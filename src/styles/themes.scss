@@ -1,0 +1,16 @@
+// src/styles/themes.scss
+
+@forward '@nebular/theme/styles/theming';
+@use '@nebular/theme/styles/theming' as *;
+@use '@nebular/theme/styles/themes/default';
+
+$nb-enable-css-custom-properties: true; // ✅ Active les variables CSS
+
+$nb-themes: nb-register-theme(
+  (
+    text-basic-color: var(--color-basic-800),
+    text-disabled-color: var(--color-basic-600),
+  ),
+  default,
+  default
+);
