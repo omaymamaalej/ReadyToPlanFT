@@ -5,30 +5,11 @@ import { LoginComponent } from './login/login.component';
 import { NbAuthComponent, NbLoginComponent, NbRegisterComponent } from '@nebular/auth';
 
 const routes: Routes = [
-  // {
-  //   path: 'auth',
-  //   component: NbAuthComponent,
-  //   children: [
-
-  //     {
-  //       path: 'login',
-  //       component: NbLoginComponent,
-  //     },
-  //     {
-  //       path: 'register',
-  //       component: NbRegisterComponent,
-  //     },
-  //   ],
-  // },
-
   {path:'auth/login',component:LoginComponent},
+  {path:'auth/register',component:RegisterComponent},
+
   { path: '', redirectTo: 'auth/login', pathMatch: 'full' },
 
-
-  // {
-  //   path: 'login',
-  //   component: LoginComponent,
-  // },
 ];
 
 @NgModule({

@@ -6,23 +6,7 @@ import { User } from 'src/app/models/User';
 
 @Component({
   selector: 'app-login',
-// template: `
-//     <nb-login
-//       [showMessages]="showMessages"
-//       [redirectDelay]="redirectDelay"
-//       [strategy]="strategy"
-//       [rememberMe]="rememberMe"
-//       [socialLinks]="socialLinks"
-//       [validation]="validation"
-//       (login)="login()"
-//     ></nb-login>
-//   `,
-
   templateUrl: './login.component.html',
-  // styleUrls: ['./login.component.css']
-
-  // template: `<nb-login></nb-login>`,
-
 })
 export class LoginComponent implements OnInit {
 
@@ -74,35 +58,31 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  // ✅ Utilise "this.config" pour accéder à la propriété dans la classe
   getConfigValue(key: string): any {
     return this.config[key];
   }
 
-  // ✅ Propriété pour afficher le champ "Remember me"
   rememberMe = true;
 
-  // ✅ Exemple de liens sociaux (à adapter selon ton besoin)
-  socialLinks = [
-    {
-      title: 'Google',
-      icon: 'fa fa-google',
-      url: 'https://google.com',
-      target: '_blank',
-    },
-    {
-      title: 'Facebook',
-      icon: 'fa fa-facebook',
-      link: '/auth/facebook',
-      target: '_self',
-    },
-  ];
+  // socialLinks = [
+  //   {
+  //     title: 'Google',
+  //     icon: 'fa fa-google',
+  //     url: 'https://google.com',
+  //     target: '_blank',
+  //   },
+  //   {
+  //     title: 'Facebook',
+  //     icon: 'fa fa-facebook',
+  //     link: '/auth/facebook',
+  //     target: '_self',
+  //   },
+  // ];
 
   login(): void {
     this.submitted = true;
     this.authService.login(this.user.username, this.user.password).subscribe({
       next: data => {
-        // Si l'API retourne { id_token: string }
         const token = data.id_token;
         this.tokenStorage.saveToken(token);
         this.tokenStorage.saveUser({ ...this.user, token });

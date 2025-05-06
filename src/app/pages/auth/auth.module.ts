@@ -52,6 +52,7 @@ import {
   NbButtonModule,
   NbCardModule,
   NbCheckboxModule,
+  NbIconModule,
   NbInputModule,
   NbThemeModule,
 } from '@nebular/theme';
@@ -76,6 +77,7 @@ import { NbAuthModule } from '@nebular/auth';
     NbCheckboxModule,
     TranslateModule,
     NbAuthModule.forRoot(),
+    NbIconModule
 
     
   ],
