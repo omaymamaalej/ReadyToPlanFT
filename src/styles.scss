@@ -1,1 +1,12 @@
 @use './styles/themes.scss';
+@use './styles/layout.scss' as layout;
+
+
+@import 'bootstrap/scss/mixins/breakpoints';
+@import '@nebular/theme/styles/global/breakpoints';
+
+
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:400,600,700&display=swap');
+
+@include layout.ngx-layout();
+

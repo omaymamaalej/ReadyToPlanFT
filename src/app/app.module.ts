@@ -4,17 +4,19 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NbButtonModule, NbIconModule, NbLayoutModule, NbMenuModule, NbSelectModule, NbThemeModule, NbUserModule } from '@nebular/theme';
+import { NbButtonModule, NbIconModule, NbLayoutModule, NbMenuModule, NbSelectModule, NbSidebarModule, NbThemeModule, NbUserModule, NbActionsModule, NbDatepickerModule } from '@nebular/theme';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { AuthModule } from './pages/auth/auth.module';
 import { NbAuthModule } from '@nebular/auth';
-import { ComponentsModule } from './components/components.module';
-
+import { LayoutService } from './@core/utils/layout.service';
+import { CoreModule } from './core/core.module';
+import { LayoutModule } from './layout/layout.module';
 
 @NgModule({
   declarations: [
     AppComponent,
   ],
+
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -22,12 +24,14 @@ import { ComponentsModule } from './components/components.module';
     NbLayoutModule,
     NbEvaIconsModule,
     AuthModule,
-    NbMenuModule,
     NbUserModule,
     NbButtonModule,
     NbSelectModule,
     NbIconModule,
-    ComponentsModule,
+    NbSidebarModule.forRoot(),
+    NbMenuModule.forRoot(),
+    NbActionsModule,
+    NbDatepickerModule.forRoot(),    
 
     NbThemeModule.forRoot({
       name: 'default', 
@@ -36,12 +40,13 @@ import { ComponentsModule } from './components/components.module';
       strategies: [],
       forms: {},
     }),
+    CoreModule,
+    LayoutModule
 
   ],
-  providers: [],
+  providers: [LayoutService],
   bootstrap: [AppComponent],
   exports: [
-    ComponentsModule
   ],
 })
 export class AppModule { }

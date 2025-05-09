@@ -1,0 +1,105 @@
+@use '../../../styles/themes' as *;
+
+@import 'bootstrap/scss/mixins/breakpoints';
+@import '@nebular/theme/styles/global/breakpoints';
+
+// Animation de fade
+@include nb-install-component() {
+  ::ng-deep router-outlet + * {
+    display: block;
+    animation: fade 1s;
+
+    @keyframes fade {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+  }
+}
+
+// Header général
+@include nb-install-component() {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  .header-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0 1rem;
+  }
+
+  .logo-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    .sidebar-toggle {
+      @include nb-ltr(padding-right, 1.25rem);
+      @include nb-rtl(padding-left, 1.25rem);
+      text-decoration: none;
+      color: nb-theme(text-hint-color);
+      nb-icon {
+        font-size: 1.75rem;
+      }
+    }
+
+    .logo {
+      padding: 0 1.25rem;
+      font-size: 1.75rem;
+      @include nb-ltr(border-left, 1px solid nb-theme(divider-color));
+      @include nb-rtl(border-right, 1px solid nb-theme(divider-color));
+      white-space: nowrap;
+      text-decoration: none;
+    }
+  }
+
+  nb-select {
+    min-width: auto;
+    width: auto;
+    max-width: 200px;
+    margin-left: auto;
+  }
+
+  nb-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    .control-item,
+    .user-action {
+      display: flex;
+      align-items: center;
+    }
+
+    ::ng-deep nb-search button {
+      padding: 0 !important;
+    }
+
+    nb-user {
+      cursor: pointer;
+    }
+  }
+
+  @include media-breakpoint-down(sm) {
+    .control-item {
+      display: none;
+    }
+
+    .user-action {
+      padding: 0;
+      border: none;
+    }
+  }
+
+  @include media-breakpoint-down(is) {
+    nb-select {
+      display: none;
+    }
+  }
+}

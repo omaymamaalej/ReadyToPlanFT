@@ -92,7 +92,7 @@ export class LoginComponent implements OnInit {
         this.messages = ['Login successful!'];
         this.errors = [];
 
-        this.router.navigate(['/home']);
+        this.router.navigate(['/home/dashboard']);
       },
       error: err => {
         this.errorMessage = err.error?.message || 'Login failed.';

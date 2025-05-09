@@ -63,7 +63,11 @@ import { HttpClientModule } from '@angular/common/http';
 import { NbAuthModule } from '@nebular/auth';
 
 @NgModule({
-  declarations: [LoginComponent, RegisterComponent],
+  declarations: [
+    LoginComponent, 
+    RegisterComponent
+  ],
+  
   imports: [
     CommonModule,
     AuthRoutingModule,
@@ -77,7 +81,8 @@ import { NbAuthModule } from '@nebular/auth';
     NbCheckboxModule,
     TranslateModule,
     NbAuthModule.forRoot(),
-    NbIconModule
+    NbIconModule,
+    NbThemeModule
 
     
   ],

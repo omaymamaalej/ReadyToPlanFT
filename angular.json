@@ -25,8 +25,9 @@
               "src/assets"
             ],
             "styles": [
-              "./node_modules/@nebular/theme/styles/prebuilt/default.css",
-              "src/styles.scss"
+              "src/styles.scss",
+              "node_modules/bootstrap/scss/bootstrap.scss",
+              "node_modules/@nebular/theme/styles/prebuilt/default.scss"
             ],
             "scripts": []
           },
