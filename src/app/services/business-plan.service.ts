@@ -1,0 +1,27 @@
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { BusinessPlan } from '../models/BusinessPlan';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class BusinessPlanService {
+
+  constructor(private http: HttpClient) { }
+
+  get() {
+    return this.http.get<BusinessPlan[]>('http://localhost:8080/api/business-plans');
+  }
+
+  create(payload: BusinessPlan) {
+    return this.http.post<BusinessPlan>('http://localhost:8080/api/business-plans', payload);
+  }
+
+  getById(id: string) {
+    return this.http.get<BusinessPlan>(`http://localhost:8080/api/business-plans/${id}`);
+  }
+
+  update(payload: BusinessPlan) {
+    return this.http.put(`http://localhost:8080/api/business-plans/${payload.id}`, payload);
+  }
+}

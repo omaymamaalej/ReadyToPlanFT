@@ -1,8 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { NbMediaBreakpointsService, NbMenuService, NbSidebarService, NbThemeService } from '@nebular/theme';
 import { map, Subject, takeUntil } from 'rxjs';
 import { MENU_ITEMS } from 'src/app/@core/data/menu.data';
 import { LayoutService } from 'src/app/@core/utils/layout.service';
+import { TokenStorageService } from 'src/app/_services/token-storage.service';
 import { UserService } from 'src/app/services/user.service';
 
 @Component({
@@ -17,7 +19,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   private destroy$: Subject<void> = new Subject<void>();
   userPictureOnly: boolean = false;
-  user: any;
+  user: { name: string; picture: string } = {
+    name: 'John Doe',
+    picture: 'https://example.com/path-to-image.jpg'
+  };
 
   themes = [
     {
@@ -40,21 +45,29 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   currentTheme = 'default';
 
-  userMenu = [ { title: 'Profile' }, { title: 'Log out' } ];
+  userMenu = [{ title: 'Profile' }, { title: 'Log out' }];
 
   constructor(private sidebarService: NbSidebarService,
-                private menuService: NbMenuService,
-                private themeService: NbThemeService,
-                private userService: UserService,
-                private layoutService: LayoutService,
-                private breakpointService: NbMediaBreakpointsService){}
+    private menuService: NbMenuService,
+    private themeService: NbThemeService,
+    private userService: UserService,
+    private layoutService: LayoutService,
+    private breakpointService: NbMediaBreakpointsService,
+    public tokenStorageService: TokenStorageService,
+    private router: Router) { }
 
   ngOnInit() {
     this.currentTheme = this.themeService.currentTheme;
 
     this.userService.get()
       .pipe(takeUntil(this.destroy$))
-      .subscribe((users: any) => this.user = users.nick);
+      .subscribe((users: any) => {
+        this.user = {
+          name: users.nick?.name ?? 'Invité',
+          picture: users.nick?.picture ?? 'assets/images/default-avatar.png',
+        };
+      });
+
 
     const { xl } = this.breakpointService.getBreakpointsMap();
     this.themeService.onMediaQueryChange()
@@ -91,5 +104,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
   navigateHome() {
     this.menuService.navigateHome();
     return false;
+  }
+
+  logout(): void {
+
+    this.tokenStorageService.signOut();
+    this.router.navigate(['/login']);
   }
 }

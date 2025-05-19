@@ -11,6 +11,9 @@ import { NbAuthModule } from '@nebular/auth';
 import { LayoutService } from './@core/utils/layout.service';
 import { CoreModule } from './core/core.module';
 import { LayoutModule } from './layout/layout.module';
+import { authInterceptorProviders } from './_helpers/auth.interceptor';
+import { ZonedDateTimeInterceptorProviders } from './_helpers/ZonedDateTime.interceptor';
+import { NbSecurityModule } from '@nebular/security';
 
 @NgModule({
   declarations: [
@@ -31,10 +34,24 @@ import { LayoutModule } from './layout/layout.module';
     NbSidebarModule.forRoot(),
     NbMenuModule.forRoot(),
     NbActionsModule,
-    NbDatepickerModule.forRoot(),    
+    NbDatepickerModule.forRoot(),
+    NbSecurityModule.forRoot({
+      accessControl: {
+        guest: {
+          view: '*',
+        },
+        user: {
+          parent: 'guest',
+          create: '*',
+          edit: '*',
+          remove: '*',
+        },
+      },
+    }),
+
 
     NbThemeModule.forRoot({
-      name: 'default', 
+      name: 'default',
     }),
     NbAuthModule.forRoot({
       strategies: [],
@@ -44,7 +61,7 @@ import { LayoutModule } from './layout/layout.module';
     LayoutModule
 
   ],
-  providers: [LayoutService],
+  providers: [LayoutService, authInterceptorProviders, ZonedDateTimeInterceptorProviders],
   bootstrap: [AppComponent],
   exports: [
   ],

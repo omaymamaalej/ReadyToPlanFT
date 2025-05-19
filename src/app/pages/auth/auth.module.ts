@@ -48,6 +48,7 @@ import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
+  NbActionsModule,
   NbAlertModule,
   NbButtonModule,
   NbCardModule,
@@ -82,7 +83,8 @@ import { NbAuthModule } from '@nebular/auth';
     TranslateModule,
     NbAuthModule.forRoot(),
     NbIconModule,
-    NbThemeModule
+    NbThemeModule,
+    NbActionsModule
 
     
   ],

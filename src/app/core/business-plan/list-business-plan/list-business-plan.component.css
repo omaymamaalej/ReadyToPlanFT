@@ -1,0 +1,8 @@
+img {
+  border-radius: 8px;
+  object-fit: cover;
+}
+.text-muted {
+  font-size: 0.85rem;
+  color: #aaa;
+}

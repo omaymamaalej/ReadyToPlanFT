@@ -7,15 +7,20 @@ import { NbActionsModule, NbAlertModule, NbBadgeModule, NbButtonModule, NbCardMo
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TranslateModule } from '@ngx-translate/core';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
+import { ReactiveFormsModule } from '@angular/forms';
+import { ListBusinessPlanComponent } from './list-business-plan/list-business-plan.component';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 
 @NgModule({
   declarations: [
-    AddBusinessPlanComponent
+    AddBusinessPlanComponent,
+    ListBusinessPlanComponent
   ],
   imports: [
     CommonModule,
     BusinessPlanRoutingModule,
+    ReactiveFormsModule,
 
     NbCardModule,
     NbSelectModule,
@@ -39,12 +44,14 @@ import { NbEvaIconsModule } from '@nebular/eva-icons';
     NbSearchModule,
     NbUserModule,
     NbEvaIconsModule,
-    NbDatepickerModule
+    NbDatepickerModule,
+    NgxPaginationModule
 
 
   ],
   exports: [
-    AddBusinessPlanComponent
+    AddBusinessPlanComponent,
+    ListBusinessPlanComponent
   ]
 })
 export class BusinessPlanModule { }

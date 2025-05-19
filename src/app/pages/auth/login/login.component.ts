@@ -64,21 +64,6 @@ export class LoginComponent implements OnInit {
 
   rememberMe = true;
 
-  // socialLinks = [
-  //   {
-  //     title: 'Google',
-  //     icon: 'fa fa-google',
-  //     url: 'https://google.com',
-  //     target: '_blank',
-  //   },
-  //   {
-  //     title: 'Facebook',
-  //     icon: 'fa fa-facebook',
-  //     link: '/auth/facebook',
-  //     target: '_self',
-  //   },
-  // ];
-
   login(): void {
     this.submitted = true;
     this.authService.login(this.user.username, this.user.password).subscribe({
@@ -102,5 +87,9 @@ export class LoginComponent implements OnInit {
         this.submitted = false;
       }
     });
+  }
+
+  reloadPage(): void {
+    window.location.reload();
   }
 }

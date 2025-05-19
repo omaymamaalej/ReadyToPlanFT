@@ -18,7 +18,7 @@ export const MENU_ITEMS: NbMenuItem[] = [
     children: [
       {
         title: 'All Business Plans',
-        link: '/home/businessPlan/list',
+        link: 'businessPlan/listBusinessPlan',
       },
       {
         title: 'Create New Business Plans',
@@ -35,14 +35,6 @@ export const MENU_ITEMS: NbMenuItem[] = [
     title: 'Auth',
     icon: 'lock-outline',
     children: [
-      // {
-      //   title: 'Login',
-      //   link: '/auth/login',
-      // },
-      // {
-      //   title: 'Register',
-      //   link: '/auth/register',
-      // },
       {
         title: 'Request Password',
         link: '/auth/request-password',
@@ -52,5 +44,11 @@ export const MENU_ITEMS: NbMenuItem[] = [
         link: '/auth/reset-password',
       },
     ],
+  },
+  {
+    title: 'Log Out',
+    icon: 'log-out-outline',
+    link: '/login',
+    data: { action: 'logout' },
   },
 ];
