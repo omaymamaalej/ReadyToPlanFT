@@ -1,21 +1,25 @@
 <!-- Message d’alerte en haut -->
-<nb-alert status="warning" closable>
+<!-- <nb-alert status="warning" closable>
   <strong>Your free limit is expired!</strong><br />
   Upgrade to a paid plan to get the full benefits of AI Generated Business plan.
   <button nbButton status="info" size="small" class="ml-3">Upgrade Now</button>
-</nb-alert>
+</nb-alert> -->
 
 <!-- Liste des Business Plans -->
 <div class="row">
-    <div *ngFor="let plan of businessPlans | paginate: { itemsPerPage: 6, currentPage: page }">
+  <div *ngFor="let businessPlan of businessPlanDto" class="col-md-4 mb-3">
     <nb-card class="shadow-lg">
       <nb-card-body>
-        <img [src]="plan.imageUrl" alt="business plan preview" class="img-fluid mb-3" />
-        <h5 class="text-white">{{ plan.companyName }}</h5>
-        <p class="text-muted">{{ plan.companyStartDate | date: 'mediumDate' }}</p>
-        <a [routerLink]="['/view', plan.id]" nbButton status="success" size="small">
-          View presentation
-        </a>
+        <h5 class="text-white">{{ businessPlan.companyName }}</h5>
+        <p class="text-muted">{{ businessPlan.companyStartDate}}</p>
+
+        <p class="text-muted">{{ businessPlan.country }}</p>
+
+<button nbButton status="success" size="small" (click)="generatePresentation(businessPlan)">
+  View presentation
+</button>
+
+
         <!-- Actions -->
         <div class="mt-2 d-flex gap-2">
           <button nbButton size="tiny" status="info">
@@ -34,7 +38,20 @@
 </div>
 
 <!-- Pagination -->
-<!-- <div class="d-flex justify-content-center mt-3">
-  <nb-pagination [pageCount]="totalPages" [(page)]="currentPage"></nb-pagination>
-</div> -->
 <pagination-controls (pageChange)="page = $event"></pagination-controls>
+
+
+<div class="container mt-4" *ngIf="selectedPresentation && selectedBusinessPlanName">
+  <h2>Présentation Générée pour : {{ selectedBusinessPlanName }}</h2>
+  <hr />
+
+  <div class="presentation-content" [innerHTML]="selectedBusinessPlan?.generatedPresentation"></div>
+
+  <a
+    class="btn btn-primary mt-3"
+    [href]="'data:application/vnd.openxmlformats-officedocument.presentationml.presentation;base64,' + selectedPresentation"
+    download="presentation.pptx"
+  >
+    Télécharger la présentation
+  </a>
+</div>

@@ -25,7 +25,7 @@ export class BusinessPlan {
   }
 }
 
-export interface BusinessPlan {
+export interface BusinessPlanDto {
   id: string;
   companyName: string;
   companyStartDate: dayjs.Dayjs;
@@ -34,4 +34,5 @@ export interface BusinessPlan {
   companyDescription: string;
   anticipatedProjectSize: number;
   currency: Currency;
+  generatedPresentation?: string;
 }

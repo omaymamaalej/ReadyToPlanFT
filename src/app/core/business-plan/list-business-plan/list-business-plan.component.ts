@@ -1,25 +1,83 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import * as dayjs from 'dayjs';
+import { Country } from 'src/app/enumerations/country.enum';
+import { Currency } from 'src/app/enumerations/currency.enum';
+import { Languages } from 'src/app/enumerations/languages.enum';
+import { BusinessPlan, BusinessPlanDto } from 'src/app/models/BusinessPlan';
+import { BusinessPlanService } from 'src/app/services/business-plan.service';
 
 @Component({
   selector: 'app-list-business-plan',
   templateUrl: './list-business-plan.component.html',
   styleUrls: ['./list-business-plan.component.css']
 })
-export class ListBusinessPlanComponent {
+export class ListBusinessPlanComponent implements OnInit {
+  businessPlans: BusinessPlan[] = [];
+  businessPlanDto: BusinessPlanDto[] = [];
 
-  businessPlans = [
-  {
-    id: 1,
-    companyName: 'novapack',
-    companyStartDate: new Date('2025-03-24'),
-    imageUrl: 'assets/images/your-image.png', // remplace par une vraie URL ou lien local
-  },
-  
-  // Ajoute d'autres plans...
-];
+  selectedPresentation?: string;
+  selectedBusinessPlanName?: string;
+  selectedBusinessPlan?: BusinessPlanDto;
 
-currentPage = 1;
-totalPages = 1; // à ajuster selon ta logique
-  page: number = 1;   // ← AJOUTE cette ligne
+  constructor(private businessPlansService: BusinessPlanService) { }
 
+  ngOnInit(): void {
+    this.businessPlansService.get().subscribe((data: BusinessPlanDto[]) => {
+      this.businessPlans = data;
+      this.businessPlanDto = this.inintbusinessPlanDto(this.businessPlans);
+
+      console.log(this.businessPlans);
+    });
+  }
+
+  inintbusinessPlanDto(businessPlans: BusinessPlan[]): BusinessPlanDto[] {
+    let tempBusinessPlanDto: BusinessPlanDto[] = [];
+
+    businessPlans.forEach((businessPlan) => {
+
+      const restDto: BusinessPlanDto = {
+        id: businessPlan.id,
+        companyName: businessPlan.companyName,
+        companyStartDate: businessPlan.companyStartDate || dayjs(),
+        country: businessPlan.country  || Country.FRANCE,
+        languages: businessPlan.languages  || Languages.ENGLISH,
+        companyDescription: businessPlan.companyDescription,
+        anticipatedProjectSize: businessPlan.anticipatedProjectSize,
+        currency: businessPlan.currency || Currency.EUR,
+        
+      };
+
+      tempBusinessPlanDto.push(restDto);
+
+    });
+
+    return tempBusinessPlanDto;
+  }
+
+
+generatePresentation(businessPlan: BusinessPlanDto): void {
+  this.businessPlansService.generateBusinessPlan(businessPlan).subscribe({
+    next: (presentation: string) => {
+      console.log('Received presentation:', presentation); 
+      this.selectedPresentation = presentation;
+      this.selectedBusinessPlan = {
+        ...businessPlan,
+        generatedPresentation: presentation 
+      };
+      this.selectedBusinessPlanName = businessPlan.companyName;
+    },
+    error: () => {
+      alert("Erreur lors de la génération de la présentation.");
+    }
+  });
+}
+
+closePresentation(): void {
+  this.selectedPresentation = undefined;
+  this.selectedBusinessPlanName = undefined;
+}
+
+  currentPage = 1;
+  totalPages = 1; 
+  page: number = 1;   
 }

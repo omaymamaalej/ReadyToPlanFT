@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BusinessPlan } from '../models/BusinessPlan';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -24,4 +25,13 @@ export class BusinessPlanService {
   update(payload: BusinessPlan) {
     return this.http.put(`http://localhost:8080/api/business-plans/${payload.id}`, payload);
   }
+
+generateBusinessPlan(businessPlan: BusinessPlan): Observable<string> {
+  const copy = { ...businessPlan };
+  // ici, si besoin, transforme les dates : copy.companyStartDate = copy.companyStartDate.toISOString() par exemple
+  return this.http.post(`http://localhost:8080/api/business-plans/generate`, copy, { responseType: 'text' });
+}
+
+
+
 }
