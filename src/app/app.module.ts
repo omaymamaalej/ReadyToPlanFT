@@ -4,7 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NbButtonModule, NbIconModule, NbLayoutModule, NbMenuModule, NbSelectModule, NbSidebarModule, NbThemeModule, NbUserModule, NbActionsModule, NbDatepickerModule } from '@nebular/theme';
+import { NbButtonModule, NbIconModule, NbLayoutModule, NbMenuModule, NbSelectModule, NbSidebarModule, NbThemeModule, NbUserModule, NbActionsModule, NbDatepickerModule, NbDialogModule, NbCardModule } from '@nebular/theme';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { AuthModule } from './pages/auth/auth.module';
 import { NbAuthModule } from '@nebular/auth';
@@ -28,6 +28,7 @@ import { NbSecurityModule } from '@nebular/security';
     NbEvaIconsModule,
     AuthModule,
     NbUserModule,
+    NbCardModule,
     NbButtonModule,
     NbSelectModule,
     NbIconModule,
@@ -58,12 +59,13 @@ import { NbSecurityModule } from '@nebular/security';
       forms: {},
     }),
     CoreModule,
-    LayoutModule
+    LayoutModule,
 
   ],
   providers: [LayoutService, authInterceptorProviders, ZonedDateTimeInterceptorProviders],
   bootstrap: [AppComponent],
   exports: [
   ],
+
 })
 export class AppModule { }

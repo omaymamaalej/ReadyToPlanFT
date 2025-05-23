@@ -1,0 +1,14 @@
+<nb-card>
+    <nb-card-header>Présentation Générée pour : {{ businessPlanName }}</nb-card-header>
+    <nb-card-body>
+        <div class="presentation-content" [innerHTML]="presentationContent"></div>
+    </nb-card-body>
+    <nb-card-footer>
+        <!-- <a class="btn btn-primary mt-3"
+            [href]="'data:application/vnd.openxmlformats-officedocument.presentationml.presentation;base64,' + presentationContent"
+            download="presentation.pptx">
+            Télécharger la présentation
+        </a> -->
+        <button nbButton hero status="primary" (click)="close()">close</button>
+    </nb-card-footer>
+</nb-card>

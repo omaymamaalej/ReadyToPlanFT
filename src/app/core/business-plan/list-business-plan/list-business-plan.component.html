@@ -10,14 +10,15 @@
   <div *ngFor="let businessPlan of businessPlanDto" class="col-md-4 mb-3">
     <nb-card class="shadow-lg">
       <nb-card-body>
-        <h5 class="text-white">{{ businessPlan.companyName }}</h5>
+        <h3 class="text-muted">{{ businessPlan.companyName }}</h3>
+
         <p class="text-muted">{{ businessPlan.companyStartDate}}</p>
 
         <p class="text-muted">{{ businessPlan.country }}</p>
 
-<button nbButton status="success" size="small" (click)="generatePresentation(businessPlan)">
-  View presentation
-</button>
+        <button nbButton status="success" size="small" (click)="generatePresentation(businessPlan)">
+          View presentation
+        </button>
 
 
         <!-- Actions -->
@@ -39,19 +40,3 @@
 
 <!-- Pagination -->
 <pagination-controls (pageChange)="page = $event"></pagination-controls>
-
-
-<div class="container mt-4" *ngIf="selectedPresentation && selectedBusinessPlanName">
-  <h2>Présentation Générée pour : {{ selectedBusinessPlanName }}</h2>
-  <hr />
-
-  <div class="presentation-content" [innerHTML]="selectedBusinessPlan?.generatedPresentation"></div>
-
-  <a
-    class="btn btn-primary mt-3"
-    [href]="'data:application/vnd.openxmlformats-officedocument.presentationml.presentation;base64,' + selectedPresentation"
-    download="presentation.pptx"
-  >
-    Télécharger la présentation
-  </a>
-</div>

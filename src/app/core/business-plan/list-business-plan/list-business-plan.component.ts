@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
+import { NbDialogService } from '@nebular/theme';
 import * as dayjs from 'dayjs';
 import { Country } from 'src/app/enumerations/country.enum';
 import { Currency } from 'src/app/enumerations/currency.enum';
 import { Languages } from 'src/app/enumerations/languages.enum';
 import { BusinessPlan, BusinessPlanDto } from 'src/app/models/BusinessPlan';
+import { PresentationDialogComponent } from 'src/app/core/business-plan/presentation-dialog/presentation-dialog.component';
 import { BusinessPlanService } from 'src/app/services/business-plan.service';
 
 @Component({
@@ -19,7 +21,10 @@ export class ListBusinessPlanComponent implements OnInit {
   selectedBusinessPlanName?: string;
   selectedBusinessPlan?: BusinessPlanDto;
 
-  constructor(private businessPlansService: BusinessPlanService) { }
+  constructor(
+    private businessPlansService: BusinessPlanService,
+    private dialogService: NbDialogService
+  ) { }
 
   ngOnInit(): void {
     this.businessPlansService.get().subscribe((data: BusinessPlanDto[]) => {
@@ -58,19 +63,21 @@ export class ListBusinessPlanComponent implements OnInit {
 generatePresentation(businessPlan: BusinessPlanDto): void {
   this.businessPlansService.generateBusinessPlan(businessPlan).subscribe({
     next: (presentation: string) => {
-      console.log('Received presentation:', presentation); 
-      this.selectedPresentation = presentation;
-      this.selectedBusinessPlan = {
-        ...businessPlan,
-        generatedPresentation: presentation 
-      };
-      this.selectedBusinessPlanName = businessPlan.companyName;
+      this.dialogService.open(PresentationDialogComponent, {
+        context: {
+          businessPlanName: businessPlan.companyName,
+          presentationContent: presentation,
+        },
+        closeOnBackdropClick: true, // optionnel : fermer en cliquant dehors
+        closeOnEsc: true,
+      });
     },
     error: () => {
       alert("Erreur lors de la génération de la présentation.");
     }
   });
 }
+
 
 closePresentation(): void {
   this.selectedPresentation = undefined;
