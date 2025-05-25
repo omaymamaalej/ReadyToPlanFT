@@ -14,6 +14,7 @@ import { LayoutModule } from './layout/layout.module';
 import { authInterceptorProviders } from './_helpers/auth.interceptor';
 import { ZonedDateTimeInterceptorProviders } from './_helpers/ZonedDateTime.interceptor';
 import { NbSecurityModule } from '@nebular/security';
+import { SharedModule } from './shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -60,6 +61,7 @@ import { NbSecurityModule } from '@nebular/security';
     }),
     CoreModule,
     LayoutModule,
+    SharedModule,
 
   ],
   providers: [LayoutService, authInterceptorProviders, ZonedDateTimeInterceptorProviders],

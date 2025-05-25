@@ -1,7 +1,108 @@
+/* .presentation-wrapper {
+  display: flex;
+  gap: 20px;
+}
+
+.table-of-contents {
+  width: 250px;
+  border-right: 1px solid #ccc;
+  padding-right: 10px;
+}
+
+.table-of-contents ul {
+  list-style: none;
+  padding: 0;
+}
+
+.table-of-contents li {
+  cursor: pointer;
+  padding: 5px 0;
+}
+
+.table-of-contents li.active {
+  font-weight: bold;
+  color: #007bff;
+}
+
 .presentation-content {
-  max-height: 60vh;
+  flex: 1;
+  padding-left: 10px;
+  white-space: pre-wrap;
+  font-family: monospace;
+} */
+
+
+
+.presentation-wrapper {
+  display: flex;
+  gap: 20px;
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 20px;
+  background: #f9f9f9;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  min-height: 600px;
+  height: auto;
+  box-sizing: border-box;
+}
+
+/* Table des matières */
+.table-of-contents {
+  width: 280px;
+  border-right: 2px solid #ddd;
+  padding-right: 15px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   overflow-y: auto;
-  border: 1px solid #ccc;
-  padding: 1rem;
-  background-color: #f9f9f9;
+  max-height: 600px;
+}
+
+.table-of-contents h3 {
+  font-size: 20px;
+  margin-bottom: 15px;
+  cursor: pointer;
+  color: #333;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 5px;
+}
+
+.table-of-contents ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.table-of-contents li {
+  cursor: pointer;
+  padding: 8px 10px;
+  border-radius: 6px;
+  transition: background 0.3s ease;
+}
+
+.table-of-contents li:hover {
+  background: #f0f0f0;
+}
+
+.table-of-contents li.active {
+  font-weight: bold;
+  color: #ffffff;
+  background-color: #007bff;
+}
+
+/* Contenu de la présentation */
+.presentation-content {
+  flex: 1;
+  padding-left: 20px;
+  font-family: 'Courier New', Courier, monospace;
+  background: #fff;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  padding: 20px;
+  overflow-y: auto;
+  max-height: 600px;
+  width: 100%;
+  box-sizing: border-box;
+  white-space: pre-wrap;
+  line-height: 1.6;
+  white-space: normal;
 }

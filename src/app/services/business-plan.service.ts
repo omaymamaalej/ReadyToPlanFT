@@ -28,7 +28,6 @@ export class BusinessPlanService {
 
 generateBusinessPlan(businessPlan: BusinessPlan): Observable<string> {
   const copy = { ...businessPlan };
-  // ici, si besoin, transforme les dates : copy.companyStartDate = copy.companyStartDate.toISOString() par exemple
   return this.http.post(`http://localhost:8080/api/business-plans/generate`, copy, { responseType: 'text' });
 }
 

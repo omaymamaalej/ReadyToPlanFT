@@ -11,6 +11,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { ListBusinessPlanComponent } from './list-business-plan/list-business-plan.component';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { PresentationDialogComponent } from './presentation-dialog/presentation-dialog.component';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 
 @NgModule({
@@ -49,6 +50,7 @@ import { PresentationDialogComponent } from './presentation-dialog/presentation-
     NbDatepickerModule,
     NgxPaginationModule,
     NbDialogModule.forRoot(),
+    SharedModule
 
 
 

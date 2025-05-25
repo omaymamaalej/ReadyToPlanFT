@@ -27,6 +27,11 @@ export const MENU_ITEMS: NbMenuItem[] = [
     ],
   },
   {
+    title: 'Strategic Planning',
+    icon: 'pie-chart-outline', // Icône qui représente bien l’analyse/stratégie
+    link: '/strategic-planning', // Le lien vers ton composant
+  },
+  {
     title: 'Personal Information',
     icon: 'person-outline',
     link: '/home/profileInformation',

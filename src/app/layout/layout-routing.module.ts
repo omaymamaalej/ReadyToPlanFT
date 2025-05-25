@@ -5,6 +5,7 @@ import { LayoutComponent } from './layout.component';
 import { DashboardComponent } from '../core/dashboard/dashboard.component';
 import { AddBusinessPlanComponent } from '../core/business-plan/add-business-plan/add-business-plan.component';
 import { ListBusinessPlanComponent } from '../core/business-plan/list-business-plan/list-business-plan.component';
+import { StrategicPlanningComponent } from '../core/strategic-planning/strategic-planning/strategic-planning.component';
 
 
 const routes: Routes = [
@@ -17,6 +18,8 @@ const routes: Routes = [
       { path: 'dashboard', component: DashboardComponent },
       { path: 'businessPlan/createpresentation', component: AddBusinessPlanComponent },
       { path: 'businessPlan/listBusinessPlan', component: ListBusinessPlanComponent },
+      { path: 'strategic-planning', component: StrategicPlanningComponent },
+
 
     ],
   },

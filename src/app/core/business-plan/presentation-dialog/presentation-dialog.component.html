@@ -1,14 +1,18 @@
-<nb-card>
-    <nb-card-header>Présentation Générée pour : {{ businessPlanName }}</nb-card-header>
-    <nb-card-body>
-        <div class="presentation-content" [innerHTML]="presentationContent"></div>
-    </nb-card-body>
-    <nb-card-footer>
-        <!-- <a class="btn btn-primary mt-3"
-            [href]="'data:application/vnd.openxmlformats-officedocument.presentationml.presentation;base64,' + presentationContent"
-            download="presentation.pptx">
-            Télécharger la présentation
-        </a> -->
-        <button nbButton hero status="primary" (click)="close()">close</button>
-    </nb-card-footer>
-</nb-card>
+<div class="presentation-wrapper">
+  <!-- Colonne gauche : Table des matières -->
+  <div class="table-of-contents">
+    <h3 (click)="goToSlide(0)">Table de matière</h3>
+    <ul>
+      <li *ngFor="let section of tableOfContents"
+          [class.active]="section.index === currentSlideIndex"
+          (click)="goToSlide(section.index)">
+        {{ section.title }}
+      </li>
+    </ul>
+  </div>
+
+  <!-- Colonne droite : contenu de la slide sélectionnée -->
+  <div class="presentation-content" *ngIf="sections.length > 0">
+    <pre>{{ sections[currentSlideIndex] }}</pre>
+  </div>
+</div>
