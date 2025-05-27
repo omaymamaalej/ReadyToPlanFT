@@ -1,18 +1,21 @@
-<div class="presentation-wrapper">
+<div class="presentation-wrapper" style="width: 1200px;">
   <!-- Colonne gauche : Table des matières -->
   <div class="table-of-contents">
-    <h3 (click)="goToSlide(0)">Table de matière</h3>
+    <h3>Slides</h3>
     <ul>
-      <li *ngFor="let section of tableOfContents"
-          [class.active]="section.index === currentSlideIndex"
-          (click)="goToSlide(section.index)">
+      <li (click)="goToSlide(0)">Table de matière</li>
+      <li *ngFor="let section of tableOfContents" [class.active]="section.index === currentSlideIndex"
+        (click)="goToSlide(section.index)">
         {{ section.title }}
       </li>
     </ul>
   </div>
 
-  <!-- Colonne droite : contenu de la slide sélectionnée -->
-  <div class="presentation-content" *ngIf="sections.length > 0">
-    <pre>{{ sections[currentSlideIndex] }}</pre>
+  <div class="presentation-content" *ngIf="sections.length > 0" style="width: 900px">
+    <pre [innerText]="formatText(sections[currentSlideIndex], currentSlideIndex === 0)"
+      [class.table-of-contents-content]="currentSlideIndex === 0"></pre>
   </div>
+  
+
+
 </div>
