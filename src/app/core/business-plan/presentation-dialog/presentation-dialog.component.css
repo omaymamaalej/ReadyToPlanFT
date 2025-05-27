@@ -8,12 +8,11 @@
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
   border-radius: 12px;
 
-  max-height: 80vh;       /* hauteur max de la zone visible */
-  overflow-y: auto;       /* scroll vertical quand dépasse */
+  max-height: 80vh;     
+  overflow-y: auto;      
   box-sizing: border-box;
 }
 
-/* Table des matières */
 .table-of-contents {
   width: 280px;
   border-right: 2px solid #ddd;
@@ -55,11 +54,10 @@
   background-color: #007bff;
 }
 
-/* Contenu de la présentation */
 .presentation-content {
-  flex-grow: 1;          /* prend toute la place restante */
+  flex-grow: 1;          
   overflow-y: auto;
-  max-height: 100%;      /* limite à la hauteur du parent */
+  max-height: 100%;    
   min-height: 400px;
 }
 
@@ -83,8 +81,29 @@
   border-left-color: #0056b3;
 }
 
+nb-card-header h4 {
+  color: #3366ff; 
+  font-size: 1.4rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
 
-/* Ajoute dans ta media query existante pour les petits écrans */
+.formatted-slide-content strong {
+  color: #586079; 
+  font-weight: bold;
+  display: block;
+  margin-top: 10px;
+}
+
+.formatted-slide-content strong:first-child {
+  font-size: 20px;
+  display: block;
+  margin-bottom: 10px;
+}
+
+
+
+
 @media (max-width: 600px) {
   .presentation-wrapper {
     flex-direction: column;
@@ -103,7 +122,7 @@
 
   .presentation-content {
     width: 100%;
-    max-height: 400px; /* hauteur raisonnable à ajuster */
-    overflow-y: auto;  /* scroll vertical activé */
+    max-height: 400px; 
+    overflow-y: auto; 
   }
 }

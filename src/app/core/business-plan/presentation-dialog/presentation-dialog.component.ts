@@ -35,7 +35,7 @@ export class PresentationDialogComponent implements OnInit {
     const tocLines = tocText.split('\n')
       .filter(line => /^\d+\.\s+/.test(line))
       .map(line => {
-        const title = line.replace(/^\d+\.\s+/, '').trim();
+        const title = line.replace(/^\d+\.\s+/, '').replace(/\*\*/g, '').trim(); 
         return title;
       });
 
@@ -43,7 +43,6 @@ export class PresentationDialogComponent implements OnInit {
 
     const tocSlideContent = tocLines.map((title, i) => `${i + 1}. ${title}`).join('\n');
 
-    // 🔽 Découpage réel des sections à partir des titres "**1. ", "**2. ", etc.
     const slideContent = parts[1];
     const regex = /\*\*\d+\.\s+[^\n]+\*\*/g;
 
@@ -53,8 +52,9 @@ export class PresentationDialogComponent implements OnInit {
     const slides: string[] = [];
     if (matches) {
       matches.forEach((title, i) => {
+        const cleanTitle = title.replace(/\*\*/g, '').trim();
         const body = splitSlides[i] ?? '';
-        slides.push(`${title}\n\n${body}`);
+        slides.push(`${cleanTitle}\n\n${body}`);
       });
     }
 
@@ -78,6 +78,41 @@ export class PresentationDialogComponent implements OnInit {
       return text.replace(/\. /g, '.\n');
     }
   }
+
+  getTitle(index: number): string {
+  if (index === 0) return '';
+  return this.tableOfContents[index - 1]?.title || '';
+}
+
+getSlideContent(index: number, isTableOfContents: boolean = false): string {
+  const text = this.sections[index] || '';
+
+  if (isTableOfContents) {
+    return text
+      .split('\n')
+      .map(line => line.trim())
+      .filter(line => line.length > 0)
+      .join('<br>');
+  }
+
+  const lines = text.split('\n');
+  const bodyLines = lines.slice(1).join('\n');
+
+  const formattedBody = bodyLines
+    .replace(/^\*\s*$/gm, '')
+    .replace(/\*\s*$/gm, '')
+    .replace(/(^|\s)\*(?=\s|$)/g, '')
+    .replace(/\*\*(.+?)\*\*/g, (_, subtitle) => {
+      const clean = subtitle.trim().replace(/:$/, '');
+      return `<br><strong>${clean} :</strong>`;
+    })
+    .replace(/\. /g, '.<br>');
+
+  return formattedBody.trim();
+}
+
+
+
 
 
 }

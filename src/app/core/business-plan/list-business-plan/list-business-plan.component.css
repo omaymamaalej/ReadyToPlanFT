@@ -1,8 +1,16 @@
 img {
-  border-radius: 8px;
+  border-radius: 5px;
   object-fit: cover;
 }
 .text-muted {
   font-size: 0.85rem;
   color: #aaa;
+}
+
+.buttons-row {
+  margin: -0.5rem;
+}
+
+button[nbButton] {
+  margin: 0.5rem;
 }

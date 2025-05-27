@@ -1,5 +1,4 @@
 <div class="presentation-wrapper" style="width: 1200px;">
-  <!-- Colonne gauche : Table des matières -->
   <div class="table-of-contents">
     <h3>Slides</h3>
     <ul>
@@ -11,11 +10,20 @@
     </ul>
   </div>
 
-  <div class="presentation-content" *ngIf="sections.length > 0" style="width: 900px">
-    <pre [innerText]="formatText(sections[currentSlideIndex], currentSlideIndex === 0)"
-      [class.table-of-contents-content]="currentSlideIndex === 0"></pre>
+
+  <div class="presentation-content" *ngIf="sections.length > 0" style="width: 900px;">
+    <nb-card>
+      <nb-card-header *ngIf="currentSlideIndex !== 0">
+        <h4>{{ getTitle(currentSlideIndex) }}</h4>
+      </nb-card-header>
+      <nb-card-body>
+        <div [innerHTML]="getSlideContent(currentSlideIndex, currentSlideIndex === 0)"
+          [class.table-of-contents-content]="currentSlideIndex === 0" class="formatted-slide-content">
+        </div>
+
+      </nb-card-body>
+    </nb-card>
   </div>
-  
 
 
 </div>
