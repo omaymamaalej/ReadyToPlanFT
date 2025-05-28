@@ -1,5 +1,5 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
-import { NbDialogService } from '@nebular/theme';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { NbDialogRef, NbDialogService } from '@nebular/theme';
 import * as dayjs from 'dayjs';
 import { Country } from 'src/app/enumerations/country.enum';
 import { Currency } from 'src/app/enumerations/currency.enum';
@@ -18,23 +18,18 @@ export class ListBusinessPlanComponent implements OnInit {
   businessPlans: BusinessPlan[] = [];
   businessPlanDto: BusinessPlanDto[] = [];
 
+  @ViewChild('deleteDialog') deleteDialog!: TemplateRef<any>;
+
+  idTodelete: string = '';
+
   selectedPresentation?: string;
   selectedBusinessPlanName?: string;
   selectedBusinessPlan?: BusinessPlanDto;
 
   constructor(
     private businessPlansService: BusinessPlanService,
-    private dialogService: NbDialogService
+    private dialogService: NbDialogService,
   ) { }
-
-  // ngOnInit(): void {
-  //   this.businessPlansService.get().subscribe((data: BusinessPlanDto[]) => {
-  //     this.businessPlans = data;
-  //     this.businessPlanDto = this.inintbusinessPlanDto(this.businessPlans);
-
-  //     console.log(this.businessPlans);
-  //   });
-  // }
 
   ngOnInit(): void {
     this.loadBusinessPlans();
@@ -57,12 +52,12 @@ export class ListBusinessPlanComponent implements OnInit {
         id: businessPlan.id,
         companyName: businessPlan.companyName,
         companyStartDate: businessPlan.companyStartDate || dayjs(),
-        country: businessPlan.country  || Country.FRANCE,
-        languages: businessPlan.languages  || Languages.ENGLISH,
+        country: businessPlan.country || Country.FRANCE,
+        languages: businessPlan.languages || Languages.ENGLISH,
         companyDescription: businessPlan.companyDescription,
         anticipatedProjectSize: businessPlan.anticipatedProjectSize,
         currency: businessPlan.currency || Currency.EUR,
-        
+
       };
 
       tempBusinessPlanDto.push(restDto);
@@ -73,46 +68,72 @@ export class ListBusinessPlanComponent implements OnInit {
   }
 
 
-generatePresentation(businessPlan: BusinessPlanDto): void {
-  this.businessPlansService.generateBusinessPlan(businessPlan).subscribe({
-    next: (presentation: string) => {
-      this.dialogService.open(PresentationDialogComponent, {
-        context: {
-          businessPlanName: businessPlan.companyName,
-          presentationContent: presentation,
-        },
-        closeOnBackdropClick: true, 
-        closeOnEsc: true,
-      });
-    },
-    error: () => {
-      alert("Erreur lors de la génération de la présentation.");
-    }
-  });
-}
+  generatePresentation(businessPlan: BusinessPlanDto): void {
+    this.businessPlansService.generateBusinessPlan(businessPlan).subscribe({
+      next: (presentation: string) => {
+        this.dialogService.open(PresentationDialogComponent, {
+          context: {
+            businessPlanName: businessPlan.companyName,
+            presentationContent: presentation,
+          },
+          closeOnBackdropClick: true,
+          closeOnEsc: true,
+        });
+      },
+      error: () => {
+        alert("Erreur lors de la génération de la présentation.");
+      }
+    });
+  }
 
-closePresentation(): void {
-  this.selectedPresentation = undefined;
-  this.selectedBusinessPlanName = undefined;
-}
+  closePresentation(): void {
+    this.selectedPresentation = undefined;
+    this.selectedBusinessPlanName = undefined;
+  }
 
-openWithoutBackdrop(businessPlan: any) {
-  const dialogRef = this.dialogService.open(UpdateBusinessPlanComponent, {
-    context: {
-      businessPlan: businessPlan
-    },
-    hasBackdrop: false // si tu veux garder le no backdrop
-  });
+  openWithoutBackdrop(businessPlan: any) {
+    const dialogRef = this.dialogService.open(UpdateBusinessPlanComponent, {
+      context: {
+        businessPlan: businessPlan
+      },
+      hasBackdrop: false // si tu veux garder le no backdrop
+    });
 
-  dialogRef.onClose.subscribe((result) => {
-    if (result === true) {
-      this.loadBusinessPlans(); 
-    }
-  });
-}
+    dialogRef.onClose.subscribe((result) => {
+      if (result === true) {
+        this.loadBusinessPlans();
+      }
+    });
+  }
+
+  openDeleteDialog(id: string) {
+    this.idTodelete = id;
+
+    const ref = this.dialogService.open(this.deleteDialog, {
+      context: {} // tu peux mettre un contexte vide
+    }).onClose.subscribe((confirmed: boolean) => {
+      if (confirmed) {
+        this.delete();
+      }
+    });
+  }
+
+
+
+  delete() {
+    this.businessPlansService.delete(this.idTodelete).subscribe({
+      next: () => {
+        this.businessPlans = this.businessPlans.filter(bp => bp.id !== this.idTodelete);
+        this.businessPlanDto = this.inintbusinessPlanDto(this.businessPlans);
+      },
+      error: () => {
+        alert('Erreur lors de la suppression.');
+      }
+    });
+  }
 
 
   currentPage = 1;
-  totalPages = 1; 
-  page: number = 1;   
+  totalPages = 1;
+  page: number = 1;
 }

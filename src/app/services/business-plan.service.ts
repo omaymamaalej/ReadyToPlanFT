@@ -32,4 +32,8 @@ export class BusinessPlanService {
     return this.http.post(`http://localhost:8080/api/business-plans/generate`, copy, { responseType: 'text' });
   }
 
+  delete(id: string) {
+    return this.http.delete<BusinessPlan>(`http://localhost:8080/api/products/${id}`);
+  }
+
 }

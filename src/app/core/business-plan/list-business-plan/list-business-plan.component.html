@@ -1,6 +1,6 @@
 <!-- Liste des Business Plans -->
 <div class="row">
-  <div *ngFor="let businessPlan of businessPlanDto" class="col-6 col-sm-3">
+  <div *ngFor="let businessPlan of businessPlanDto" class="col-6 col-sm-5">
     <nb-card class="shadow-lg">
       <nb-card-body>
         <h3 class="d-flex justify-content-between text-muted">
@@ -19,7 +19,8 @@
         </div>
 
         <div class="buttons-row mt-3 d-flex justify-content-center">
-          <button nbButton status="success" size="small" (click)="generatePresentation(businessPlan)" ghost class="px-4">
+          <button nbButton status="success" size="small" (click)="generatePresentation(businessPlan)" ghost
+            class="px-4">
             <nb-icon icon="eye-outline" pack="eva" class="me-2"></nb-icon>
             View presentation
           </button>
@@ -36,7 +37,7 @@
           <button nbButton size="tiny" status="success" (click)="openWithoutBackdrop(businessPlan)">
             <nb-icon icon="edit-outline"></nb-icon>
           </button>
-          <button nbButton size="tiny" status="danger">
+          <button nbButton size="tiny" status="danger" class="delete" (click)="openDeleteDialog(businessPlan.id)">
             <nb-icon icon="trash-2-outline"></nb-icon>
           </button>
         </div>
@@ -47,3 +48,15 @@
 
 <!-- Pagination -->
 <pagination-controls (pageChange)="page = $event"></pagination-controls>
+
+
+
+<!-- Modal -->
+<ng-template #deleteDialog let-ref>
+  <h5 class="mb-3">Warning!</h5>
+  <p>Are you sure to delete the item?</p>
+  <div class="d-flex justify-content-end gap-2">
+    <button nbButton status="basic" (click)="ref.close(false)">Close</button>
+    <button nbButton status="danger" (click)="ref.close(true)">Confirm Delete</button>
+  </div>
+</ng-template>
