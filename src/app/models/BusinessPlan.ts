@@ -35,4 +35,5 @@ export interface BusinessPlanDto {
   anticipatedProjectSize: number;
   currency: Currency;
   generatedPresentation?: string;
+  regeneratePresentation?: boolean;
 }

@@ -3,26 +3,38 @@
   <div *ngFor="let businessPlan of businessPlanDto" class="col-6 col-sm-3">
     <nb-card class="shadow-lg">
       <nb-card-body>
-        <h3 class="text-muted">{{ businessPlan.companyName }}</h3>
+        <h3 class="d-flex justify-content-between text-muted">
+          <span>{{ businessPlan.companyName }}</span>
+          <small>Start Date : <strong>{{ businessPlan.companyStartDate }}</strong></small>
+        </h3>
 
-        <p class="text-muted">{{ businessPlan.companyStartDate}}</p>
+        <h3 class="d-flex justify-content-between text-muted">
+          <p>Country : <strong>{{ businessPlan.country }}</strong></p>
+          <p>Languages : <strong>{{ businessPlan.languages }}</strong></p>
+        </h3>
 
-        <p class="text-muted">{{ businessPlan.country }}</p>
+        <div class="d-flex justify-content-start align-items-center text-muted">
+          <span>{{ businessPlan.anticipatedProjectSize }}</span>
+          <strong class="ms-1">{{ businessPlan.currency }}</strong>
+        </div>
 
-        <div class="buttons-row">
-          <button nbButton status="success" size="small" (click)="generatePresentation(businessPlan)" ghost>
+        <div class="buttons-row mt-3 d-flex justify-content-center">
+          <button nbButton status="success" size="small" (click)="generatePresentation(businessPlan)" ghost class="px-4">
+            <nb-icon icon="eye-outline" pack="eva" class="me-2"></nb-icon>
             View presentation
           </button>
         </div>
 
-
         <!-- Actions -->
-        <div class="mt-2 d-flex gap-2">
+        <div class="mt-2 d-flex gap-2 justify-content-end">
           <button nbButton size="tiny" status="info">
             <nb-icon icon="download-outline"></nb-icon>
           </button>
           <button nbButton size="tiny" status="primary">
             <nb-icon icon="share-outline"></nb-icon>
+          </button>
+          <button nbButton size="tiny" status="success" (click)="openWithoutBackdrop(businessPlan)">
+            <nb-icon icon="edit-outline"></nb-icon>
           </button>
           <button nbButton size="tiny" status="danger">
             <nb-icon icon="trash-2-outline"></nb-icon>

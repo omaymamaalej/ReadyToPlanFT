@@ -22,15 +22,14 @@ export class BusinessPlanService {
     return this.http.get<BusinessPlan>(`http://localhost:8080/api/business-plans/${id}`);
   }
 
-  update(payload: BusinessPlan) {
-    return this.http.put(`http://localhost:8080/api/business-plans/${payload.id}`, payload);
+
+  update(payload: BusinessPlan): Observable<BusinessPlan> {
+    return this.http.put<BusinessPlan>(`http://localhost:8080/api/business-plans/${payload.id}`, payload);
   }
 
-generateBusinessPlan(businessPlan: BusinessPlan): Observable<string> {
-  const copy = { ...businessPlan };
-  return this.http.post(`http://localhost:8080/api/business-plans/generate`, copy, { responseType: 'text' });
-}
-
-
+  generateBusinessPlan(businessPlan: BusinessPlan): Observable<string> {
+    const copy = { ...businessPlan };
+    return this.http.post(`http://localhost:8080/api/business-plans/generate`, copy, { responseType: 'text' });
+  }
 
 }

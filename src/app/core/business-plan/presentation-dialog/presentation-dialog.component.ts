@@ -16,6 +16,9 @@ export class PresentationDialogComponent implements OnInit {
   sections: string[] = [];
   currentSlideIndex: number = 0;
 
+  tableOfContentsTitle: string = '';
+
+
   ngOnInit() {
     this.parsePresentation(this.presentationContent);
   }
@@ -30,12 +33,15 @@ export class PresentationDialogComponent implements OnInit {
     console.log("Nombre de slides détectées :", parts.length);
     console.log("Contenu brut des slides :", parts);
 
+    const isEnglish = content.toLowerCase().includes('table of contents');
+    this.tableOfContentsTitle = isEnglish ? 'Table of contents' : 'Table des matières';
+
     const tocText = parts[0];
 
     const tocLines = tocText.split('\n')
       .filter(line => /^\d+\.\s+/.test(line))
       .map(line => {
-        const title = line.replace(/^\d+\.\s+/, '').replace(/\*\*/g, '').trim(); 
+        const title = line.replace(/^\d+\.\s+/, '').replace(/\*\*/g, '').trim();
         return title;
       });
 
@@ -43,7 +49,8 @@ export class PresentationDialogComponent implements OnInit {
 
     const tocSlideContent = tocLines.map((title, i) => `${i + 1}. ${title}`).join('\n');
 
-    const slideContent = parts[1];
+    // const slideContent = parts[1];
+    const slideContent = parts.length > 1 ? parts[1] : '';
     const regex = /\*\*\d+\.\s+[^\n]+\*\*/g;
 
     const matches = slideContent.match(regex);
@@ -80,39 +87,35 @@ export class PresentationDialogComponent implements OnInit {
   }
 
   getTitle(index: number): string {
-  if (index === 0) return '';
-  return this.tableOfContents[index - 1]?.title || '';
-}
-
-getSlideContent(index: number, isTableOfContents: boolean = false): string {
-  const text = this.sections[index] || '';
-
-  if (isTableOfContents) {
-    return text
-      .split('\n')
-      .map(line => line.trim())
-      .filter(line => line.length > 0)
-      .join('<br>');
+    if (index === 0) return '';
+    return this.tableOfContents[index - 1]?.title || '';
   }
 
-  const lines = text.split('\n');
-  const bodyLines = lines.slice(1).join('\n');
+  getSlideContent(index: number, isTableOfContents: boolean = false): string {
+    const text = this.sections[index] || '';
 
-  const formattedBody = bodyLines
-    .replace(/^\*\s*$/gm, '')
-    .replace(/\*\s*$/gm, '')
-    .replace(/(^|\s)\*(?=\s|$)/g, '')
-    .replace(/\*\*(.+?)\*\*/g, (_, subtitle) => {
-      const clean = subtitle.trim().replace(/:$/, '');
-      return `<br><strong>${clean} :</strong>`;
-    })
-    .replace(/\. /g, '.<br>');
+    if (isTableOfContents) {
+      return text
+        .split('\n')
+        .map(line => line.trim())
+        .filter(line => line.length > 0)
+        .join('<br>');
+    }
 
-  return formattedBody.trim();
-}
+    const lines = text.split('\n');
+    const bodyLines = lines.slice(1).join('\n');
 
+    const formattedBody = bodyLines
+      .replace(/^\*\s*$/gm, '')
+      .replace(/\*\s*$/gm, '')
+      .replace(/(^|\s)\*(?=\s|$)/g, '')
+      .replace(/\*\*(.+?)\*\*/g, (_, subtitle) => {
+        const clean = subtitle.trim().replace(/:$/, '');
+        return `<br><strong>${clean} :</strong>`;
+      })
+      .replace(/\. /g, '.<br>');
 
-
-
+    return formattedBody.trim();
+  }
 
 }

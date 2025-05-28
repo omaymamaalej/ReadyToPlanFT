@@ -1,0 +1,33 @@
+.nb-theme-default nb-card-body {
+  display: block;
+}
+
+.nb-theme-default nb-card-body button {
+  width: 100%;
+  margin-bottom: 2rem;
+  display: block;
+}
+
+.nb-theme-default nb-card-body button:last-child {
+  margin-bottom: 0;
+}
+
+.nb-theme-default .result-from-dialog {
+  flex-direction: column;
+}
+
+.nb-theme-default .form-input-card nb-card-body {
+  display: block;
+}
+
+@media (max-width: 1199.98px) {
+  .nb-theme-default nb-card-body button {
+    padding: 0.8rem;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .nb-theme-default nb-card-body button {
+    padding: 0.75rem;
+  }
+}

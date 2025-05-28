@@ -26,16 +26,16 @@ export class AddBusinessPlanComponent implements OnInit {
   constructor(private builder: FormBuilder,
     private businessPlanService: BusinessPlanService,
     private router: Router,
-    private fb: FormBuilder,) {
+    private fb: FormBuilder) {
 
       this.businessPlanForm = this.fb.group({
       companyName: ['', Validators.required],
       companyStartDate: [null, Validators.required],
       country: [null, Validators.required],
-      languages: [Languages.ENGLISH, Validators.required],
+      languages: [null, Validators.required],
       companyDescription: [''],
       anticipatedProjectSize: [0, [Validators.required, Validators.min(0)]],
-      currency: [Currency.EUR, Validators.required],
+      currency: [null, Validators.required],
     });
   }
 

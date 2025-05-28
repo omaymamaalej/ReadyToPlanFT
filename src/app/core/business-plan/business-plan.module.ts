@@ -12,13 +12,15 @@ import { ListBusinessPlanComponent } from './list-business-plan/list-business-pl
 import { NgxPaginationModule } from 'ngx-pagination';
 import { PresentationDialogComponent } from './presentation-dialog/presentation-dialog.component';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { UpdateBusinessPlanComponent } from './update-business-plan/update-business-plan.component';
 
 
 @NgModule({
   declarations: [
     AddBusinessPlanComponent,
     ListBusinessPlanComponent,
-    PresentationDialogComponent
+    PresentationDialogComponent,
+    UpdateBusinessPlanComponent
   ],
   imports: [
     CommonModule,
@@ -57,7 +59,8 @@ import { SharedModule } from 'src/app/shared/shared.module';
   ],
   exports: [
     AddBusinessPlanComponent,
-    ListBusinessPlanComponent
+    ListBusinessPlanComponent,
+    UpdateBusinessPlanComponent
   ],
   entryComponents: [PresentationDialogComponent]
 

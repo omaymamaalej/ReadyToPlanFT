@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { NbDialogService } from '@nebular/theme';
 import * as dayjs from 'dayjs';
 import { Country } from 'src/app/enumerations/country.enum';
@@ -7,6 +7,7 @@ import { Languages } from 'src/app/enumerations/languages.enum';
 import { BusinessPlan, BusinessPlanDto } from 'src/app/models/BusinessPlan';
 import { PresentationDialogComponent } from 'src/app/core/business-plan/presentation-dialog/presentation-dialog.component';
 import { BusinessPlanService } from 'src/app/services/business-plan.service';
+import { UpdateBusinessPlanComponent } from '../update-business-plan/update-business-plan.component';
 
 @Component({
   selector: 'app-list-business-plan',
@@ -26,14 +27,26 @@ export class ListBusinessPlanComponent implements OnInit {
     private dialogService: NbDialogService
   ) { }
 
+  // ngOnInit(): void {
+  //   this.businessPlansService.get().subscribe((data: BusinessPlanDto[]) => {
+  //     this.businessPlans = data;
+  //     this.businessPlanDto = this.inintbusinessPlanDto(this.businessPlans);
+
+  //     console.log(this.businessPlans);
+  //   });
+  // }
+
   ngOnInit(): void {
+    this.loadBusinessPlans();
+  }
+
+  loadBusinessPlans(): void {
     this.businessPlansService.get().subscribe((data: BusinessPlanDto[]) => {
       this.businessPlans = data;
       this.businessPlanDto = this.inintbusinessPlanDto(this.businessPlans);
-
-      console.log(this.businessPlans);
     });
   }
+
 
   inintbusinessPlanDto(businessPlans: BusinessPlan[]): BusinessPlanDto[] {
     let tempBusinessPlanDto: BusinessPlanDto[] = [];
@@ -68,7 +81,7 @@ generatePresentation(businessPlan: BusinessPlanDto): void {
           businessPlanName: businessPlan.companyName,
           presentationContent: presentation,
         },
-        closeOnBackdropClick: true, // optionnel : fermer en cliquant dehors
+        closeOnBackdropClick: true, 
         closeOnEsc: true,
       });
     },
@@ -78,11 +91,26 @@ generatePresentation(businessPlan: BusinessPlanDto): void {
   });
 }
 
-
 closePresentation(): void {
   this.selectedPresentation = undefined;
   this.selectedBusinessPlanName = undefined;
 }
+
+openWithoutBackdrop(businessPlan: any) {
+  const dialogRef = this.dialogService.open(UpdateBusinessPlanComponent, {
+    context: {
+      businessPlan: businessPlan
+    },
+    hasBackdrop: false // si tu veux garder le no backdrop
+  });
+
+  dialogRef.onClose.subscribe((result) => {
+    if (result === true) {
+      this.loadBusinessPlans(); 
+    }
+  });
+}
+
 
   currentPage = 1;
   totalPages = 1; 

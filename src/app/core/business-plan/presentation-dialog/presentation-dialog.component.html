@@ -2,7 +2,7 @@
   <div class="table-of-contents">
     <h3>Slides</h3>
     <ul>
-      <li (click)="goToSlide(0)">Table de matière</li>
+      <li (click)="goToSlide(0)">{{ tableOfContentsTitle }}</li>
       <li *ngFor="let section of tableOfContents" [class.active]="section.index === currentSlideIndex"
         (click)="goToSlide(section.index)">
         {{ section.title }}
