@@ -14,3 +14,24 @@ img {
 button[nbButton] {
   margin: 0.5rem;
 }
+
+
+.blur-and-disable {
+  filter: blur(5px);
+  pointer-events: none; 
+  user-select: none; 
+  transition: filter 0.3s ease;
+}
+
+
+.actions-column {
+  display: flex;
+  flex-direction: column;
+  gap: none;
+}
+
+.actions-column button {
+  margin-bottom: 2px; 
+}
+
+

@@ -118,7 +118,7 @@ export class UpdateBusinessPlanComponent implements OnInit {
 
     this.businessPlanService.update(updatedPlan).subscribe({
       next: (updated) => {
-        this.dialogRef.close(true); // Indique que la mise à jour a eu lieu
+        this.dialogRef.close(true); 
       },
       error: (err) => {
         console.error('Error during regeneration:', err);
@@ -136,5 +136,11 @@ export class UpdateBusinessPlanComponent implements OnInit {
         hasBackdrop: false,
       });
   }
+
+  onClose() {
+    this.dialogRef.close();
+  }
+
+
 
 }

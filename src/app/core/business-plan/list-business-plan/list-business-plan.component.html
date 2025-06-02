@@ -1,53 +1,55 @@
-<!-- Liste des Business Plans -->
-<div class="row">
-  <div *ngFor="let businessPlan of businessPlanDto" class="col-6 col-sm-5">
-    <nb-card class="shadow-lg">
-      <nb-card-body>
-        <h3 class="d-flex justify-content-between text-muted">
-          <span>{{ businessPlan.companyName }}</span>
-          <small>Start Date : <strong>{{ businessPlan.companyStartDate }}</strong></small>
-        </h3>
+<nb-card [class.blur-and-disable]="isDialogOpen">
+  <nb-card-header>
+    Liste des Business Plans
+  </nb-card-header>
+  <nb-card-body>
+    <table class="table nb-theme">
+      <thead>
+        <tr>
+          <th>Company Name</th>
+          <th>Company Start Date</th>
+          <th>Country</th>
+          <th>Languages</th>
+          <th>Anticipated Project Size</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let businessPlan of businessPlanDto">
+          <td>{{ businessPlan.companyName }}</td>
+          <td>{{ businessPlan.companyStartDate }}</td>
+          <td>{{ businessPlan.country }}</td>
+          <td>{{ businessPlan.languages }}</td>
+          <td>{{ businessPlan.anticipatedProjectSize }} {{ businessPlan.currency }}</td>
+          <td class="d-flex">
+            <div class="actions-column">
+              <button nbButton size="tiny" status="primary" ghost (click)="openWithoutBackdrop(businessPlan)">
+                <nb-icon icon="edit-outline"></nb-icon>
+              </button>
+              <button nbButton status="success" size="tiny" (click)="generatePresentation(businessPlan)" ghost>
+                <nb-icon icon="eye-outline" pack="eva"></nb-icon>
+              </button>     
+            </div>
 
-        <h3 class="d-flex justify-content-between text-muted">
-          <p>Country : <strong>{{ businessPlan.country }}</strong></p>
-          <p>Languages : <strong>{{ businessPlan.languages }}</strong></p>
-        </h3>
+            <div class="actions-column">
+              <button nbButton size="tiny" status="danger" ghost (click)="openDeleteDialog(businessPlan.id)">
+                <nb-icon icon="trash-2-outline"></nb-icon>
+              </button>
+              <button nbButton size="tiny" status="info" ghost>
+                <nb-icon icon="download-outline"></nb-icon>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </nb-card-body>
 
-        <div class="d-flex justify-content-start align-items-center text-muted">
-          <span>{{ businessPlan.anticipatedProjectSize }}</span>
-          <strong class="ms-1">{{ businessPlan.currency }}</strong>
-        </div>
+  <pagination-controls (pageChange)="page = $event"></pagination-controls>
+</nb-card>
 
-        <div class="buttons-row mt-3 d-flex justify-content-center">
-          <button nbButton status="success" size="small" (click)="generatePresentation(businessPlan)" ghost
-            class="px-4">
-            <nb-icon icon="eye-outline" pack="eva" class="me-2"></nb-icon>
-            View presentation
-          </button>
-        </div>
 
-        <!-- Actions -->
-        <div class="mt-2 d-flex gap-2 justify-content-end">
-          <button nbButton size="tiny" status="info">
-            <nb-icon icon="download-outline"></nb-icon>
-          </button>
-          <button nbButton size="tiny" status="primary">
-            <nb-icon icon="share-outline"></nb-icon>
-          </button>
-          <button nbButton size="tiny" status="success" (click)="openWithoutBackdrop(businessPlan)">
-            <nb-icon icon="edit-outline"></nb-icon>
-          </button>
-          <button nbButton size="tiny" status="danger" class="delete" (click)="openDeleteDialog(businessPlan.id)">
-            <nb-icon icon="trash-2-outline"></nb-icon>
-          </button>
-        </div>
-      </nb-card-body>
-    </nb-card>
-  </div>
-</div>
-
-<!-- Pagination -->
-<pagination-controls (pageChange)="page = $event"></pagination-controls>
+<!--  -->
 
 
 
@@ -64,4 +66,3 @@
     </nb-card-footer>
   </nb-card>
 </ng-template>
-

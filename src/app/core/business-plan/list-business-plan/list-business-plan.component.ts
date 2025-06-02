@@ -21,6 +21,7 @@ export class ListBusinessPlanComponent implements OnInit {
   // @ViewChild('deleteDialog') deleteDialog!: TemplateRef<any>;
   @ViewChild('deleteDialog', { static: true }) deleteDialog!: TemplateRef<any>;
 
+  isDialogOpen = false;
 
 
   idTodelete: string = '';
@@ -95,6 +96,7 @@ export class ListBusinessPlanComponent implements OnInit {
   }
 
   openWithoutBackdrop(businessPlan: any) {
+    this.isDialogOpen = true;
     const dialogRef = this.dialogService.open(UpdateBusinessPlanComponent, {
       context: {
         businessPlan: businessPlan
@@ -104,10 +106,12 @@ export class ListBusinessPlanComponent implements OnInit {
 
     dialogRef.onClose.subscribe((result) => {
       if (result === true) {
+        this.isDialogOpen = false;
         this.loadBusinessPlans();
       }
     });
   }
+
 
 
   openDeleteDialog(id: string) {

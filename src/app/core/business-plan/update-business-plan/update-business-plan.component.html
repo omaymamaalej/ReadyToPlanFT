@@ -1,27 +1,31 @@
 <nb-card class="dialog-card">
-    <nb-card-header>{{ title }}</nb-card-header>
+    <nb-card-header class="header-with-close">
+        {{ title }}
+        <button nbButton status="danger" size="tiny" class="close-btn" (click)="onClose()">
+            <nb-icon icon="close-outline"></nb-icon>
+        </button>
+    </nb-card-header>
+
     <nb-card-body class="dialog-body">
         <form [formGroup]="formGroup">
 
             <div class="row">
-
                 <div class="col-sm-6">
                     <div class="form-group">
-                        <label for="inputCompanyName" class="label">Company Name :</label>
-                        <input formControlName="companyName" type="text" nbInput placeholder="Company Name" fullWidth />
+                    <label for="inputCompanyName" class="label">Company Name :</label>
+                    <input formControlName="companyName" type="text" nbInput placeholder="Company Name" style="width: 100%;" />
                     </div>
                 </div>
 
                 <div class="col-sm-6">
                     <div class="form-group">
-                        <label for="companyStartDate" class="label">Company Start Date :</label>
-                        <input nbInput formControlName="companyStartDate" placeholder="Select Date"
-                            [nbDatepicker]="picker" readonly />
-                        <nb-datepicker #picker></nb-datepicker>
+                    <label for="companyStartDate" class="label">Company Start Date :</label>
+                    <input nbInput formControlName="companyStartDate" placeholder="Select Date" [nbDatepicker]="picker" readonly style="width: 100%;" />
+                    <nb-datepicker #picker></nb-datepicker>
                     </div>
                 </div>
-
             </div>
+
             <div class="row">
 
                 <div class="col-sm-12 col-md-6">
@@ -43,10 +47,12 @@
                 </div>
             </div>
 
-            <div class="form-group">
-                <label for="companyDescription" class="label">Company Description :</label>
-                <textarea formControlName="companyDescription" rows="5" nbInput fullWidth shape="round"
-                    placeholder="Company Description"></textarea>
+            <div class="row">
+                <div class="form-group">
+                    <label for="companyDescription" class="label">Company Description :</label>
+                    <textarea formControlName="companyDescription" rows="5" nbInput fullWidth shape="round"
+                        placeholder="Company Description"></textarea>
+                </div>
             </div>
 
             <div class="row">
@@ -73,14 +79,15 @@
 
         </form>
     </nb-card-body>
-    <nb-card-footer class="d-flex justify-content-end">
+    <nb-card-footer class="d-flex justify-content-end" style="gap: 1rem;">
 
         <button nbButton status="primary" (click)="regeneratePresentation()">
-            Regenerate Presentation
+            <nb-icon icon="refresh-outline"></nb-icon> Regenerate Presentation
         </button>
 
-        <button nbButton status="success" class="ml-2" (click)="onUpdate()">
-            Update
+        <button nbButton status="success" class="ml-3" (click)="onUpdate()">
+            <nb-icon icon="checkmark-outline"></nb-icon> Update
         </button>
+
     </nb-card-footer>
 </nb-card>
