@@ -33,7 +33,7 @@ export class BusinessPlanService {
   }
 
   delete(id: string) {
-    return this.http.delete<BusinessPlan>(`http://localhost:8080/api/products/${id}`);
+    return this.http.delete<BusinessPlan>(`http://localhost:8080/api/business-plans/${id}`);
   }
 
 }

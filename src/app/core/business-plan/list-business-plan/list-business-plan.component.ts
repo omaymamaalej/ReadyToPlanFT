@@ -18,7 +18,10 @@ export class ListBusinessPlanComponent implements OnInit {
   businessPlans: BusinessPlan[] = [];
   businessPlanDto: BusinessPlanDto[] = [];
 
-  @ViewChild('deleteDialog') deleteDialog!: TemplateRef<any>;
+  // @ViewChild('deleteDialog') deleteDialog!: TemplateRef<any>;
+  @ViewChild('deleteDialog', { static: true }) deleteDialog!: TemplateRef<any>;
+
+
 
   idTodelete: string = '';
 
@@ -96,7 +99,7 @@ export class ListBusinessPlanComponent implements OnInit {
       context: {
         businessPlan: businessPlan
       },
-      hasBackdrop: false // si tu veux garder le no backdrop
+      hasBackdrop: false 
     });
 
     dialogRef.onClose.subscribe((result) => {
@@ -106,12 +109,14 @@ export class ListBusinessPlanComponent implements OnInit {
     });
   }
 
+
   openDeleteDialog(id: string) {
     this.idTodelete = id;
+    const dialogRef = this.dialogService.open(this.deleteDialog, {
+      context: { id }
+    });
 
-    const ref = this.dialogService.open(this.deleteDialog, {
-      context: {} // tu peux mettre un contexte vide
-    }).onClose.subscribe((confirmed: boolean) => {
+    dialogRef.onClose.subscribe((confirmed: boolean) => {
       if (confirmed) {
         this.delete();
       }
@@ -119,8 +124,8 @@ export class ListBusinessPlanComponent implements OnInit {
   }
 
 
-
   delete() {
+    console.log('Suppression de :', this.idTodelete);
     this.businessPlansService.delete(this.idTodelete).subscribe({
       next: () => {
         this.businessPlans = this.businessPlans.filter(bp => bp.id !== this.idTodelete);

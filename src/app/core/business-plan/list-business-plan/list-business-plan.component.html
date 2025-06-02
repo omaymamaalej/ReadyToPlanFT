@@ -51,12 +51,17 @@
 
 
 
-<!-- Modal -->
-<ng-template #deleteDialog let-ref>
-  <h5 class="mb-3">Warning!</h5>
-  <p>Are you sure to delete the item?</p>
-  <div class="d-flex justify-content-end gap-2">
-    <button nbButton status="basic" (click)="ref.close(false)">Close</button>
-    <button nbButton status="danger" (click)="ref.close(true)">Confirm Delete</button>
-  </div>
+<!-- Template de confirmation -->
+<ng-template #deleteDialog let-id="id" let-dialogRef="dialogRef">
+  <nb-card>
+    <nb-card-header class="text-danger">⚠️ Confirmation</nb-card-header>
+    <nb-card-body>
+      Êtes-vous sûr de vouloir supprimer cet élément ?
+    </nb-card-body>
+    <nb-card-footer class="d-flex justify-content-end gap-2">
+      <button nbButton status="basic" (click)="dialogRef.close(false)">Annuler</button>
+      <button nbButton status="danger" (click)="dialogRef.close(true)">Supprimer</button>
+    </nb-card-footer>
+  </nb-card>
 </ng-template>
+
