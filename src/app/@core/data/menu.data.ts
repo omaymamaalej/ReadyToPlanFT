@@ -26,10 +26,20 @@ export const MENU_ITEMS: NbMenuItem[] = [
       },
     ],
   },
+  
   {
     title: 'Strategic Planning',
-    icon: 'pie-chart-outline', // Icône qui représente bien l’analyse/stratégie
-    link: '/strategic-planning', // Le lien vers ton composant
+    icon: 'pie-chart-outline',
+    children: [
+      {
+        title: 'Add Strategy',
+        link: '/strategic-planning/',
+      },
+      {
+        title: 'All Strategies',
+        link: '/strategic-planning/list',
+      },
+    ],
   },
   {
     title: 'Personal Information',

@@ -1,0 +1,58 @@
+<!-- Affichage du bouton d’ajout uniquement si la liste est visible -->
+<div *ngIf="!showForm">
+  <button nbButton status="success" (click)=" openAddProductDialog()">Ajouter un produit</button>
+
+  <!-- Tableau des produits -->
+  <table class="table mt-3">
+    <thead>
+      <tr>
+        <th>Nom</th>
+        <th>Description</th>
+        <th>Prix unitaire</th>
+        <th>Ventes mensuelles</th>
+        <th>Durée (mois)</th>
+        <th>Revenu estimé</th>
+          <th>Réponse AI</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let product of products">
+        <td>{{ product.nameProductOrService }}</td>
+        <td>{{ product.productDescription }}</td>
+        <td>{{ product.unitPrice }} €</td>
+        <td>{{ product.estimatedMonthlySales }}</td>
+        <td>{{ product.durationInMonths }}</td>
+         
+        <td>
+          {{
+            (product.unitPrice || 0) *
+            (product.estimatedMonthlySales || 0) *
+            (product.durationInMonths || 0) | number:'1.0-0'
+          }} €
+        </td>
+         <td>
+        <button nbButton size="tiny" status="info"
+                (click)="showAIResponseDialog(aiResponsesMap[product.id!])"
+                [disabled]="!aiResponsesMap[product.id!]">
+          Afficher IA
+        </button>
+      </td>
+        <td>
+         <button nbButton size="tiny" status="info" (click)="editProduct(product)">Modifier</button>
+
+       <button nbButton size="tiny" status="danger" (click)="product.id && deleteProduct(product.id)">Supprimer</button>
+
+
+        </td>
+      </tr>
+       
+    </tbody>
+  </table>
+</div>
+
+<!-- Formulaire d’ajout -->
+<app-product-sales
+  *ngIf="showForm"
+  (formSubmitted)="onFormSubmitted($event)">
+</app-product-sales>

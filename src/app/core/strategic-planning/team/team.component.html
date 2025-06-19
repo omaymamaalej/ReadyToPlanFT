@@ -1,0 +1,56 @@
+
+<nb-card>
+  <nb-card-header>
+    <div class="header">
+      <h3>Liste des membres de l'équipe</h3>
+      <button nbButton status="success" (click)="openAddMemberDialog()">+ Ajouter un membre</button>
+    </div>
+  </nb-card-header>
+
+  <nb-card-body *ngIf="teamMembers.length > 0; else noMembers">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Nom</th>
+          <th>Rôle</th>
+          <th>Compétence</th>
+          <th>Email</th>
+          <th>Salaire</th>
+          <th>Réponse IA</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let member of teamMembers">
+          <td>{{ member.name }}</td>
+          <td>{{ member.role }}</td>
+          <td>{{ member.competance }}</td>
+           <td>{{ member.email }}</td>
+             
+          <td>
+  {{ member.salaire }} {{ getCurrencySymbol(member.currency) }}
+</td>
+ <td>
+ 
+  <button nbButton size="tiny" *ngIf="member.id" (click)="showAIResponse(member.id)">Voir</button>
+
+  </td>
+          <td>
+            <button nbButton size="tiny" status="info" (click)="editMember(member)">Modifier</button>
+<button 
+  nbButton size="small" status="danger" 
+  (click)="member.id ? deleteMember(member.id) : null"
+  [disabled]="!member.id">
+  Supprimer
+</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </nb-card-body>
+
+  <ng-template #noMembers>
+    <nb-card-body>
+      <p>Aucun membre trouvé.</p>
+    </nb-card-body>
+  </ng-template>
+</nb-card>

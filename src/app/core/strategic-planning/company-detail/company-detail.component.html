@@ -1,0 +1,104 @@
+<!-- Affichage des détails sous forme de tableau -->
+<div *ngIf="!isEditing && selectedCompany">
+  <nb-card>
+    <nb-card-header>Détails de l’entreprise</nb-card-header>
+    <nb-card-body>
+      <table class="table">
+        <tbody>
+          <tr>
+            <th>Nom de l’entreprise</th>
+            <td>{{ selectedCompany.enterpriseName }}</td>
+          </tr>
+          <tr>
+            <th>Numéro de téléphone</th>
+            <td>{{ selectedCompany.phoneNumber }}</td>
+          </tr>
+          <tr>
+            <th>Pays</th>
+            <td>{{ selectedCompany.country }}</td>
+          </tr>
+          <tr>
+            <th>Description</th>
+            <td>{{ selectedCompany.description }}</td>
+          </tr>
+          <tr>
+            <th>Montant</th>
+            <td>{{ selectedCompany.amount }} {{ selectedCompany.currency }}</td>
+          </tr>
+        </tbody>
+        <div *ngIf="aiResponse">
+  <h3>Suggestion IA</h3>
+  <p>{{ aiResponse }}</p>
+</div>
+      </table>
+
+      <button nbButton status="info" (click)="edit()">Modifier</button>
+
+
+    </nb-card-body>
+  </nb-card>
+</div>
+
+<!-- Formulaire d’édition -->
+<div *ngIf="isEditing">
+  <nb-card>
+    <nb-card-header>Modifier l’entreprise</nb-card-header>
+    <nb-card-body>
+      <form [formGroup]="companyForm">
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label>Nom de l’entreprise</label>
+            <input nbInput formControlName="enterpriseName" placeholder="Nom" fullWidth />
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label>Numéro de téléphone</label>
+            <input nbInput formControlName="phoneNumber" type="tel" placeholder="+216..." fullWidth />
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label>Pays</label>
+            <nb-select formControlName="country">
+              <nb-option *ngFor="let c of countries" [value]="c[0]">{{ c[1] }}</nb-option>
+            </nb-select>
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label>Devise</label>
+            <nb-select formControlName="currency">
+              <nb-option *ngFor="let cur of currencies" [value]="cur[0]">{{ cur[1] }}</nb-option>
+            </nb-select>
+          </div>
+
+          <div class="col-12 mb-3">
+            <label>Description</label>
+            <textarea nbInput formControlName="description" rows="3" placeholder="Description..." fullWidth></textarea>
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label>Montant</label>
+            <input nbInput formControlName="amount" type="number" placeholder="0.00" fullWidth />
+          </div>
+        
+        </div>
+    <div class="col-12 mb-3">
+  <button nbButton status="info" (click)="openBusinessPlan()">Voir Business Plan Final</button>
+</div>
+
+        <button nbButton status="success" (click)="update()">Enregistrer</button>
+      </form>
+    </nb-card-body>
+  </nb-card>
+ 
+</div>
+<ng-template #businessPlanDialog let-content="content">
+  <nb-card>
+    <nb-card-header>
+      Business Plan Final
+      <button nbButton ghost status="danger" size="tiny" (click)="dialogRef?.close()">Fermer</button>
+    </nb-card-header>
+    <nb-card-body style="max-height: 500px; overflow-y: auto; white-space: pre-wrap;">
+      {{ content }}
+    </nb-card-body>
+  </nb-card>
+</ng-template>

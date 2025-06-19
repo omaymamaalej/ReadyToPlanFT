@@ -1,0 +1,43 @@
+<nb-card>
+  <nb-card-header>
+    {{ memberToEdit ? 'Modifier le membre' : 'Ajouter un membre' }}
+  </nb-card-header>
+
+  <nb-card-body [formGroup]="memberForm">
+    <label>Nom</label>
+    <input nbInput placeholder="Nom" formControlName="name" fullWidth />
+    <br /><br />
+
+    <label>Rôle</label>
+    <nb-select formControlName="role" placeholder="Choisir un rôle">
+      <nb-option *ngFor="let role of roles" [value]="role">{{ role }}</nb-option>
+    </nb-select>
+    <br /><br />
+
+    <label>Compétence</label>
+    <textarea nbInput placeholder="Compétences" formControlName="competance" fullWidth></textarea>
+  <div class="row">
+  <div class="col-md-6 mb-3">
+    <label>Email:</label>
+    <input nbInput fullWidth formControlName="email" type="email" />
+  </div>
+
+  <div class="col-md-6 mb-3">
+    <label>Salaire:</label>
+    <input nbInput fullWidth formControlName="salaire" type="number" min="0" />
+  </div>
+</div>
+
+<div class="col-md-6 mb-3">
+  <label>Devise:</label>
+  <nb-select fullWidth formControlName="currency">
+    <nb-option *ngFor="let c of currencies" [value]="c">{{ c }}</nb-option>
+  </nb-select>
+</div>
+  </nb-card-body>
+
+  <nb-card-footer>
+    <button nbButton status="primary" (click)="submit()">Enregistrer</button>
+    <button nbButton status="danger" (click)="cancel()">Annuler</button>
+  </nb-card-footer>
+</nb-card>

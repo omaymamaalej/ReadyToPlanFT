@@ -11,6 +11,8 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { LayoutModule } from '../layout/layout.module';
 import { StrategicPlanningComponent } from './strategic-planning/strategic-planning/strategic-planning.component';
 import { StrategicPlanningModule } from './strategic-planning/strategic-planning.module';
+import { AppRoutingModule } from '../app-routing.module';
+import { BrowserModule } from '@angular/platform-browser';
 
 
 @NgModule({
@@ -18,6 +20,8 @@ import { StrategicPlanningModule } from './strategic-planning/strategic-planning
     DashboardComponent,
   ],
   imports: [
+     BrowserModule,
+    AppRoutingModule,
     CommonModule,
     CoreRoutingModule,
     BusinessPlanModule,
@@ -25,9 +29,6 @@ import { StrategicPlanningModule } from './strategic-planning/strategic-planning
     NbLayoutModule,
     LayoutModule,
     NbDatepickerModule,
-
-
-
     NbSidebarModule,
     BrowserAnimationsModule,
     NbMenuModule,
@@ -45,7 +46,9 @@ import { StrategicPlanningModule } from './strategic-planning/strategic-planning
     NbContextMenuModule,
     NbSearchModule,
     NbUserModule,
-    NbEvaIconsModule
+    NbEvaIconsModule,
+    StrategicPlanningModule,
+   
   ],
   exports: [
     DashboardComponent
