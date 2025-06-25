@@ -26,7 +26,7 @@
               <button nbButton size="tiny" status="primary" ghost (click)="openWithoutBackdrop(businessPlan)">
                 <nb-icon icon="edit-outline"></nb-icon>
               </button>
-              <button nbButton status="success" size="tiny" (click)="generatePresentation(businessPlan)" ghost>
+              <button nbButton status="success" size="tiny" (click)="openPresentationOptions(businessPlan)" ghost>
                 <nb-icon icon="eye-outline" pack="eva"></nb-icon>
               </button>     
             </div>
@@ -35,9 +35,11 @@
               <button nbButton size="tiny" status="danger" ghost (click)="openDeleteDialog(businessPlan.id)">
                 <nb-icon icon="trash-2-outline"></nb-icon>
               </button>
-              <button nbButton size="tiny" status="info" ghost>
+              
+              <button nbButton size="tiny" status="info" ghost (click)="openDownloadOptions(businessPlan)">
                 <nb-icon icon="download-outline"></nb-icon>
               </button>
+
             </div>
           </td>
         </tr>
@@ -48,10 +50,58 @@
   <pagination-controls (pageChange)="page = $event"></pagination-controls>
 </nb-card>
 
+<!-- Template de confirmation de suppression -->
+<ng-template #deleteDialog let-id="id" let-dialogRef="dialogRef">
+  <nb-card>
+    <nb-card-header class="text-danger">⚠️ Confirmation</nb-card-header>
+    <nb-card-body>
+      Êtes-vous sûr de vouloir supprimer cet élément ?
+    </nb-card-body>
+    <nb-card-footer class="d-flex justify-content-end gap-2">
+      <button nbButton status="basic" (click)="dialogRef.close(false)">Annuler</button>
+      <button nbButton status="danger" (click)="dialogRef.close(true)">Supprimer</button>
+    </nb-card-footer>
+  </nb-card>
+</ng-template>
 
-<!--  -->
+<!-- Template des options de présentation -->
+<ng-template #presentationOptionsDialog let-ref="dialogRef">
+  <nb-card>
+    <nb-card-header>Options de présentation pour {{ currentBusinessPlanForPresentation?.companyName }}</nb-card-header>
+    <nb-card-body>
+      <p>Choisissez comment afficher la présentation :</p>
+    </nb-card-body>
+    <nb-card-footer class="d-flex justify-content-between">
+      <button nbButton status="primary" (click)="handlePresentationChoice('generated'); ref.close()">
+        <nb-icon icon="file-text-outline"></nb-icon> Version originale
+      </button>
+      <button nbButton status="success" (click)="handlePresentationChoice('edited'); ref.close()">
+        <nb-icon icon="edit-outline"></nb-icon> Version modifiée
+      </button>
+      <button nbButton status="warning" (click)="handlePresentationChoice('regenerate'); ref.close()">
+        <nb-icon icon="refresh-outline"></nb-icon> Régénérer
+      </button>
+    </nb-card-footer>
+  </nb-card>
+</ng-template>
 
-
+<!-- Template des options de téléchargement -->
+<ng-template #downloadOptionsDialog let-ref="dialogRef">
+  <nb-card>
+    <nb-card-header>Télécharger {{ currentBusinessPlanForDownload?.companyName }}</nb-card-header>
+    <nb-card-body>
+      <p>Choisissez le format de téléchargement :</p>
+    </nb-card-body>
+    <nb-card-footer class="d-flex justify-content-between">
+      <button nbButton status="danger" (click)="handleDownloadChoice('pdf'); ref.close()">
+        <nb-icon icon="file-text-outline"></nb-icon> Télécharger en PDF
+      </button>
+      <button nbButton status="info" (click)="handleDownloadChoice('powerpoint'); ref.close()">
+        <nb-icon icon="file-outline"></nb-icon> Télécharger en PowerPoint
+      </button>
+    </nb-card-footer>
+  </nb-card>
+</ng-template>
 
 <!-- Template de confirmation -->
 <ng-template #deleteDialog let-id="id" let-dialogRef="dialogRef">

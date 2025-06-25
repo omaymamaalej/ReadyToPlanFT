@@ -8,6 +8,8 @@ import { BusinessPlan, BusinessPlanDto } from 'src/app/models/BusinessPlan';
 import { PresentationDialogComponent } from 'src/app/core/business-plan/presentation-dialog/presentation-dialog.component';
 import { BusinessPlanService } from 'src/app/services/business-plan.service';
 import { UpdateBusinessPlanComponent } from '../update-business-plan/update-business-plan.component';
+import { Slide } from 'src/app/models/Slide';
+import { DownloadHelper } from 'src/app/_helpers/download.helper';
 
 @Component({
   selector: 'app-list-business-plan',
@@ -18,17 +20,18 @@ export class ListBusinessPlanComponent implements OnInit {
   businessPlans: BusinessPlan[] = [];
   businessPlanDto: BusinessPlanDto[] = [];
 
-  // @ViewChild('deleteDialog') deleteDialog!: TemplateRef<any>;
   @ViewChild('deleteDialog', { static: true }) deleteDialog!: TemplateRef<any>;
+  @ViewChild('presentationOptionsDialog', { static: true }) presentationOptionsDialog!: TemplateRef<any>;
+
+  @ViewChild('downloadOptionsDialog', { static: true }) downloadOptionsDialog!: TemplateRef<any>;
+  currentBusinessPlanForDownload?: BusinessPlanDto;
 
   isDialogOpen = false;
-
-
   idTodelete: string = '';
-
   selectedPresentation?: string;
   selectedBusinessPlanName?: string;
   selectedBusinessPlan?: BusinessPlanDto;
+  currentBusinessPlanForPresentation?: BusinessPlanDto;
 
   constructor(
     private businessPlansService: BusinessPlanService,
@@ -46,12 +49,10 @@ export class ListBusinessPlanComponent implements OnInit {
     });
   }
 
-
   inintbusinessPlanDto(businessPlans: BusinessPlan[]): BusinessPlanDto[] {
     let tempBusinessPlanDto: BusinessPlanDto[] = [];
 
     businessPlans.forEach((businessPlan) => {
-
       const restDto: BusinessPlanDto = {
         id: businessPlan.id,
         companyName: businessPlan.companyName,
@@ -61,32 +62,118 @@ export class ListBusinessPlanComponent implements OnInit {
         companyDescription: businessPlan.companyDescription,
         anticipatedProjectSize: businessPlan.anticipatedProjectSize,
         currency: businessPlan.currency || Currency.EUR,
-
       };
-
       tempBusinessPlanDto.push(restDto);
-
     });
 
     return tempBusinessPlanDto;
   }
 
+  openPresentationOptions(businessPlan: BusinessPlanDto): void {
+    this.currentBusinessPlanForPresentation = businessPlan;
+    this.dialogService.open(this.presentationOptionsDialog);
+  }
 
-  generatePresentation(businessPlan: BusinessPlanDto): void {
-    this.businessPlansService.generateBusinessPlan(businessPlan).subscribe({
-      next: (presentation: string) => {
-        this.dialogService.open(PresentationDialogComponent, {
-          context: {
-            businessPlanName: businessPlan.companyName,
-            presentationContent: presentation,
-          },
-          closeOnBackdropClick: true,
-          closeOnEsc: true,
-        });
+  handlePresentationChoice(choice: 'generated' | 'edited' | 'regenerate'): void {
+    if (!this.currentBusinessPlanForPresentation) return;
+
+    switch (choice) {
+      case 'generated':
+        this.getExistingPresentation(false);
+        break;
+      case 'edited':
+        this.getExistingPresentation(true);
+        break;
+      case 'regenerate':
+        this.regeneratePresentation();
+        break;
+    }
+  }
+
+  private getExistingPresentation(preferEdited: boolean): void {
+    if (!this.currentBusinessPlanForPresentation) return;
+
+    this.businessPlansService.getPresentation(this.currentBusinessPlanForPresentation.companyName).subscribe({
+      next: (slides: Slide[]) => {
+        const presentation = this.convertSlidesToPresentation(slides);
+        this.displayPresentation(
+          this.currentBusinessPlanForPresentation!.id,
+          this.currentBusinessPlanForPresentation!.companyName,
+          presentation
+        );
       },
-      error: () => {
+      error: (err) => {
+        console.error("Erreur lors de la récupération de la présentation :", err);
+        this.generateAndDisplayNewPresentation(this.currentBusinessPlanForPresentation!);
+      }
+    });
+  }
+
+  private convertSlidesToPresentation(slides: Slide[]): string {
+    return slides.map(slide => slide.content).join("\n===SLIDE===\n");
+  }
+
+  private regeneratePresentation(): void {
+    if (!this.currentBusinessPlanForPresentation) return;
+
+    const businessPlanToSend: BusinessPlan = {
+      id: this.currentBusinessPlanForPresentation.id,
+      companyName: this.currentBusinessPlanForPresentation.companyName,
+      companyStartDate: this.currentBusinessPlanForPresentation.companyStartDate,
+      country: this.currentBusinessPlanForPresentation.country,
+      languages: this.currentBusinessPlanForPresentation.languages,
+      companyDescription: this.currentBusinessPlanForPresentation.companyDescription,
+      anticipatedProjectSize: this.currentBusinessPlanForPresentation.anticipatedProjectSize,
+      currency: this.currentBusinessPlanForPresentation.currency
+    };
+
+    this.businessPlansService.generateBusinessPlan(businessPlanToSend).subscribe({
+      next: (presentation: string) => {
+        this.displayPresentation(
+          this.currentBusinessPlanForPresentation!.id,
+          this.currentBusinessPlanForPresentation!.companyName,
+          presentation
+        );
+      },
+      error: (err) => {
+        console.error("Erreur lors de la régénération de la présentation :", err);
+        alert("Erreur lors de la régénération de la présentation.");
+      }
+    });
+  }
+
+  private generateAndDisplayNewPresentation(businessPlan: BusinessPlanDto): void {
+    const businessPlanToSend: BusinessPlan = {
+      id: businessPlan.id,
+      companyName: businessPlan.companyName,
+      companyStartDate: businessPlan.companyStartDate,
+      country: businessPlan.country,
+      languages: businessPlan.languages,
+      companyDescription: businessPlan.companyDescription,
+      anticipatedProjectSize: businessPlan.anticipatedProjectSize,
+      currency: businessPlan.currency
+    };
+
+    this.businessPlansService.generateBusinessPlan(businessPlanToSend).subscribe({
+      next: (presentation: string) => {
+        this.displayPresentation(businessPlan.id, businessPlan.companyName, presentation);
+      },
+      error: (err) => {
+        console.error("Erreur lors de la génération de la présentation :", err);
         alert("Erreur lors de la génération de la présentation.");
       }
+    });
+  }
+
+  private displayPresentation(id: string, companyName: string, presentation: string): void {
+    this.dialogService.open(PresentationDialogComponent, {
+      context: {
+        businessPlanId: id,
+        businessPlanName: companyName,
+        presentationContent: presentation,
+      },
+      closeOnBackdropClick: true,
+      closeOnEsc: true,
     });
   }
 
@@ -101,7 +188,7 @@ export class ListBusinessPlanComponent implements OnInit {
       context: {
         businessPlan: businessPlan
       },
-      hasBackdrop: false 
+      hasBackdrop: false
     });
 
     dialogRef.onClose.subscribe((result) => {
@@ -111,8 +198,6 @@ export class ListBusinessPlanComponent implements OnInit {
       }
     });
   }
-
-
 
   openDeleteDialog(id: string) {
     this.idTodelete = id;
@@ -127,22 +212,60 @@ export class ListBusinessPlanComponent implements OnInit {
     });
   }
 
-
   delete() {
-    console.log('Suppression de :', this.idTodelete);
     this.businessPlansService.delete(this.idTodelete).subscribe({
       next: () => {
         this.businessPlans = this.businessPlans.filter(bp => bp.id !== this.idTodelete);
         this.businessPlanDto = this.inintbusinessPlanDto(this.businessPlans);
       },
-      error: () => {
+      error: (err) => {
+        console.error("Erreur lors de la suppression :", err);
         alert('Erreur lors de la suppression.');
       }
     });
   }
 
+  openDownloadOptions(businessPlan: BusinessPlanDto): void {
+    this.currentBusinessPlanForDownload = businessPlan;
+    this.dialogService.open(this.downloadOptionsDialog);
+  }
+
+  handleDownloadChoice(format: 'pdf' | 'powerpoint'): void {
+    if (!this.currentBusinessPlanForDownload) return;
+
+    if (format === 'pdf') {
+      this.downloadAsPdf();
+    } else {
+      this.downloadAsPowerPoint();
+    }
+  }
+
+  private downloadAsPdf(): void {
+    if (!this.currentBusinessPlanForDownload) return;
+
+    this.businessPlansService.downloadPresentation(
+      this.currentBusinessPlanForDownload.companyName,
+      'PDF'
+    ).subscribe(blob => {
+      const filename = `business-plan-${this.currentBusinessPlanForDownload?.companyName}-${new Date().toISOString().slice(0, 10)}.pdf`;
+      DownloadHelper.downloadFile(blob, filename);
+    });
+  }
+
+  private downloadAsPowerPoint(): void {
+    if (!this.currentBusinessPlanForDownload) return;
+
+    this.businessPlansService.downloadPresentation(
+      this.currentBusinessPlanForDownload.companyName,
+      'PPTX'
+    ).subscribe(blob => {
+      const filename = `business-plan-${this.currentBusinessPlanForDownload?.companyName}-${new Date().toISOString().slice(0, 10)}.pptx`;
+      DownloadHelper.downloadFile(blob, filename);
+    });
+  }
 
   currentPage = 1;
   totalPages = 1;
   page: number = 1;
 }
+

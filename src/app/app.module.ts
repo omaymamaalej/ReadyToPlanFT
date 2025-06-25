@@ -15,6 +15,7 @@ import { authInterceptorProviders } from './_helpers/auth.interceptor';
 import { ZonedDateTimeInterceptorProviders } from './_helpers/ZonedDateTime.interceptor';
 import { NbSecurityModule } from '@nebular/security';
 import { SharedModule } from './shared/shared.module';
+import { MarkdownModule } from 'ngx-markdown';
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import { SharedModule } from './shared/shared.module';
     NbSidebarModule.forRoot(),
     NbMenuModule.forRoot(),
     NbActionsModule,
+    MarkdownModule.forRoot(),
     NbDatepickerModule.forRoot(),
     NbSecurityModule.forRoot({
       accessControl: {

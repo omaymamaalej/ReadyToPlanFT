@@ -1,5 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { NbDialogRef } from '@nebular/theme';
+import { Component, HostListener, Input, OnInit } from '@angular/core';
+import { Slide } from 'src/app/models/Slide';
+import { BusinessPlanService } from 'src/app/services/business-plan.service';
 
 @Component({
   selector: 'app-presentation-dialog',
@@ -7,115 +8,208 @@ import { NbDialogRef } from '@nebular/theme';
   styleUrls: ['./presentation-dialog.component.css']
 })
 export class PresentationDialogComponent implements OnInit {
+  @Input() businessPlanId!: string;
   @Input() businessPlanName!: string;
-  @Input() presentationContent!: string;
+  @Input() presentationContent?: string;
 
-  slides: string[] = [];
-
-  tableOfContents: { title: string, index: number }[] = [];
-  sections: string[] = [];
+  slides: Slide[] = [];
   currentSlideIndex: number = 0;
+  isEditing: boolean = false;
+  isLoading: boolean = true;
+  errorMessage: string | null = null;
 
-  tableOfContentsTitle: string = '';
+  private originalContent = '';
+  modifiedSlides: Set<number> = new Set();
 
 
-  ngOnInit() {
-    this.parsePresentation(this.presentationContent);
+  constructor(private businessPlanService: BusinessPlanService) { }
+
+  @HostListener('window:keydown', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent) {
+    if (this.isEditing) return;
+    if (event.key === '>' || event.key === '.' || event.key === 'ArrowRight') {
+      this.nextSlide();
+      event.preventDefault();
+    }
+    else if (event.key === '<' || event.key === ',' || event.key === 'ArrowLeft') {
+      this.prevSlide();
+      event.preventDefault();
+    }
   }
 
-  parsePresentation(content: string) {
-    const parts = content.split('===SLIDE===').map(part => part.trim()).filter(p => p.length > 0);
+  ngOnInit() {
+    if (this.presentationContent) {
+      this.parsePresentationContent(this.presentationContent);
+      this.isLoading = false;
+    } else {
+      this.loadPresentation();
+    }
+  }
 
-    if (parts.length < 2) {
-      console.warn("Format invalide : il manque des '===SLIDE===' pour séparer les sections !");
+  private parsePresentationContent(content: string): void {
+    const slideContents = content.split(/===SLIDE===\s*\n+/)
+      .map(slide => slide.trim())
+      .filter(slide => slide.length > 0);
+
+    this.slides = slideContents.map((content, index) => {
+      if (index === 0) return { content };
+
+      const lines = content.split('\n');
+      let cleanedLines: string[] = [];
+
+      if (lines.length > 0) {
+        cleanedLines.push(lines[0]);
+      }
+
+      for (let i = 1; i < lines.length; i++) {
+        const line = lines[i];
+        if (line.startsWith('## ') &&
+          line.substring(3).trim() === lines[0].replace(/^#\s*\d+\.\s*/, '').trim()) {
+          continue;
+        }
+        cleanedLines.push(line);
+      }
+
+      return { content: cleanedLines.join('\n') };
+    });
+  }
+
+  loadPresentation() {
+    this.isLoading = true;
+    this.errorMessage = null;
+
+  }
+
+  getCleanTitle(content: string): string {
+    if (!content) return '';
+
+    const firstLine = content.split('\n')[0] || '';
+    return firstLine
+      .replace(/^\d+\.\s*/, '') 
+      .replace(/\*\*/g, '')     
+      .trim();
+  }
+
+  formatSlideContent(content: string, slideIndex: number): string {
+    if (!content) return '';
+
+    if (slideIndex === 0) {
+      return '';
     }
 
-    console.log("Nombre de slides détectées :", parts.length);
-    console.log("Contenu brut des slides :", parts);
+    const lines = content.split('\n');
+    let html = '';
 
-    const isEnglish = content.toLowerCase().includes('table of contents');
-    this.tableOfContentsTitle = isEnglish ? 'Table of contents' : 'Table des matières';
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i].trim();
 
-    const tocText = parts[0];
+      if (i === 0) continue;
 
-    const tocLines = tocText.split('\n')
-      .filter(line => /^\d+\.\s+/.test(line))
-      .map(line => {
-        const title = line.replace(/^\d+\.\s+/, '').replace(/\*\*/g, '').trim();
-        return title;
-      });
-
-    this.tableOfContents = tocLines.map((title, i) => ({ title, index: i + 1 }));
-
-    const tocSlideContent = tocLines.map((title, i) => `${i + 1}. ${title}`).join('\n');
-
-    // const slideContent = parts[1];
-    const slideContent = parts.length > 1 ? parts[1] : '';
-    const regex = /\*\*\d+\.\s+[^\n]+\*\*/g;
-
-    const matches = slideContent.match(regex);
-    const splitSlides = slideContent.split(regex).map(s => s.trim()).filter(Boolean);
-
-    const slides: string[] = [];
-    if (matches) {
-      matches.forEach((title, i) => {
-        const cleanTitle = title.replace(/\*\*/g, '').trim();
-        const body = splitSlides[i] ?? '';
-        slides.push(`${cleanTitle}\n\n${body}`);
-      });
+      if (line.startsWith('## ')) {
+        html += `<h2>${line.substring(3)}</h2>`;
+      } else if (line.startsWith('- ')) {
+        if (i === 1 || !lines[i - 1].startsWith('- ')) html += '<ul>';
+        html += `<li>${line.substring(2)}</li>`;
+        if (i === lines.length - 1 || !lines[i + 1].startsWith('- ')) html += '</ul>';
+      } else if (line.match(/\*\*.+\*\*/)) {
+        html += line.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+      } else if (line) {
+        html += `<p>${line}</p>`;
+      }
     }
 
-    this.sections = [`Table de matière\n\n${tocSlideContent}`, ...slides];
-
-    console.log("Table des matières détectée :", tocLines);
-    console.log("Slides finales utilisées :", this.sections);
-    this.currentSlideIndex = 0;
+    return html;
   }
 
   goToSlide(index: number) {
-    this.currentSlideIndex = index;
-  }
-
-  formatText(text: string, isTableOfContents: boolean = false): string {
-    if (!text) return '';
-
-    if (isTableOfContents) {
-      return text;
-    } else {
-      return text.replace(/\. /g, '.\n');
+    if (index >= 0 && index < this.slides.length) {
+      this.currentSlideIndex = index;
+      this.isEditing = false;
+      this.originalContent = this.slides[index].content;
     }
   }
 
-  getTitle(index: number): string {
-    if (index === 0) return '';
-    return this.tableOfContents[index - 1]?.title || '';
+  startEditing() {
+    this.originalContent = this.slides[this.currentSlideIndex].content;
+    this.isEditing = true;
   }
 
-  getSlideContent(index: number, isTableOfContents: boolean = false): string {
-    const text = this.sections[index] || '';
+  cancelEditing() {
+    this.slides[this.currentSlideIndex].content = this.originalContent;
+    this.isEditing = false;
+    this.modifiedSlides.delete(this.currentSlideIndex);
+  }
 
-    if (isTableOfContents) {
-      return text
-        .split('\n')
-        .map(line => line.trim())
-        .filter(line => line.length > 0)
-        .join('<br>');
+  hasChanges(index: number): boolean {
+    return this.modifiedSlides.has(index);
+  }
+
+  onContentChange(index: number, newContent: string) {
+    this.slides[index].content = newContent;
+    this.modifiedSlides.add(index);
+  }
+
+  saveSlide(index: number) {
+    if (!this.hasChanges(index)) {
+      return;
     }
 
-    const lines = text.split('\n');
-    const bodyLines = lines.slice(1).join('\n');
+    this.businessPlanService.updateSlide(
+      this.businessPlanId,
+      index,
+      this.slides[index].content
+    ).subscribe({
+      next: () => {
+        this.modifiedSlides.delete(index);
+        this.isEditing = false;
 
-    const formattedBody = bodyLines
-      .replace(/^\*\s*$/gm, '')
-      .replace(/\*\s*$/gm, '')
-      .replace(/(^|\s)\*(?=\s|$)/g, '')
-      .replace(/\*\*(.+?)\*\*/g, (_, subtitle) => {
-        const clean = subtitle.trim().replace(/:$/, '');
-        return `<br><strong>${clean} :</strong>`;
-      })
-      .replace(/\. /g, '.<br>');
-
-    return formattedBody.trim();
+        console.log(`Slide ${index} updated successfully`);
+      },
+      error: (err) => {
+        console.error('Error updating slide:', err);
+        this.slides[index].content = this.originalContent;
+        this.modifiedSlides.delete(index);
+        this.isEditing = false;
+      }
+    });
   }
 
+  saveAllChanges() {
+    this.modifiedSlides.forEach(index => {
+      this.saveSlide(index);
+    });
+  }
+
+  getSlideTitle(index: number): string {
+    if (!this.slides[index]?.content) return `Slide ${index + 1}`;
+
+    const content = this.slides[index].content;
+    const firstLine = content.split('\n')[0] || '';
+    
+    if (index === 0) {
+      return this.businessPlanName;
+    }
+    
+    return firstLine
+      .replace(/^#\s*\d+\.\s*/, '')  
+      .replace(/\*\*/g, '')         
+      .trim();
+  }
+
+  isTableOfContents(index: number): boolean {
+    return index === 0;
+  }
+
+  prevSlide() {
+    if (this.currentSlideIndex > 0) {
+      this.currentSlideIndex--;
+    }
+  }
+
+  nextSlide() {
+    if (this.currentSlideIndex < this.slides.length - 1) {
+      this.currentSlideIndex++;
+    }
+  }
 }
+

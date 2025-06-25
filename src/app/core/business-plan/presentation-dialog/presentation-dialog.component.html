@@ -1,29 +1,88 @@
-<div class="presentation-wrapper" style="width: 1200px;">
-  <div class="table-of-contents">
-    <h3>Slides</h3>
-    <ul>
-      <li (click)="goToSlide(0)">{{ tableOfContentsTitle }}</li>
-      <li *ngFor="let section of tableOfContents" [class.active]="section.index === currentSlideIndex"
-        (click)="goToSlide(section.index)">
-        {{ section.title }}
-      </li>
-    </ul>
+<div class="presentation-wrapper">
+  <!-- État de chargement -->
+  <div *ngIf="isLoading" class="loading-state">
+    <nb-spinner size="giant"></nb-spinner>
+    <p>Loading presentation...</p>
   </div>
 
+  <div *ngIf="errorMessage" class="error-state">
+    <nb-alert status="danger">{{ errorMessage }}</nb-alert>
+    <button nbButton status="primary" (click)="loadPresentation()">
+      <nb-icon icon="refresh-outline"></nb-icon> Try Again
+    </button>
+  </div>
 
-  <div class="presentation-content" *ngIf="sections.length > 0" style="width: 900px;">
-    <nb-card>
-      <nb-card-header *ngIf="currentSlideIndex !== 0">
-        <h4>{{ getTitle(currentSlideIndex) }}</h4>
-      </nb-card-header>
-      <nb-card-body>
-        <div [innerHTML]="getSlideContent(currentSlideIndex, currentSlideIndex === 0)"
-          [class.table-of-contents-content]="currentSlideIndex === 0" class="formatted-slide-content">
+  <div *ngIf="!isLoading && !errorMessage && slides.length < 2" class="warning-state">
+    <nb-alert status="warning">Attention: Le format de la présentation semble incomplet. Certaines sections peuvent manquer.</nb-alert>
+  </div>
+
+  <div *ngIf="!isLoading && !errorMessage" class="presentation-container" >
+
+    <div class="slide-list">
+      <div *ngFor="let slide of slides; let i = index" 
+          class="slide-item" 
+          [class.active]="i === currentSlideIndex"
+          (click)="goToSlide(i)">
+        <span class="slide-number">{{i}}.</span>
+        {{ getSlideTitle(i) }}
+      </div>
+    </div>
+
+    <div class="main-content">
+
+      <div class="slide-navigation" *ngIf="currentSlideIndex !== 0">
+        <button nbButton ghost (click)="prevSlide()" [disabled]="currentSlideIndex === 1">
+          <nb-icon icon="arrow-left-outline"></nb-icon>
+        </button>
+
+        <span class="slide-counter">
+          {{currentSlideIndex}}/{{slides.length - 1}}
+        </span>
+
+        <button nbButton ghost (click)="nextSlide()" [disabled]="currentSlideIndex === slides.length - 1">
+          <nb-icon icon="arrow-right-outline"></nb-icon>
+        </button>
+      </div>
+
+      <div class="slide-container" [class.cover-container]="currentSlideIndex === 0">
+        <div class="slide active">
+          <div class="slide-content">
+            <h2 *ngIf="currentSlideIndex !== 0" class="slide-title">{{getCleanTitle(slides[currentSlideIndex].content)}}</h2>
+
+            <div *ngIf="currentSlideIndex === 0" class="cover-slide">
+              <h1>{{businessPlanName}}</h1>
+            </div>  
+
+            <div *ngIf="currentSlideIndex !== 0" class="slide-body"> 
+
+              <div *ngIf="!isEditing" [innerHTML]="formatSlideContent(slides[currentSlideIndex].content, currentSlideIndex)"></div>
+
+              <div *ngIf="isEditing" class="edit-container">
+                <textarea [(ngModel)]="slides[currentSlideIndex].content" 
+                          (input)="onContentChange(currentSlideIndex, slides[currentSlideIndex].content)"
+                          class="edit-textarea"></textarea>
+              </div>
+
+            </div>
+            
+          </div>
         </div>
+      </div>
 
-      </nb-card-body>
-    </nb-card>
+      <div class="edit-controls" *ngIf="currentSlideIndex !== 0">
+        <button *ngIf="!isEditing" nbButton status="basic" (click)="startEditing()">
+          <nb-icon icon="edit-2-outline"></nb-icon> Modifier
+        </button>
+        <div *ngIf="isEditing" class="editing-buttons">
+          <button nbButton status="success" (click)="saveSlide(currentSlideIndex)" [disabled]="!hasChanges(currentSlideIndex)">
+            Sauvegarder
+          </button>
+          <button nbButton status="danger" (click)="cancelEditing()">
+            Annuler
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
-
-
 </div>
+
