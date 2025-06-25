@@ -28,26 +28,22 @@ export const MENU_ITEMS: NbMenuItem[] = [
   },
   {
     title: 'Strategic Planning',
-    icon: 'pie-chart-outline', // Icône qui représente bien l’analyse/stratégie
-    link: '/strategic-planning', // Le lien vers ton composant
+    icon: 'pie-chart-outline', 
+    link: 'strategic-planning', 
   },
   {
     title: 'Personal Information',
     icon: 'person-outline',
-    link: '/home/profileInformation',
+    link: 'profileInformation/account',
   },
   {
     title: 'Auth',
     icon: 'lock-outline',
     children: [
       {
-        title: 'Request Password',
-        link: '/auth/request-password',
-      },
-      {
-        title: 'Reset Password',
-        link: '/auth/reset-password',
-      },
+        title: 'Password Settings',
+        link: 'auth/password',
+      }
     ],
   },
   {

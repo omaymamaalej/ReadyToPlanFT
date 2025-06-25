@@ -1,0 +1,82 @@
+<div style="margin: -0.9rem 1rem 0rem -0.09rem ; background:none">
+  <div class="row gutters">
+    <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12">
+      <div class="card h-100" style="font-family: 'Varela Round', sans-serif;
+      background: #435d7d;
+      color: #fff;">
+        <div class="card-body">
+          <div class="account-settings">
+            <div class="user-profile">
+              <div class="user-avatar">
+                <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Maxwell Admin"
+                  style="background-color: #fff;">
+              </div>
+              <h4 class="user-name">{{ currentUser.login }}</h4>
+              <h5 class="user-email"> {{ currentUser.email }}</h5>
+            </div>
+            <div class="about">
+              <h4>About</h4>
+              <p> I am {{ currentUser.firstName }} {{ currentUser.lastName }}</p>
+              <p>My profile was created since <br>{{ currentUser.createdDate| date:
+                'dd/MM/yy HH:mm' }} </p>
+              <p>Roles i fullfill in Ready To Plan are : </p>
+
+              <p *ngFor="let authority of currentUser.authorities">
+                + {{ authority }}
+              </p>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12">
+      <div class="card h-100">
+        <div class="card-body">
+          <div class="row gutters">
+            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+              <h4 class="mb-2" style="font-family: 'Varela Round', sans-serif;  color: #5678a1;">Personal
+                Details</h4>
+            </div>
+            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+              <div class="form-group">
+                <label for="firstName">First Name</label>
+                <input type="text" name="firstName" [(ngModel)]="currentUser.firstName" class="form-control"
+                  id="firstName" placeholder="Enter first Name">
+              </div>
+            </div>
+
+
+
+            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+              <div class="form-group">
+                <label for="lastName">Last Name</label>
+                <input type="text" class="form-control" id="lastName" name="lastName" [(ngModel)]="currentUser.lastName"
+                  placeholder="Enter last Name">
+              </div>
+            </div>
+
+
+            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+              <div class="form-group">
+                <label for="eMail">Email</label>
+                <input type="email" class="form-control" id="eMail" name="email" [(ngModel)]="currentUser.email"
+                  placeholder="Enter email ID">
+              </div>
+            </div>
+
+
+          </div>
+
+          <div class="row gutters">
+            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+              <div class="text-right">
+                <button type="button" id="submit" name="submit" (click)="update()" class="btn btn-primary">Save</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
