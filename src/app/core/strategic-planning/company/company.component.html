@@ -1,0 +1,69 @@
+<!-- Formulaire de création de l'entreprise -->
+<div class="row" *ngIf="!showDetail">
+  <div class="col-lg-12">
+    <nb-card>
+      <nb-card-header>Create a Company</nb-card-header>
+      <nb-card-body>
+        <form [formGroup]="companyForm">
+          <div class="row">
+            <div class="col-sm-12 col-md-6">
+              <div class="form-group mb-3">
+                <label for="enterpriseName" class="label">Enterprise Name:</label>
+                <input formControlName="enterpriseName" nbInput fullWidth placeholder="Enterprise Name" />
+              </div>
+            </div>
+
+            <div class="col-sm-12 col-md-6">
+              <div class="form-group mb-3">
+                <label for="phoneNumber" class="label">Phone Number:</label>
+                <input formControlName="phoneNumber" nbInput fullWidth type="tel" placeholder="+216 00 000 000" />
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-sm-12 col-md-6">
+              <div class="form-group mb-3">
+                <label for="country" class="label">Country:</label>
+                <nb-select formControlName="country" placeholder="Select Country">
+                  <nb-option *ngFor="let c of countries" [value]="c[0]">{{ c[1] }}</nb-option>
+                </nb-select>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group mb-3">
+            <label for="description" class="label">Description:</label>
+            <textarea formControlName="description" rows="4" nbInput fullWidth placeholder="Company description..."></textarea>
+          </div>
+
+          <div class="row">
+            <div class="col-sm-12 col-md-6">
+              <div class="form-group mb-3">
+                <label for="amount" class="label">Amount:</label>
+                <input formControlName="amount" nbInput fullWidth type="number" min="0" step="0.01" placeholder="0.00" />
+              </div>
+            </div>
+
+            <div class="col-sm-12 col-md-6">
+              <div class="form-group mb-3">
+                <label for="currency" class="label">Currency:</label>
+                <nb-select formControlName="currency" placeholder="Select Currency">
+                  <nb-option *ngFor="let cur of currencies" [value]="cur[0]">{{ cur[1] }}</nb-option>
+                </nb-select>
+              </div>
+            </div>
+          </div>
+
+          <div class="buttons-row mt-4">
+            <button type="button" nbButton status="primary" (click)="submit()">Enregistrer</button>
+          </div>
+        </form>
+      </nb-card-body>
+    </nb-card>
+  
+  </div>
+</div>
+<app-company-detail *ngIf="showDetail && selectedCompany" [company]="selectedCompany"></app-company-detail>
+
+

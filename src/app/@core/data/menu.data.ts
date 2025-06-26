@@ -28,8 +28,17 @@ export const MENU_ITEMS: NbMenuItem[] = [
   },
   {
     title: 'Strategic Planning',
-    icon: 'pie-chart-outline', 
-    link: 'strategic-planning', 
+    icon: 'pie-chart-outline',
+    children: [
+      {
+        title: 'Add Strategy',
+        link: '/strategic-planning/',
+      },
+      {
+        title: 'All Strategies',
+        link: '/business-plan-list/',
+      },
+    ],
   },
   {
     title: 'Personal Information',

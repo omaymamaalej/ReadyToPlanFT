@@ -1,0 +1,54 @@
+<!-- Display add button only when list is visible -->
+<div *ngIf="!showForm">
+  <button nbButton status="success" (click)="openAddProductDialog()">Add Product</button>
+
+  <!-- Products table -->
+  <table class="table mt-3">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Unit Price</th>
+        <th>Monthly Sales</th>
+        <th>Duration (months)</th>
+        <th>Estimated Revenue</th>
+        <th>AI Response</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let product of products">
+        <td>{{ product.nameProductOrService }}</td>
+        <td>{{ product.productDescription }}</td>
+        <td>{{ product.unitPrice }} €</td>
+        <td>{{ product.estimatedMonthlySales }}</td>
+        <td>{{ product.durationInMonths }}</td>
+         
+        <td>
+          {{
+            (product.unitPrice || 0) *
+            (product.estimatedMonthlySales || 0) *
+            (product.durationInMonths || 0) | number:'1.0-0'
+          }} €
+        </td>
+        <td>
+          <button nbButton size="tiny" status="info"
+                  (click)="showAIResponseDialog(aiResponsesMap[product.id!])"
+                  [disabled]="!aiResponsesMap[product.id!]">
+            Show AI
+          </button>
+        </td>
+        <td>
+          <button nbButton size="tiny" status="info" (click)="editProduct(product)">Edit</button>
+          <button nbButton size="tiny" status="danger" (click)="product.id && deleteProduct(product.id)">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Add/Edit form -->
+<app-product-sales
+  *ngIf="showForm"
+  (formSubmitted)="onFormSubmitted($event)">
+</app-product-sales>

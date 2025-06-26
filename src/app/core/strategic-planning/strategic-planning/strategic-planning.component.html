@@ -1,25 +1,32 @@
 <nb-card class="col-md-12 col-lg-12 col-xxxl-12">
   <nb-card-body>
     <nb-stepper orientation="horizontal">
-      <nb-step [label]="'Product & Sales'">
-        <app-product-sales></app-product-sales>
-        <button nbButton disabled nbStepperNext>prev</button>
-        <button nbButton nbStepperNext>next</button>
-      </nb-step>
       <nb-step [label]="labelTwo">
-        <ng-template #labelTwo>Second step</ng-template>
-        <h3>Step content #2</h3>
+        <ng-template #labelTwo>Company</ng-template>
+        <app-company></app-company>
         <button nbButton nbStepperPrevious>prev</button>
         <button nbButton nbStepperNext>next</button>
       </nb-step>
-      <nb-step label="Third step">
-        <h3>Step content #3</h3>
+      <nb-step [label]="'Product & Sales'">
+        <app-product-detail></app-product-detail>
+        <button nbButton disabled nbStepperNext>prev</button>
+        <button nbButton nbStepperNext>next</button>
+      </nb-step>
+
+      <nb-step label="Team">
+        <ng-template #labelTwo>Team</ng-template>
+        <app-team></app-team>
         <button nbButton nbStepperPrevious>prev</button>
         <button nbButton nbStepperNext>next</button>
       </nb-step>
       <nb-step [label]="labelFour">
-        <ng-template #labelFour>Fourth step</ng-template>
-        <h3>Step content #4</h3>
+        <ng-template #labelFour>Marketing</ng-template>
+        <app-marketing></app-marketing>
+        <button nbButton nbStepperPrevious>prev</button>
+        <button nbButton disabled nbStepperNext>next</button>
+      </nb-step>
+      <nb-step [label]="labelFive">
+        <ng-template #labelFour>Others</ng-template>
         <button nbButton nbStepperPrevious>prev</button>
         <button nbButton disabled nbStepperNext>next</button>
       </nb-step>

@@ -1,0 +1,31 @@
+<button nbButton status="success" (click)="openAddDialog()">Ajouter</button>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Distribution</th>
+      <th>Canal</th>
+      <th>Objectif de vente</th>
+       <th>Réponse AI</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let m of marketingList">
+      <td>{{ m.distribution_Channel }}</td>
+      <td>{{ m.marketing_channel }}</td>
+      <td>{{ m.sales_target }} {{ m.currency }}</td>
+     <td>
+ <button nbButton size="tiny" *ngIf="m.id" (click)="showAIResponse(m.id)">Voir</button>
+</td>
+      <td>
+        <button nbButton size="tiny" status="info" (click)="editMarketing(m)">Éditer</button>
+        <button nbButton size="tiny" status="danger" (click)="deleteMarketing(m.id!)">Supprimer</button>
+      </td>
+    </tr>
+  </tbody>
+  
+</table>
+<button nbButton status="success" (click)="generateBusinessPlan()">
+  🧠 Générer le Business Plan Final
+</button>

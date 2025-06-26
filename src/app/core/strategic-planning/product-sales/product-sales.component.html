@@ -1,1 +1,61 @@
-<p>product-sales works!</p>
+<nb-card>
+    <nb-card-header>Products / Sales</nb-card-header>
+    <nb-card-body>
+        <form [formGroup]="productForm">
+            <div formArrayName="items">
+                <div *ngFor="let item of items.controls; let i = index" [formGroupName]="i"
+                    class="mb-4 border p-3 rounded bg-light">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>Name :</label>
+                            <input nbInput fullWidth formControlName="nameProductOrService"
+                                placeholder="Product or Sales name" />
+                        </div>
+                        <div class="col-md-6">
+                            <label>Description :</label>
+                            <input nbInput fullWidth formControlName="productDescription" placeholder="Description" />
+                        </div>
+                    </div>
+
+                    <div class="row mt-2">
+                        <div class="col-md-4">
+                            <label>Unit price (€) :</label>
+                            <input nbInput fullWidth type="number" formControlName="unitPrice"
+                                (input)="updateRevenue(i)" />
+                        </div>
+                        <div class="col-md-4">
+                            <label>Estimated monthly sales :</label>
+                            <input nbInput fullWidth type="number" formControlName="estimatedMonthlySales"
+                                (input)="updateRevenue(i)" />
+                        </div>
+                        <div class="col-md-4">
+                            <label>Duration (months):</label>
+                            <input nbInput fullWidth type="number" formControlName="durationInMonths"
+                                (input)="updateRevenue(i)" />
+                        </div>
+                    </div>
+
+                    <div class="mt-2">
+                        <strong>Total estimated revenue : {{ calculatedRevenues[i] | number:'1.0-0' }} €</strong>
+                        <button *ngIf="!isEditMode" nbButton size="tiny" status="danger" (click)="removeItem(i)"
+                            class="float-end mt-1">Remove</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-3" *ngIf="!isEditMode">
+                <button nbButton status="success" (click)="addItem()">Add product</button>
+            </div>
+
+            <div class="mt-4">
+                <strong class="text-primary">Overall total revenue : {{ totalRevenue | number:'1.0-0' }} €</strong>
+            </div>
+
+            <div class="buttons-row mt-4">
+                <button (click)="submit()" nbButton status="success">
+                    Save
+                </button>
+            </div>
+        </form>
+    </nb-card-body>
+</nb-card>

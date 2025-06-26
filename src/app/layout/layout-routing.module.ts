@@ -8,6 +8,7 @@ import { ListBusinessPlanComponent } from '../core/business-plan/list-business-p
 import { StrategicPlanningComponent } from '../core/strategic-planning/strategic-planning/strategic-planning.component';
 import { AccountComponent } from '../pages/auth/account/account.component';
 import { PasswordSettingsComponent } from '../pages/auth/password-settings/password-settings.component';
+import { BusinessPlanListComponent } from '../core/strategic-planning/business-plan-list/business-plan-list.component';
 
 
 const routes: Routes = [
@@ -24,6 +25,8 @@ const routes: Routes = [
       { path: 'profileInformation/account', component: AccountComponent },
       { path: 'auth/password', component: PasswordSettingsComponent },
 
+
+      { path: 'business-plan-list', component: BusinessPlanListComponent }
 
 
     ],

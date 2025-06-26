@@ -9,7 +9,6 @@ import { TranslateModule } from '@ngx-translate/core';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { LayoutModule } from '../layout/layout.module';
-import { StrategicPlanningComponent } from './strategic-planning/strategic-planning/strategic-planning.component';
 import { StrategicPlanningModule } from './strategic-planning/strategic-planning.module';
 
 
@@ -25,9 +24,6 @@ import { StrategicPlanningModule } from './strategic-planning/strategic-planning
     NbLayoutModule,
     LayoutModule,
     NbDatepickerModule,
-
-
-
     NbSidebarModule,
     BrowserAnimationsModule,
     NbMenuModule,

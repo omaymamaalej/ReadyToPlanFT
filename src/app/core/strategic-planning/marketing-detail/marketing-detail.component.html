@@ -1,0 +1,40 @@
+<form [formGroup]="form" (ngSubmit)="submit()">
+  <nb-card>
+    <nb-card-header>Marketing</nb-card-header>
+    <nb-card-body>
+
+      <label>Distribution Channel</label>
+      <nb-select fullWidth formControlName="distribution_Channel">
+        <nb-option *ngFor="let option of distribution_ChannelList" [value]="option">
+          {{ option }}
+        </nb-option>
+      </nb-select>
+
+      <label>Marketing Channel</label>
+      <nb-select fullWidth formControlName="marketing_channel">
+        <nb-option *ngFor="let option of marketing_channelList" [value]="option">
+          {{ option }}
+        </nb-option>
+      </nb-select>
+
+      <label>Sales Target</label>
+      <input nbInput fullWidth type="number" formControlName="sales_target" />
+
+      <label>Currency</label>
+      <nb-select fullWidth formControlName="currency">
+        <nb-option *ngFor="let cur of currencies" [value]="cur">
+          {{ cur }}
+        </nb-option>
+      </nb-select>
+
+    </nb-card-body>
+
+    <nb-card-footer>
+      <button nbButton status="primary" type="submit" [disabled]="form.invalid">Valider</button>
+      <button nbButton status="danger" type="button" (click)="cancel()">Annuler</button>
+    </nb-card-footer>
+   
+
+  </nb-card>
+</form>
+ 

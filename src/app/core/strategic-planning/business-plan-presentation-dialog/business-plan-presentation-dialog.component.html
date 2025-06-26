@@ -1,0 +1,21 @@
+<nb-card>
+  <nb-card-header>{{ plan.title }}</nb-card-header>
+  <nb-card-body>
+    <p><strong>Date de création :</strong> {{ plan.creationDate | date: 'longDate' }}</p>
+
+    <div *ngIf="plan.aiResponses?.length; else noResponses">
+      <h5>Réponses IA :</h5>
+      <ul>
+        <li *ngFor="let response of plan.aiResponses">
+          <strong>{{ response.entityType }} :</strong> {{ response.aiResponse }}
+        </li>
+      </ul>
+    </div>
+    <ng-template #noResponses>
+      <p>Aucune réponse IA disponible.</p>
+    </ng-template>
+  </nb-card-body>
+  <nb-card-footer>
+    <button nbButton status="danger" (click)="close()">Fermer</button>
+  </nb-card-footer>
+</nb-card>
