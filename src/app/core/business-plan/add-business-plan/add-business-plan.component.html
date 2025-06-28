@@ -39,9 +39,8 @@
                         <div class="col-sm-12 col-md-6">
                             <div class="form-group">
                                 <label for="languageSelect" class="label">Language :</label>
-                                <nb-select id="languageSelect" placeholder="Select Language">
-                                    <nb-option *ngFor="let lang of languages" [value]="lang[0]">{{ lang[1]
-                                        }}</nb-option>
+                                <nb-select formControlName="languages" id="languageSelect" placeholder="Select Language">
+                                    <nb-option *ngFor="let lang of languages" [value]="lang[0]">{{ lang[1] }}</nb-option>
                                 </nb-select>
                             </div>
                         </div>
@@ -67,8 +66,8 @@
 
                         <div class="col-sm-12 col-md-6 col-lg-3">
                             <div class="form-group">
-                                <label for="currency" class="label">Currency :</label>
-                                <nb-select placeholder="Select Currency">
+                                <label for="currencySelect" class="label">Currency :</label>
+                                <nb-select formControlName="currency" id="currencySelect" placeholder="Select Currency">
                                     <nb-option *ngFor="let cur of currencies" [value]="cur[0]">{{ cur[1] }}</nb-option>
                                 </nb-select>
                             </div>

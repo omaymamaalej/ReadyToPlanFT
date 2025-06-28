@@ -1,11 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import * as dayjs from 'dayjs';
 import { Country } from 'src/app/enumerations/country.enum';
 import { Currency } from 'src/app/enumerations/currency.enum';
 import { Languages } from 'src/app/enumerations/languages.enum';
-import { BusinessPlan } from 'src/app/models/BusinessPlan';
 import { BusinessPlanService } from 'src/app/services/business-plan.service';
 
 @Component({
@@ -32,10 +30,10 @@ export class AddBusinessPlanComponent implements OnInit {
       companyName: ['', Validators.required],
       companyStartDate: [null, Validators.required],
       country: [null, Validators.required],
-      languages: [Languages.ENGLISH, Validators.required],
+      languages: [null, Validators.required],
       companyDescription: [''],
       anticipatedProjectSize: [0, [Validators.required, Validators.min(0)]],
-      currency: [Currency.EUR, Validators.required],
+      currency: [null, Validators.required],
     });
   }
 

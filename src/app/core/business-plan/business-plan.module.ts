@@ -64,7 +64,8 @@ import { MarkdownModule } from 'ngx-markdown';
   exports: [
     AddBusinessPlanComponent,
     ListBusinessPlanComponent,
-    UpdateBusinessPlanComponent
+    UpdateBusinessPlanComponent,
+    PresentationDialogComponent
   ],
   entryComponents: [PresentationDialogComponent]
 

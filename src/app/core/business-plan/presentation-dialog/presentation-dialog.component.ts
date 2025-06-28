@@ -85,8 +85,8 @@ export class PresentationDialogComponent implements OnInit {
 
     const firstLine = content.split('\n')[0] || '';
     return firstLine
-      .replace(/^\d+\.\s*/, '') 
-      .replace(/\*\*/g, '')     
+      .replace(/^\d+\.\s*/, '')
+      .replace(/\*\*/g, '')
       .trim();
   }
 
@@ -99,12 +99,32 @@ export class PresentationDialogComponent implements OnInit {
 
     const lines = content.split('\n');
     let html = '';
+    let inTable = false;
+    let tableRows: string[] = [];
 
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i].trim();
 
-      if (i === 0) continue;
+      if (i === 0) continue; // Skip the title line
 
+      // Détection des tableaux markdown
+      if (line.startsWith('|') && line.includes('|')) {
+        if (!inTable) {
+          inTable = true;
+          tableRows = [];
+          html += '<div class="markdown-table-container">';
+          html += '<table class="markdown-table">';
+        }
+        tableRows.push(line);
+        continue;
+      } else if (inTable) {
+        // Fin du tableau - convertir les lignes en HTML
+        html += this.convertMarkdownTableToHTML(tableRows);
+        html += '</table></div>';
+        inTable = false;
+      }
+
+      // Traitement du texte normal
       if (line.startsWith('## ')) {
         html += `<h2>${line.substring(3)}</h2>`;
       } else if (line.startsWith('- ')) {
@@ -118,8 +138,52 @@ export class PresentationDialogComponent implements OnInit {
       }
     }
 
+    // Fermer le tableau si le slide se termine avec un tableau ouvert
+    if (inTable) {
+      html += this.convertMarkdownTableToHTML(tableRows);
+      html += '</table></div>';
+    }
+
     return html;
   }
+
+  private convertMarkdownTableToHTML(tableRows: string[]): string {
+    if (!tableRows || tableRows.length === 0) return '';
+
+    let html = '';
+    let isHeaderRow = false;
+    let isSeparatorRow = false;
+
+    for (let i = 0; i < tableRows.length; i++) {
+      const row = tableRows[i];
+      const cells = row.split('|').map(cell => cell.trim()).filter(cell => cell);
+
+      if (i === 0) {
+        // Première ligne - en-tête
+        html += '<thead><tr>';
+        cells.forEach(cell => {
+          html += `<th>${cell.replace(/\*\*/g, '')}</th>`;
+        });
+        html += '</tr></thead><tbody>';
+        isHeaderRow = true;
+      } else if (row.includes('---') || row.includes('----')) {
+        // Ligne de séparation - on l'ignore en HTML
+        isSeparatorRow = true;
+        continue;
+      } else {
+        // Ligne normale
+        html += '<tr>';
+        cells.forEach(cell => {
+          const cellContent = cell.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+          html += `<td>${cellContent}</td>`;
+        });
+        html += '</tr>';
+      }
+    }
+
+    html += '</tbody>';
+    return html;
+  } 
 
   goToSlide(index: number) {
     if (index >= 0 && index < this.slides.length) {
@@ -185,14 +249,14 @@ export class PresentationDialogComponent implements OnInit {
 
     const content = this.slides[index].content;
     const firstLine = content.split('\n')[0] || '';
-    
+
     if (index === 0) {
       return this.businessPlanName;
     }
-    
+
     return firstLine
-      .replace(/^#\s*\d+\.\s*/, '')  
-      .replace(/\*\*/g, '')         
+      .replace(/^#\s*\d+\.\s*/, '')
+      .replace(/\*\*/g, '')
       .trim();
   }
 

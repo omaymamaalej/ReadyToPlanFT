@@ -53,16 +53,16 @@
               <h1>{{businessPlanName}}</h1>
             </div>  
 
-            <div *ngIf="currentSlideIndex !== 0" class="slide-body"> 
-
-              <div *ngIf="!isEditing" [innerHTML]="formatSlideContent(slides[currentSlideIndex].content, currentSlideIndex)"></div>
-
+            <div *ngIf="currentSlideIndex !== 0" class="slide-body">
+              <div *ngIf="!isEditing" 
+                  [innerHTML]="formatSlideContent(slides[currentSlideIndex].content, currentSlideIndex)"
+                  class="slide-content-container"></div>
+              
               <div *ngIf="isEditing" class="edit-container">
                 <textarea [(ngModel)]="slides[currentSlideIndex].content" 
                           (input)="onContentChange(currentSlideIndex, slides[currentSlideIndex].content)"
                           class="edit-textarea"></textarea>
               </div>
-
             </div>
             
           </div>
@@ -75,10 +75,10 @@
         </button>
         <div *ngIf="isEditing" class="editing-buttons">
           <button nbButton status="success" (click)="saveSlide(currentSlideIndex)" [disabled]="!hasChanges(currentSlideIndex)">
-            Sauvegarder
+            Save
           </button>
           <button nbButton status="danger" (click)="cancelEditing()">
-            Annuler
+            Cancel
           </button>
         </div>
       </div>

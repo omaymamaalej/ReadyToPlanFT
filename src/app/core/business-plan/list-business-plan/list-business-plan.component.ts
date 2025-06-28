@@ -10,6 +10,7 @@ import { BusinessPlanService } from 'src/app/services/business-plan.service';
 import { UpdateBusinessPlanComponent } from '../update-business-plan/update-business-plan.component';
 import { Slide } from 'src/app/models/Slide';
 import { DownloadHelper } from 'src/app/_helpers/download.helper';
+import { PaginationInstance } from 'ngx-pagination';
 
 @Component({
   selector: 'app-list-business-plan',
@@ -33,6 +34,14 @@ export class ListBusinessPlanComponent implements OnInit {
   selectedBusinessPlan?: BusinessPlanDto;
   currentBusinessPlanForPresentation?: BusinessPlanDto;
 
+  public readonly paginationConfig: PaginationInstance = {
+    id: 'businessPlanPagination',  // This is now a required string
+    itemsPerPage: 6,
+    currentPage: 1,
+    totalItems: 0
+  };
+
+
   constructor(
     private businessPlansService: BusinessPlanService,
     private dialogService: NbDialogService,
@@ -46,6 +55,7 @@ export class ListBusinessPlanComponent implements OnInit {
     this.businessPlansService.get().subscribe((data: BusinessPlanDto[]) => {
       this.businessPlans = data;
       this.businessPlanDto = this.inintbusinessPlanDto(this.businessPlans);
+      this.paginationConfig.totalItems = this.businessPlanDto.length;
     });
   }
 
@@ -267,5 +277,12 @@ export class ListBusinessPlanComponent implements OnInit {
   currentPage = 1;
   totalPages = 1;
   page: number = 1;
+
+
+  onPageChange(page: number): void {
+    this.paginationConfig.currentPage = page;
+  }
+
+
 }
 
