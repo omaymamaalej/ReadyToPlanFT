@@ -10,26 +10,42 @@ import { BusinessPlanFinalService } from 'src/app/services/business-plan-final.s
 })
 export class BusinessPlanFinalComponent implements OnInit {
 
+formattedContent: string = '';
 
   companyId: string = localStorage.getItem('selectedCompanyId') || '';
-  businessPlan: BusinessPlanFinalDTO | null = null;
+ businessPlan: BusinessPlanFinalDTO | null = null;
 
   constructor(
     private route: ActivatedRoute,
     private planService: BusinessPlanFinalService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     const companyId = this.route.snapshot.paramMap.get('companyId');
-    if (companyId) {
-      this.planService.getAIOnlyBusinessPlan(companyId).subscribe({
-        next: (data) => {
-          this.businessPlan = data;
-        },
-        error: (err) => {
-          console.error('Erreur chargement plan IA:', err);
+  if (companyId) {
+    this.planService.getAIOnlyBusinessPlan(companyId).subscribe({
+      next: (data) => {
+        console.log("✅ Données reçues :", data); // 👈 Ici
+        this.businessPlan = data;
+        if (data.finalContent) {
+          this.formattedContent = data.finalContent.replace(/\n/g, '<br/>');
+          console.log("🧾 Contenu formaté :", this.formattedContent); // 👈 Ici
         }
-      });
-    }
+      },
+      error: (err) => {
+        console.error('❌ Erreur chargement plan IA:', err);
+      }
+    });
   }
+  }
+ formatContent(content: string): string {
+  if (!content) return '';
+
+  // Exemple simple de remplacement pour simuler un rendu HTML
+  return content
+    .replace(/__\*\*(.*?)\*\*__/g, '<h5>$1</h5>')     // titres
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // gras
+    .replace(/__([^_]+)__/g, '<em>$1</em>')           // italique
+    .replace(/\n/g, '<br>');                          // sauts de ligne
+}
 }

@@ -1,21 +1,51 @@
-<nb-card>
+<nb-card *ngIf="plan">
   <nb-card-header>{{ plan.title }}</nb-card-header>
-  <nb-card-body>
-    <p><strong>Date de création :</strong> {{ plan.creationDate | date: 'longDate' }}</p>
 
-    <div *ngIf="plan.aiResponses?.length; else noResponses">
-      <h5>Réponses IA :</h5>
-      <ul>
-        <li *ngFor="let response of plan.aiResponses">
-          <strong>{{ response.entityType }} :</strong> {{ response.aiResponse }}
-        </li>
-      </ul>
+  <nb-card-body>
+
+    <div *ngIf="isLoading" class="loading-state">
+      <nb-spinner size="giant"></nb-spinner>
+      <p>Loading presentation...</p>
     </div>
-    <ng-template #noResponses>
-      <p>Aucune réponse IA disponible.</p>
-    </ng-template>
+
+    <div *ngIf="errorMessage" class="error-state">
+      <nb-alert status="danger">{{ errorMessage }}</nb-alert>
+      <button nbButton status="primary" (click)="loadPresentation()">Retry</button>
+    </div>
+
+    <div *ngIf="!isLoading && !errorMessage">
+
+      <div class="slide-list">
+        <div *ngFor="let slide of slides; let i = index" 
+             class="slide-item" 
+             [class.active]="i === currentSlideIndex"
+             (click)="currentSlideIndex = i">
+          Slide {{ i + 1 }}
+        </div>
+      </div>
+
+      <div class="slide-content">
+       <div *ngIf="!isEditing && slides && slides.length > currentSlideIndex" [innerHTML]="slides[currentSlideIndex].content"></div>
+
+        <div *ngIf="isEditing">
+          <textarea [(ngModel)]="slides[currentSlideIndex].content" (input)="onContentChange(slides[currentSlideIndex].content)" rows="10" cols="50"></textarea>
+          <br />
+          <button nbButton status="success" (click)="saveSlide()" [disabled]="!hasChanges()">Save</button>
+          <button nbButton status="danger" (click)="cancelEditing()">Cancel</button>
+        </div>
+      </div>
+
+      <div class="slide-navigation">
+        <button nbButton status="basic" (click)="prevSlide()" [disabled]="currentSlideIndex === 0">Previous</button>
+        <button nbButton status="basic" (click)="nextSlide()" [disabled]="currentSlideIndex === slides.length - 1">Next</button>
+        <button nbButton status="primary" *ngIf="!isEditing" (click)="startEditing()">Edit</button>
+      </div>
+
+    </div>
+
   </nb-card-body>
+
   <nb-card-footer>
-    <button nbButton status="danger" (click)="close()">Fermer</button>
+    <button nbButton status="danger" (click)="close()">Close</button>
   </nb-card-footer>
 </nb-card>

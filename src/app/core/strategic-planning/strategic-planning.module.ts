@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { NbAccordionModule, NbButtonModule, NbCardModule, NbIconModule, NbInputModule, NbLayoutModule, NbOptionModule, NbSelectModule, NbStepperModule } from '@nebular/theme';
-import { ReactiveFormsModule } from '@angular/forms';
+import { NbAccordionModule, NbAlertModule, NbButtonModule, NbCardModule, NbDialogModule, NbIconModule, NbInputModule, NbLayoutModule, NbOptionModule, NbSelectModule, NbSpinnerModule, NbStepperModule } from '@nebular/theme';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { StrategicPlanningComponent } from './strategic-planning/strategic-planning.component';
 import { ProductSalesComponent } from './product-sales/product-sales.component';
 import { AiResponseDialogComponent } from './ai-response-dialog/ai-response-dialog.component';
@@ -19,6 +19,7 @@ import { RouterModule } from '@angular/router';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { BusinessPlanPresentationDialogComponent } from './business-plan-presentation-dialog/business-plan-presentation-dialog.component';
+import { UpdateBusinessPlanFinalComponent } from './update-business-plan-final/update-business-plan-final.component';
 
 
 @NgModule({
@@ -35,7 +36,8 @@ import { BusinessPlanPresentationDialogComponent } from './business-plan-present
     ProductDetailComponent,
     TeamDetailComponent,
     TeamComponent,
-    BusinessPlanPresentationDialogComponent
+    BusinessPlanPresentationDialogComponent,
+    UpdateBusinessPlanFinalComponent
   ],
   imports: [
     RouterModule,
@@ -52,6 +54,10 @@ import { BusinessPlanPresentationDialogComponent } from './business-plan-present
     NbIconModule,       
     NbEvaIconsModule,  
     NbAccordionModule,
+    NbDialogModule.forChild(),
+    FormsModule,
+    NbAlertModule,
+    NbSpinnerModule
 
 
 
@@ -69,7 +75,8 @@ import { BusinessPlanPresentationDialogComponent } from './business-plan-present
     ProductDetailComponent,
     TeamDetailComponent,
     TeamComponent,
-    BusinessPlanPresentationDialogComponent
+    BusinessPlanPresentationDialogComponent,
+    UpdateBusinessPlanFinalComponent
   ]
 })
 export class StrategicPlanningModule { }

@@ -11,9 +11,8 @@ export class ProductSalesService {
   private baseUrl = 'http://localhost:8080/api/product-or-services';
 
   constructor(private http: HttpClient) { }
-  
+
   create(payload: Product_sales) {
-    
     if (!payload.companyId) {
       throw new Error('companyId est requis pour créer un produit');
     }
@@ -21,7 +20,6 @@ export class ProductSalesService {
     const url = `http://localhost:8080/api/product-or-services?companyId=${payload.companyId}`;
     return this.http.post<Product_sales>(url, payload);
   }
-
 
 
   getAll(): Observable<Product_sales[]> {

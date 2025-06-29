@@ -1,0 +1,29 @@
+<nb-card>
+  <nb-card-header>
+    ✏️ Edit Business Plan
+  </nb-card-header>
+
+  <nb-card-body [formGroup]="formGroup">
+    <input type="hidden" formControlName="id" />
+
+    <div class="form-group mb-3">
+      <label for="title">Title</label>
+      <input nbInput fullWidth id="title" formControlName="title" placeholder="Plan title" />
+    </div>
+
+    <div class="form-group mb-3">
+      <label for="creationDate">Creation Date</label>
+      <input nbInput fullWidth id="creationDate" formControlName="creationDate" type="date" />
+    </div>
+
+    <div class="form-group mb-3">
+      <label for="finalContent">Generated Content (editable)</label>
+      <textarea nbInput fullWidth id="finalContent" rows="6" formControlName="finalContent" placeholder="Final generated content"></textarea>
+    </div>
+  </nb-card-body>
+
+  <nb-card-footer class="d-flex justify-content-end gap-2">
+    <button nbButton status="basic" (click)="dialogRef.close()">Cancel</button>
+    <button nbButton status="success" (click)="onUpdate()">Save</button>
+  </nb-card-footer>
+</nb-card>

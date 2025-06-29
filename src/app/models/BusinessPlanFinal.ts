@@ -7,6 +7,7 @@ export interface BusinessPlanFinal {
   products?: any[];
   teams?: any[];
   marketings?: any[];
+   finalContent?: string;
 }
 export interface AIResponseDTO {
   entityType: string;
@@ -14,7 +15,9 @@ export interface AIResponseDTO {
 }
 
 export interface BusinessPlanFinalDTO {
+   id: string;  
   title: string;
   creationDate: string;
-  aiResponses: AIResponseDTO[];
+  aiResponses?: AIResponseDTO[];
+  finalContent:string;
 }

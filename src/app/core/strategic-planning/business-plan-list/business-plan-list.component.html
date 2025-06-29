@@ -1,15 +1,81 @@
-<div class="row">
-  <div *ngFor="let plan of businessPlanDto | paginate: { itemsPerPage: 6, currentPage: page }" class="col-md-4 mb-4">
-    <nb-card class="shadow">
-      <nb-card-body>
-        <h4>{{ plan.title }}</h4>
-        <p class="text-muted">Créé le : {{ plan.creationDate | date: 'longDate' }}</p>
-    <button nbButton status="primary" size="small" (click)="generatePresentation(plan)">Voir</button>
- </nb-card-body>
-    </nb-card>
-  </div>
-</div>
+<nb-card>
+  <nb-card-header>📄 Business Plans List</nb-card-header>
 
-<div class="d-flex justify-content-center mt-3">
-  <pagination-controls (pageChange)="page = $event"></pagination-controls>
-</div>
+  <nb-card-body>
+    <table class="table nb-theme">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Creation Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+         <tr *ngFor="let plan of businessPlanDto">
+          <td>{{ plan.title }}</td>
+          <td>{{ plan.creationDate | date: 'longDate' }}</td>
+          <td class="d-flex gap-2">
+           <button nbButton status="success" size="tiny" (click)="viewPresentation(plan)" ghost>
+              <nb-icon icon="eye-outline" pack="eva"></nb-icon> View
+            </button>
+
+            <button nbButton status="info" size="tiny" (click)="openDownloadOptions(plan)">
+              <nb-icon icon="download-outline"></nb-icon>
+            </button>
+
+            <button nbButton status="danger" size="tiny" (click)="openDeleteDialog(plan)">
+              <nb-icon icon="trash-2-outline"></nb-icon>
+            </button>
+            
+            <button nbButton size="tiny" status="primary" ghost (click)="openEditDialog(plan)">
+              <nb-icon icon="edit-outline"></nb-icon>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </nb-card-body>
+</nb-card>
+
+<!-- Presentation -->
+<ng-template #presentationOptionsDialog let-ref="dialogRef">
+  <nb-card>
+    <nb-card-header>👁 Presentation of {{ currentPlan?.title }}</nb-card-header>
+    <nb-card-body>
+      <p>Choose how to view the plan:</p>
+    </nb-card-body>
+    <nb-card-footer class="d-flex justify-content-between">
+      <button nbButton status="primary" (click)="handlePresentationChoice('generated'); ref.close()">Original version</button>
+      <button nbButton status="success" (click)="handlePresentationChoice('edited'); ref.close()">Edited version</button>
+      <button nbButton status="warning" (click)="handlePresentationChoice('regenerate'); ref.close()">Regenerate</button>
+    </nb-card-footer>
+  </nb-card>
+</ng-template>
+
+<!-- Download -->
+<ng-template #downloadOptionsDialog let-ref="dialogRef">
+  <nb-card>
+    <nb-card-header>⬇ Download {{ currentPlan?.title }}</nb-card-header>
+    <nb-card-body>
+      <p>Choose format:</p>
+    </nb-card-body>
+    <nb-card-footer class="d-flex justify-content-between">
+      <button nbButton status="danger" (click)="handleDownloadChoice('pdf'); ref.close()">PDF</button>
+      <button nbButton status="info" (click)="handleDownloadChoice('ppt'); ref.close()">PowerPoint</button>
+    </nb-card-footer>
+  </nb-card>
+</ng-template>
+
+<!-- Delete -->
+<ng-template #deleteDialog let-plan="plan" let-ref="dialogRef">
+  <nb-card>
+    <nb-card-header class="text-danger">❌ Confirmation</nb-card-header>
+    <nb-card-body>
+      Are you sure you want to delete the plan <strong>{{ plan?.title }}</strong>?
+    </nb-card-body>
+    <nb-card-footer class="d-flex justify-content-end gap-2">
+      <button nbButton status="basic" (click)="ref.close()">Cancel</button>
+      <button nbButton status="danger" (click)="confirmDelete(plan.id); ref.close()">Delete</button>
+    </nb-card-footer>
+  </nb-card>
+</ng-template>

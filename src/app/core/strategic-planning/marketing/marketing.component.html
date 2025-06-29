@@ -1,12 +1,12 @@
-<button nbButton status="success" (click)="openAddDialog()">Ajouter</button>
+<button nbButton status="success" (click)="openAddDialog()">Add</button>
 
 <table class="table">
   <thead>
     <tr>
       <th>Distribution</th>
-      <th>Canal</th>
-      <th>Objectif de vente</th>
-       <th>Réponse AI</th>
+      <th>Channel</th>
+      <th>Sales Target</th>
+      <th>AI Response</th>
       <th>Actions</th>
     </tr>
   </thead>
@@ -15,17 +15,26 @@
       <td>{{ m.distribution_Channel }}</td>
       <td>{{ m.marketing_channel }}</td>
       <td>{{ m.sales_target }} {{ m.currency }}</td>
-     <td>
- <button nbButton size="tiny" *ngIf="m.id" (click)="showAIResponse(m.id)">Voir</button>
-</td>
       <td>
-        <button nbButton size="tiny" status="info" (click)="editMarketing(m)">Éditer</button>
-        <button nbButton size="tiny" status="danger" (click)="deleteMarketing(m.id!)">Supprimer</button>
+        <button nbButton size="tiny" *ngIf="m.id" (click)="showAIResponse(m.id)">View</button>
+      </td>
+      <td>
+        <button nbButton size="tiny" status="info" (click)="editMarketing(m)">Edit</button>
+        <button nbButton size="tiny" status="danger" (click)="deleteMarketing(m.id!)">Delete</button>
       </td>
     </tr>
   </tbody>
-  
 </table>
-<button nbButton status="success" (click)="generateBusinessPlan()">
-  🧠 Générer le Business Plan Final
+
+<button (click)="generateBusinessPlan()" [disabled]="loading">
+  {{ loading ? 'Generating...' : 'Generate Final Business Plan' }}
 </button>
+
+<div *ngIf="errorMessage" style="color: red; margin-top: 10px;">
+  {{ errorMessage }}
+</div>
+
+<div *ngIf="businessPlanFinal" style="margin-top: 20px;">
+  <h3>Generated Final Business Plan:</h3>
+  <pre style="white-space: pre-wrap;">{{ businessPlanFinal.finalContent }}</pre>
+</div>

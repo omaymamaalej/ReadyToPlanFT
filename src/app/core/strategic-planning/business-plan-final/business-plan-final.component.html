@@ -1,18 +1,14 @@
 <nb-card *ngIf="businessPlan">
   <nb-card-header>{{ businessPlan.title }}</nb-card-header>
   <nb-card-body>
-    <p><strong>Date de création :</strong> {{ businessPlan.creationDate | date:'short' }}</p>
+    <p><strong>Creation Date:</strong> {{ businessPlan.creationDate | date:'longDate' }}</p>
 
-    <h4>🧠 Résumés générés par l'IA :</h4>
-    <ul *ngIf="businessPlan.aiResponses.length > 0; else aucun">
-      <li *ngFor="let res of businessPlan.aiResponses">
-        <p><strong>{{ res.entityType }} :</strong></p>
-        <p>{{ res.aiResponse }}</p>
-      </li>
-    </ul>
-
-    <ng-template #aucun>
-      <p>Aucun résumé IA disponible.</p>
+    <h4>🧠 Generated Plan:</h4>
+    <div *ngIf="businessPlan.finalContent; else noContent">
+      <div *ngIf="formattedContent; else noContent" [innerHTML]="formattedContent"></div>
+    </div>
+    <ng-template #noContent>
+      <p>No content generated.</p>
     </ng-template>
   </nb-card-body>
 </nb-card>

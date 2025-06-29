@@ -8,6 +8,7 @@ import { MarketingService } from 'src/app/services/marketing.service';
 import { AiGenerationService } from 'src/app/services/ai-generation.service';
 import { BusinessPlanFinalService } from 'src/app/services/business-plan-final.service';
 import { catchError, of } from 'rxjs';
+import { BusinessPlanPresentationDialogComponent } from '../business-plan-presentation-dialog/business-plan-presentation-dialog.component';
 
 @Component({
   selector: 'app-marketing',
@@ -18,59 +19,60 @@ export class MarketingComponent implements OnInit {
   
   aiResponsesMap: { [memberId: string]: string } = {};
   marketingList: Marketing[] = [];
-  businessPlanFinal: any;
+businessPlanFinal: any;
   companyId: string | undefined = localStorage.getItem('selectedCompanyId') ?? undefined;
-
+  loading = false;
+  errorMessage = '';
   constructor(
     private marketingService: MarketingService,
     private dialogService: NbDialogService,
     private aiService: AiGenerationService,
-    private businessPlanFinalService: BusinessPlanFinalService,
-    private router: Router
-  ) { }
+     private businessPlanFinalService: BusinessPlanFinalService,
+      private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.loadMarketing();
   }
 
-  loadMarketing(): void {
-    const companyId = localStorage.getItem('selectedCompanyId');
-    if (!companyId) {
-      alert("Aucune entreprise sélectionnée.");
-      return;
-    }
-
-    this.marketingService.getByCompanyId(companyId).pipe(
-      catchError(err => {
-        console.error("Erreur serveur ou parsing:", err);
-        return of([]);
-      })
-    ).subscribe({
-      next: data => {
-        console.log("Réponse brute marketing:", data);
-        this.marketingList = data;
-
-        // 🔁 Pour chaque marketing, récupérer la réponse IA
-        this.marketingList.forEach(item => {
-          if (item.id) {
-            this.aiService.getAIResponse('MARKETING', item.id).subscribe({
-              next: res => {
-                console.log("Réponse IA pour", item.id, ":", res);
-                this.aiResponsesMap[item.id!] = res.aiResponse;
-              },
-              error: err => {
-                console.error("Erreur IA pour l'id", item.id, ":", err);
-                this.aiResponsesMap[item.id!] = "Erreur lors du chargement.";
-              }
-            });
-          }
-        });
-      },
-      error: err => {
-        console.error("Erreur chargement marketing:", err);
-      }
-    });
+loadMarketing(): void {
+  const companyId = localStorage.getItem('selectedCompanyId');
+  if (!companyId) {
+    alert("Aucune entreprise sélectionnée.");
+    return;
   }
+
+  this.marketingService.getByCompanyId(companyId).pipe(
+    catchError(err => {
+      console.error("Erreur serveur ou parsing:", err);
+      return of([]);
+    })
+  ).subscribe({
+    next: data => {
+      console.log("Réponse brute marketing:", data);
+      this.marketingList = data;
+
+      // 🔁 Pour chaque marketing, récupérer la réponse IA
+      this.marketingList.forEach(item => {
+        if (item.id) {
+          this.aiService.getAIResponse('MARKETING', item.id).subscribe({
+            next: res => {
+              console.log("Réponse IA pour", item.id, ":", res);
+              this.aiResponsesMap[item.id!] = res.aiResponse;
+            },
+            error: err => {
+              console.error("Erreur IA pour l'id", item.id, ":", err);
+              this.aiResponsesMap[item.id!] = "Erreur lors du chargement.";
+            }
+          });
+        }
+      });
+    },
+    error: err => {
+      console.error("Erreur chargement marketing:", err);
+    }
+  });
+}
 
 
   showAIResponse(id: string): void {
@@ -106,19 +108,41 @@ export class MarketingComponent implements OnInit {
       this.marketingService.delete(id).subscribe(() => this.loadMarketing());
     }
   }
-  generateBusinessPlan(): void {
-    if (!this.companyId) {
-      console.error("Company ID manquant");
-      return;
-    }
 
-    this.businessPlanFinalService.getAIOnlyBusinessPlan(this.companyId).subscribe({
-      next: (plan) => {
-        this.router.navigate(['/business-plan-final', this.companyId]);  // ✅ Redirige vers l'affichage
-      },
-      error: (err) => {
-        console.error("Erreur génération du plan IA", err);
-      }
-    });
+generateBusinessPlan(): void {
+  if (!this.companyId) {
+    console.error("Company ID manquant");
+    return;
   }
+
+  this.loading = true;
+  this.errorMessage = '';
+
+  this.businessPlanFinalService.generateBusinessPlan(this.companyId).subscribe({
+    next: (res) => {
+      this.loading = false;
+      this.businessPlanFinal = res;
+
+      // ✅ Ouvrir la boîte de dialogue avec le plan généré
+      this.dialogService.open(BusinessPlanPresentationDialogComponent, {
+        context: {
+          plan: {
+            title: res.title ?? 'Business Plan',
+            creationDate: res.creationDate ?? new Date().toISOString(),
+            finalContent: res.finalContent ?? 'Aucun contenu disponible.',
+            id: ''
+          }
+        }
+      });
+    },
+    error: (err) => {
+      this.loading = false;
+      this.errorMessage = 'Erreur lors de la génération du business plan.';
+      console.error(err);
+    }
+  });
+}
+ 
+
+
 }

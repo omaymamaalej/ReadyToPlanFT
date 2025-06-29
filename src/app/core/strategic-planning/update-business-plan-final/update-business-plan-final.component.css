@@ -1,0 +1,90 @@
+::ng-deep nb-card.dialog-card {
+  width: 60vw !important;
+  max-width: none !important;
+  margin: 0 auto;
+  min-width: 600px; 
+  height: 500px;
+
+  display: flex;
+  flex-direction: column;
+}
+
+::ng-deep nb-card-body.dialog-body {
+  flex: 1 1 auto;  
+  overflow-y: auto;
+  padding-right: 1rem;
+}
+
+.row {
+  margin-bottom: 1.5rem; 
+}
+
+.col-sm-6 {
+  flex: 1 1 50%;
+  max-width: 50%;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+::ng-deep nb-card-header.header-with-close,
+::ng-deep nb-card-footer {
+  flex: 0 0 auto;
+}
+
+
+::ng-deep nb-card-header.header-with-close {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.close-btn {
+  min-width: 30px;
+  padding: 0 6px;
+}
+
+
+.nb-theme-default nb-card-body {
+  display: block;
+}
+
+.nb-theme-default nb-card-body button {
+  width: 100%;
+  margin-bottom: 2rem;
+  display: block;
+}
+
+.nb-theme-default nb-card-body button:last-child {
+  margin-bottom: 0;
+}
+
+.nb-theme-default .result-from-dialog {
+  flex-direction: column;
+}
+
+.nb-theme-default .form-input-card nb-card-body {
+  display: block;
+}
+
+.nb-card-footer .button nb-icon {
+  vertical-align: middle;
+  margin-right: 0.5rem;
+}
+
+
+@media (max-width: 991.98px) {
+  ::ng-deep nb-card.dialog-card {
+    width: 90vw !important;
+    height: 70vh; 
+    min-width: auto;
+  }
+}
+
+@media (max-width: 575.98px) {
+  ::ng-deep nb-card.dialog-card {
+    width: 95vw !important;
+    height: 80vh;
+  }
+}
