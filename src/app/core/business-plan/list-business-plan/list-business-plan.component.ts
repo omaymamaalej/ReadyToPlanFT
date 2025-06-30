@@ -34,6 +34,10 @@ export class ListBusinessPlanComponent implements OnInit {
   selectedBusinessPlan?: BusinessPlanDto;
   currentBusinessPlanForPresentation?: BusinessPlanDto;
 
+  showSearchBar = false;
+  searchTerm = '';
+
+
   public readonly paginationConfig: PaginationInstance = {
     id: 'businessPlanPagination',  // This is now a required string
     itemsPerPage: 6,
@@ -281,6 +285,19 @@ export class ListBusinessPlanComponent implements OnInit {
 
   onPageChange(page: number): void {
     this.paginationConfig.currentPage = page;
+  }
+
+  toggleSearchBar() {
+    this.showSearchBar = !this.showSearchBar;
+    if (!this.showSearchBar) {
+      this.searchTerm = '';
+      this.onSearch(); // Pour réinitialiser la liste si nécessaire
+    }
+  }
+
+  onSearch() {
+    // Implémentez votre logique de recherche ici
+    // Par exemple, filtrer businessPlanDto en fonction de searchTerm
   }
 
 

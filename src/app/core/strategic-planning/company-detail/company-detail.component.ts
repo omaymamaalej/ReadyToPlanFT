@@ -36,7 +36,7 @@ export class CompanyDetailComponent implements OnInit {
     const stored = localStorage.getItem('selectedCompany');
     if (stored) {
       this.selectedCompany = JSON.parse(stored);
-
+      this.aiResponse = this.selectedCompany!.aiPresentation || null;
     }
 
     this.companyForm = this.fb.group({
@@ -50,19 +50,9 @@ export class CompanyDetailComponent implements OnInit {
 
     if (this.selectedCompany) {
       this.companyForm.patchValue(this.selectedCompany);
-      const cleanedId = this.selectedCompany.id?.trim();
-      if (cleanedId) {
-        this.aiService.getAIResponse('COMPANY', this.selectedCompany.id!).subscribe({
-          next: (res) => {
-            console.log('Réponse IA:', res); // AJOUTE CECI POUR DEBUG
-            this.aiResponse = res.aiResponse;
-          },
-          error: (err) => console.error('Erreur IA:', err),
-        });
-      }
-
     }
   }
+
 
 
   loadAIResponse(companyId: string): void {
@@ -89,13 +79,14 @@ export class CompanyDetailComponent implements OnInit {
         next: (updated: Company) => {
           this.selectedCompany = updated;
           localStorage.setItem('selectedCompany', JSON.stringify(updated));
+          this.aiResponse = updated.aiPresentation || null; // mise à jour directe
           this.isEditing = false;
-          this.loadAIResponse(updated.id!); // <--- recharge la réponse IA !
         },
         error: (err) => console.error(err),
       });
     }
   }
+
   goToFinalPlan(): void {
     this.router.navigate(['/business-plan-final']);
   }

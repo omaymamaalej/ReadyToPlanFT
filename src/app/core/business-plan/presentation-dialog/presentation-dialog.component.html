@@ -16,7 +16,7 @@
     <nb-alert status="warning">Attention: Le format de la présentation semble incomplet. Certaines sections peuvent manquer.</nb-alert>
   </div>
 
-  <div *ngIf="!isLoading && !errorMessage" class="presentation-container" >
+  <div *ngIf="!isLoading && !errorMessage" class="presentation-container">
 
     <div class="slide-list">
       <div *ngFor="let slide of slides; let i = index" 
@@ -25,20 +25,20 @@
           (click)="goToSlide(i)">
         <span class="slide-number">{{i}}.</span>
         {{ getSlideTitle(i) }}
+        <span *ngIf="isTableSlide(i)" class="table-indicator">
+          <nb-icon icon="grid-outline"></nb-icon>
+        </span>
       </div>
     </div>
 
     <div class="main-content">
-
       <div class="slide-navigation" *ngIf="currentSlideIndex !== 0">
         <button nbButton ghost (click)="prevSlide()" [disabled]="currentSlideIndex === 1">
           <nb-icon icon="arrow-left-outline"></nb-icon>
         </button>
-
         <span class="slide-counter">
           {{currentSlideIndex}}/{{slides.length - 1}}
         </span>
-
         <button nbButton ghost (click)="nextSlide()" [disabled]="currentSlideIndex === slides.length - 1">
           <nb-icon icon="arrow-right-outline"></nb-icon>
         </button>
@@ -56,7 +56,9 @@
             <div *ngIf="currentSlideIndex !== 0" class="slide-body">
               <div *ngIf="!isEditing" 
                   [innerHTML]="formatSlideContent(slides[currentSlideIndex].content, currentSlideIndex)"
-                  class="slide-content-container"></div>
+                  [class.table-slide]="isTableSlide(currentSlideIndex)"
+                  class="slide-content-container markdown-content">
+              </div>
               
               <div *ngIf="isEditing" class="edit-container">
                 <textarea [(ngModel)]="slides[currentSlideIndex].content" 
@@ -64,7 +66,6 @@
                           class="edit-textarea"></textarea>
               </div>
             </div>
-            
           </div>
         </div>
       </div>
@@ -85,4 +86,3 @@
     </div>
   </div>
 </div>
-

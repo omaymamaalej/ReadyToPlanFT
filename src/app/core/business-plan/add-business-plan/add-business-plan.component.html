@@ -1,7 +1,15 @@
 <div class="row">
     <div class="col-lg-13">
         <nb-card>
-            <nb-card-header>Create a presentation</nb-card-header>
+            <nb-card-header>
+                <div class="d-flex justify-content-between align-items-center">
+                    <span>Create A New Presentation</span>
+                    <a nbButton size="tiny" status="info" ghost [routerLink]="'/home/businessPlan/listBusinessPlan'"
+                        nbTooltip="View all business plans" nbTooltipPlacement="bottom">
+                        <nb-icon icon="list-outline"></nb-icon>
+                    </a>
+                </div>
+            </nb-card-header>
             <nb-card-body>
                 <form [formGroup]="businessPlanForm">
 

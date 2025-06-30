@@ -35,3 +35,27 @@ button[nbButton] {
 }
 
 
+.search-bar {
+  width: 200px;
+  transition: width 0.3s ease;
+}
+
+.search-bar:focus {
+  width: 250px;
+}
+
+.d-flex {
+  display: flex;
+}
+
+.justify-content-between {
+  justify-content: space-between;
+}
+
+.align-items-center {
+  align-items: center;
+}
+
+.gap-2 {
+  gap: 8px;
+}

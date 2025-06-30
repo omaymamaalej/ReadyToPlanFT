@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { NbAccordionModule, NbAlertModule, NbButtonModule, NbCardModule, NbDialogModule, NbIconModule, NbInputModule, NbLayoutModule, NbOptionModule, NbSelectModule, NbSpinnerModule, NbStepperModule } from '@nebular/theme';
+import { NbAccordionModule, NbAlertModule, NbButtonModule, NbCardModule, NbDialogModule, NbIconModule, NbInputModule, NbLayoutModule, NbOptionModule, NbSelectModule, NbSpinnerModule, NbStepperModule, NbToastrModule, NbTooltipModule } from '@nebular/theme';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { StrategicPlanningComponent } from './strategic-planning/strategic-planning.component';
 import { ProductSalesComponent } from './product-sales/product-sales.component';
@@ -57,7 +57,9 @@ import { UpdateBusinessPlanFinalComponent } from './update-business-plan-final/u
     NbDialogModule.forChild(),
     FormsModule,
     NbAlertModule,
-    NbSpinnerModule
+    NbSpinnerModule,
+    NbTooltipModule,
+    NbToastrModule,
 
 
 

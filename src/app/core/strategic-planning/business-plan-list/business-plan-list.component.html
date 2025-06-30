@@ -1,5 +1,22 @@
 <nb-card>
-  <nb-card-header>📄 Business Plans List</nb-card-header>
+  <nb-card-header>
+     <div class="d-flex justify-content-between align-items-center">
+      <span>All Strategy Created</span>
+      <div class="d-flex gap-2">
+        <input *ngIf="showSearchBar" type="text" nbInput placeholder="Search..." 
+               [(ngModel)]="searchTerm" (input)="onSearch()" class="search-bar">
+        
+        <button nbButton size="tiny" status="basic" ghost (click)="toggleSearchBar()">
+          <nb-icon icon="search-outline"></nb-icon>
+        </button>
+        
+        <a nbButton size="tiny" status="primary" ghost [routerLink]="'/strategic-planning'"
+           nbTooltip="Create A Strategic-Planning" nbTooltipPlacement="bottom">
+          <nb-icon icon="plus-outline"></nb-icon>
+        </a>
+      </div>
+    </div>
+  </nb-card-header>
 
   <nb-card-body>
     <table class="table nb-theme">
@@ -16,7 +33,7 @@
           <td>{{ plan.creationDate | date: 'longDate' }}</td>
           <td class="d-flex gap-2">
            <button nbButton status="success" size="tiny" (click)="viewPresentation(plan)" ghost>
-              <nb-icon icon="eye-outline" pack="eva"></nb-icon> View
+              <nb-icon icon="eye-outline" pack="eva"></nb-icon> 
             </button>
 
             <button nbButton status="info" size="tiny" (click)="openDownloadOptions(plan)">

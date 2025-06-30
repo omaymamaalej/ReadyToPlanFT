@@ -14,6 +14,9 @@ export class BusinessPlanListComponent implements OnInit {
   businessPlanDto: BusinessPlanFinalDTO[] = [];
   currentPlan?: BusinessPlanFinalDTO;
 
+  showSearchBar = false;
+  searchTerm = '';
+
   @ViewChild('presentationOptionsDialog') presentationOptionsDialog!: TemplateRef<any>;
   @ViewChild('downloadOptionsDialog') downloadOptionsDialog!: TemplateRef<any>;
   @ViewChild('deleteDialog') deleteDialog!: TemplateRef<any>;
@@ -21,7 +24,7 @@ export class BusinessPlanListComponent implements OnInit {
   constructor(
     private businessPlanService: BusinessPlanFinalService,
     private dialogService: NbDialogService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.businessPlanService.getAll().subscribe({
@@ -30,41 +33,41 @@ export class BusinessPlanListComponent implements OnInit {
     });
   }
 
- viewPresentation(plan: BusinessPlanFinalDTO): void {
-  this.dialogService.open(BusinessPlanPresentationDialogComponent, {
-    context: { plan }, // tu passes le plan à afficher
-    closeOnBackdropClick: true,
-    hasScroll: true,
-    dialogClass: 'custom-dialog', // optionnel pour un style personnalisé
-  });
-}
+  viewPresentation(plan: BusinessPlanFinalDTO): void {
+    this.dialogService.open(BusinessPlanPresentationDialogComponent, {
+      context: { plan }, // tu passes le plan à afficher
+      closeOnBackdropClick: true,
+      hasScroll: true,
+      dialogClass: 'custom-dialog', // optionnel pour un style personnalisé
+    });
+  }
 
   openDownloadOptions(plan: BusinessPlanFinalDTO) {
     this.currentPlan = plan;
     this.dialogService.open(this.downloadOptionsDialog);
   }
 
- openDeleteDialog(plan: BusinessPlanFinalDTO): void {
-  if (!plan?.id) {
-    console.error('Plan invalide ou ID manquant', plan);
-    return;
-  }
-  this.dialogService.open(this.deleteDialog, {
-    context: { plan }
-  });
-}
-
-
-confirmDelete(id: string): void {
-  this.businessPlanService.delete(id).subscribe({
-    next: () => {
-      this.businessPlanDto = this.businessPlanDto.filter(plan => plan.id !== id);
-    },
-    error: (err) => {
-      console.error('Erreur lors de la suppression :', err);
+  openDeleteDialog(plan: BusinessPlanFinalDTO): void {
+    if (!plan?.id) {
+      console.error('Plan invalide ou ID manquant', plan);
+      return;
     }
-  });
-}
+    this.dialogService.open(this.deleteDialog, {
+      context: { plan }
+    });
+  }
+
+
+  confirmDelete(id: string): void {
+    this.businessPlanService.delete(id).subscribe({
+      next: () => {
+        this.businessPlanDto = this.businessPlanDto.filter(plan => plan.id !== id);
+      },
+      error: (err) => {
+        console.error('Erreur lors de la suppression :', err);
+      }
+    });
+  }
 
 
   handlePresentationChoice(option: 'generated' | 'edited' | 'regenerate') {
@@ -76,18 +79,31 @@ confirmDelete(id: string): void {
     console.log('Téléchargement format :', format, this.currentPlan?.id);
     // Appelle le backend pour générer le fichier
   }
-  
-openEditDialog(plan: BusinessPlanFinalDTO): void {
-  this.dialogService.open(UpdateBusinessPlanFinalComponent, {
-    context: {
-      businessPlanFinal: plan
-    },
-    closeOnBackdropClick: false,
-    hasScroll: true,
-  }).onClose.subscribe((updated: boolean) => {
-    if (updated) {
-      this.ngOnInit();
+
+  openEditDialog(plan: BusinessPlanFinalDTO): void {
+    this.dialogService.open(UpdateBusinessPlanFinalComponent, {
+      context: {
+        businessPlanFinal: plan
+      },
+      closeOnBackdropClick: false,
+      hasScroll: true,
+    }).onClose.subscribe((updated: boolean) => {
+      if (updated) {
+        this.ngOnInit();
+      }
+    });
+  }
+
+  toggleSearchBar() {
+    this.showSearchBar = !this.showSearchBar;
+    if (!this.showSearchBar) {
+      this.searchTerm = '';
+      this.onSearch(); // Pour réinitialiser la liste si nécessaire
     }
-  });
-}
+  }
+
+  onSearch() {
+    // Implémentez votre logique de recherche ici
+    // Par exemple, filtrer businessPlanDto en fonction de searchTerm
+  }
 }   

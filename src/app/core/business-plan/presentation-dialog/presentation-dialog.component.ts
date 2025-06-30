@@ -1,6 +1,7 @@
 import { Component, HostListener, Input, OnInit } from '@angular/core';
 import { Slide } from 'src/app/models/Slide';
 import { BusinessPlanService } from 'src/app/services/business-plan.service';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-presentation-dialog',
@@ -21,8 +22,12 @@ export class PresentationDialogComponent implements OnInit {
   private originalContent = '';
   modifiedSlides: Set<number> = new Set();
 
+  private readonly TABLE_SLIDES = [9, 12, 13, 16, 17];
 
-  constructor(private businessPlanService: BusinessPlanService) { }
+  constructor(
+    private businessPlanService: BusinessPlanService,
+    private sanitizer: DomSanitizer
+  ) { }
 
   @HostListener('window:keydown', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
@@ -30,8 +35,7 @@ export class PresentationDialogComponent implements OnInit {
     if (event.key === '>' || event.key === '.' || event.key === 'ArrowRight') {
       this.nextSlide();
       event.preventDefault();
-    }
-    else if (event.key === '<' || event.key === ',' || event.key === 'ArrowLeft') {
+    } else if (event.key === '<' || event.key === ',' || event.key === 'ArrowLeft') {
       this.prevSlide();
       event.preventDefault();
     }
@@ -46,6 +50,11 @@ export class PresentationDialogComponent implements OnInit {
     }
   }
 
+  isTableSlide(index: number): boolean {
+    return this.TABLE_SLIDES.includes(index) ||
+      (this.slides[index]?.content?.includes('[TABLE]') ?? false);
+  }
+
   private parsePresentationContent(content: string): void {
     const slideContents = content.split(/===SLIDE===\s*\n+/)
       .map(slide => slide.trim())
@@ -58,7 +67,9 @@ export class PresentationDialogComponent implements OnInit {
       let cleanedLines: string[] = [];
 
       if (lines.length > 0) {
-        cleanedLines.push(lines[0]);
+        // cleanedLines.push(lines[0]);
+        const firstLine = lines[0].replace(/^\d+\.\s*/, '');
+        cleanedLines.push(firstLine);
       }
 
       for (let i = 1; i < lines.length; i++) {
@@ -77,113 +88,111 @@ export class PresentationDialogComponent implements OnInit {
   loadPresentation() {
     this.isLoading = true;
     this.errorMessage = null;
-
+    // Logique de chargement ici
   }
 
   getCleanTitle(content: string): string {
     if (!content) return '';
-
     const firstLine = content.split('\n')[0] || '';
     return firstLine
-      .replace(/^\d+\.\s*/, '')
+      .replace(/^#\s*\d+\.\s*/, '')
       .replace(/\*\*/g, '')
+      .replace(/\[TABLE\]/g, '')
       .trim();
   }
 
-  formatSlideContent(content: string, slideIndex: number): string {
+  formatSlideContent(content: string, slideIndex: number): SafeHtml {
     if (!content) return '';
+    if (slideIndex === 0) return '';
 
-    if (slideIndex === 0) {
-      return '';
+    let html = content
+      .replace(/^#+\s+(.*)/gm, '<h1>$1</h1>')
+      .replace(/^##\s+(.*)/gm, '<h2>$1</h2>')
+      .replace(/^-\s+(.*)/gm, '<li>$1</li>')
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*(.*?)\*/g, '<em>$1</em>')
+      .replace(/\[TABLE\]/g, '');
+
+    if (this.isTableSlide(slideIndex)) {
+      const formattedTables = this.formatTables(html, slideIndex);
+      const tableSlideClass = [9, 12, 13, 16, 17].includes(slideIndex) ? 'table-slide' : 'table-slide';
+      html = `<div class="${tableSlideClass}">${formattedTables}</div>`;
     }
 
-    const lines = content.split('\n');
-    let html = '';
-    let inTable = false;
-    let tableRows: string[] = [];
-
-    for (let i = 0; i < lines.length; i++) {
-      const line = lines[i].trim();
-
-      if (i === 0) continue; // Skip the title line
-
-      // Détection des tableaux markdown
-      if (line.startsWith('|') && line.includes('|')) {
-        if (!inTable) {
-          inTable = true;
-          tableRows = [];
-          html += '<div class="markdown-table-container">';
-          html += '<table class="markdown-table">';
-        }
-        tableRows.push(line);
-        continue;
-      } else if (inTable) {
-        // Fin du tableau - convertir les lignes en HTML
-        html += this.convertMarkdownTableToHTML(tableRows);
-        html += '</table></div>';
-        inTable = false;
-      }
-
-      // Traitement du texte normal
-      if (line.startsWith('## ')) {
-        html += `<h2>${line.substring(3)}</h2>`;
-      } else if (line.startsWith('- ')) {
-        if (i === 1 || !lines[i - 1].startsWith('- ')) html += '<ul>';
-        html += `<li>${line.substring(2)}</li>`;
-        if (i === lines.length - 1 || !lines[i + 1].startsWith('- ')) html += '</ul>';
-      } else if (line.match(/\*\*.+\*\*/)) {
-        html += line.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-      } else if (line) {
-        html += `<p>${line}</p>`;
-      }
-    }
-
-    // Fermer le tableau si le slide se termine avec un tableau ouvert
-    if (inTable) {
-      html += this.convertMarkdownTableToHTML(tableRows);
-      html += '</table></div>';
-    }
-
-    return html;
+    return this.sanitizer.bypassSecurityTrustHtml(html);
   }
 
-  private convertMarkdownTableToHTML(tableRows: string[]): string {
-    if (!tableRows || tableRows.length === 0) return '';
+  private formatTables(html: string, slideIndex: number): string {
+    const tableSections = html.split(/(TABLE \d+:)/g);
+    let result = '';
 
-    let html = '';
-    let isHeaderRow = false;
-    let isSeparatorRow = false;
-
-    for (let i = 0; i < tableRows.length; i++) {
-      const row = tableRows[i];
-      const cells = row.split('|').map(cell => cell.trim()).filter(cell => cell);
-
-      if (i === 0) {
-        // Première ligne - en-tête
-        html += '<thead><tr>';
-        cells.forEach(cell => {
-          html += `<th>${cell.replace(/\*\*/g, '')}</th>`;
-        });
-        html += '</tr></thead><tbody>';
-        isHeaderRow = true;
-      } else if (row.includes('---') || row.includes('----')) {
-        // Ligne de séparation - on l'ignore en HTML
-        isSeparatorRow = true;
-        continue;
-      } else {
-        // Ligne normale
-        html += '<tr>';
-        cells.forEach(cell => {
-          const cellContent = cell.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-          html += `<td>${cellContent}</td>`;
-        });
-        html += '</tr>';
+    if (tableSections.length > 1) {
+      for (let i = 0; i < tableSections.length; i++) {
+        if (i % 2 === 1) {
+          result += `<h3 class="table-title">${tableSections[i]}</h3>`;
+        } else {
+          result += this.processTableContent(tableSections[i]);
+        }
       }
+    } else {
+      result = this.processTableContent(html);
     }
 
-    html += '</tbody>';
-    return html;
-  } 
+    return `<div class="table-container">${result}</div>`;
+  }
+
+  private processTableContent(content: string): string {
+    content = content.replace(/\[TABLE\]/g, '');
+
+    const tableRegex = /(\|.*\|(\s*\|.*\|)*)/g;
+
+    return content.replace(tableRegex, (match) => {
+      const rows = match.trim().split('\n');
+      let tableHtml = `<table class="business-table" style="border: 2px solid #ccc; border-collapse: collapse; width: 100%;">`;
+
+
+      let isNumericColumn: boolean[] = [];
+
+      rows.forEach((row, rowIndex) => {
+        const cells = row.split('|').slice(1, -1).map(cell => cell.trim());
+
+        if (rowIndex === 0) {
+          tableHtml += '<thead><tr style="background-color: rgb(127, 134, 179); color: black;">';
+          cells.forEach((cell, colIndex) => {
+            isNumericColumn[colIndex] = /\d/.test(cell.toLowerCase()) ||
+              /(revenue|profit|amount|value|€|\$|%)/i.test(cell);
+            tableHtml += `<th style="border: 1px solid #ccc; padding: 10px;">${cell}</th>`;
+          });
+          tableHtml += '</tr></thead><tbody>';
+        
+        } else if (row.includes('----')) {
+          return;
+        } else {
+          tableHtml += '<tr>';
+          cells.forEach((cell, colIndex) => {
+            const isHighlighted = cell.includes('**');
+            const cleanCell = cell.replace(/\*\*/g, '');
+            const classes = [
+              isHighlighted ? 'highlight' : '',
+              isNumericColumn[colIndex] ? 'numeric' : '',
+              colIndex === 0 ? 'main-col' : ''
+            ].filter(Boolean).join(' ');
+
+            const tdStyle = 'style="border: 1px solid #ccc; padding: 10px;"';
+
+            tableHtml += classes
+              ? `<td class="${classes}" ${tdStyle}>${cleanCell}</td>`
+              : `<td ${tdStyle}>${cleanCell}</td>`;
+          });
+
+          tableHtml += '</tr>';
+        }
+      });
+
+      tableHtml += '</tbody></table>';
+      return tableHtml;
+    });
+  }
 
   goToSlide(index: number) {
     if (index >= 0 && index < this.slides.length) {
@@ -214,9 +223,7 @@ export class PresentationDialogComponent implements OnInit {
   }
 
   saveSlide(index: number) {
-    if (!this.hasChanges(index)) {
-      return;
-    }
+    if (!this.hasChanges(index)) return;
 
     this.businessPlanService.updateSlide(
       this.businessPlanId,
@@ -226,7 +233,6 @@ export class PresentationDialogComponent implements OnInit {
       next: () => {
         this.modifiedSlides.delete(index);
         this.isEditing = false;
-
         console.log(`Slide ${index} updated successfully`);
       },
       error: (err) => {
@@ -244,24 +250,14 @@ export class PresentationDialogComponent implements OnInit {
     });
   }
 
+
   getSlideTitle(index: number): string {
     if (!this.slides[index]?.content) return `Slide ${index + 1}`;
-
     const content = this.slides[index].content;
     const firstLine = content.split('\n')[0] || '';
-
-    if (index === 0) {
-      return this.businessPlanName;
-    }
-
-    return firstLine
-      .replace(/^#\s*\d+\.\s*/, '')
-      .replace(/\*\*/g, '')
-      .trim();
-  }
-
-  isTableOfContents(index: number): boolean {
-    return index === 0;
+    return index === 0
+      ? this.businessPlanName
+      : firstLine.replace(/^#\s*\d+\.\s*/, '').replace(/\*\*/g, '').trim();
   }
 
   prevSlide() {

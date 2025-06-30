@@ -112,8 +112,8 @@ export class ProductSalesComponent implements OnInit {
         next: (results) => {
           console.log('Tous les produits enregistrés', results);
           this.dialogRef?.close(true);
-          // this.router.navigate(['/product-detail', results[0].id]); 
-          this.router.navigate(['/strategic-planning/product-detail', results[0].id]);
+          this.dialogRef?.close(true); 
+
         },
         error: (err) => console.error('Erreur lors de la création de produits :', err),
       });

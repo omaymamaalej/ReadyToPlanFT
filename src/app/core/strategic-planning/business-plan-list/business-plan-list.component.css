@@ -33,3 +33,20 @@ button[nbButton] {
 .actions-column button {
   margin-bottom: 2px; 
 }
+
+
+.d-flex {
+  display: flex;
+}
+
+.justify-content-between {
+  justify-content: space-between;
+}
+
+.align-items-center {
+  align-items: center;
+}
+
+.gap-2 {
+  gap: 8px;
+}

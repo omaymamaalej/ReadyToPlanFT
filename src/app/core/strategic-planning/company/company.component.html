@@ -4,7 +4,7 @@
     <nb-card>
       <nb-card-header>Create a Company</nb-card-header>
       <nb-card-body>
-        <form [formGroup]="companyForm">
+        <form [formGroup]="companyForm" (ngSubmit)="submit()">
           <div class="row">
             <div class="col-sm-12 col-md-6">
               <div class="form-group mb-3">
@@ -56,7 +56,15 @@
           </div>
 
           <div class="buttons-row mt-4">
-            <button type="button" nbButton status="primary" (click)="submit()">Enregistrer</button>
+            <button 
+              type="submit" 
+              nbButton 
+              status="primary" 
+              [disabled]="isSubmitting || companyForm.invalid"
+            >
+              <nb-icon *ngIf="isSubmitting" icon="loader-outline" animation="spin"></nb-icon>
+              {{ isSubmitting ? 'Sauvegarde...' : 'Save' }}
+            </button>
           </div>
         </form>
       </nb-card-body>
@@ -65,5 +73,7 @@
   </div>
 </div>
 <app-company-detail *ngIf="showDetail && selectedCompany" [company]="selectedCompany"></app-company-detail>
+
+
 
 
