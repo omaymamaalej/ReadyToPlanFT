@@ -4,6 +4,7 @@ import { BusinessPlanFinalDTO } from 'src/app/models/BusinessPlanFinal';
 import { BusinessPlanFinalService } from 'src/app/services/business-plan-final.service';
 import { BusinessPlanPresentationDialogComponent } from '../business-plan-presentation-dialog/business-plan-presentation-dialog.component';
 import { UpdateBusinessPlanFinalComponent } from '../update-business-plan-final/update-business-plan-final.component';
+import { TokenStorageService } from 'src/app/_services/token-storage.service';
 
 @Component({
   selector: 'app-business-plan-list',
@@ -17,13 +18,17 @@ export class BusinessPlanListComponent implements OnInit {
   showSearchBar = false;
   searchTerm = '';
 
+  isAdmin: boolean = false;
+
   @ViewChild('presentationOptionsDialog') presentationOptionsDialog!: TemplateRef<any>;
   @ViewChild('downloadOptionsDialog') downloadOptionsDialog!: TemplateRef<any>;
   @ViewChild('deleteDialog') deleteDialog!: TemplateRef<any>;
 
   constructor(
     private businessPlanService: BusinessPlanFinalService,
-    private dialogService: NbDialogService
+    private dialogService: NbDialogService,
+    private tokenStorageService: TokenStorageService
+    
   ) { }
 
   ngOnInit(): void {
@@ -31,6 +36,7 @@ export class BusinessPlanListComponent implements OnInit {
       next: (data) => (this.businessPlanDto = data),
       error: (err) => console.error('Erreur de chargement', err),
     });
+    this.checkRole();
   }
 
   viewPresentation(plan: BusinessPlanFinalDTO): void {
@@ -105,5 +111,9 @@ export class BusinessPlanListComponent implements OnInit {
   onSearch() {
     // Implémentez votre logique de recherche ici
     // Par exemple, filtrer businessPlanDto en fonction de searchTerm
+  }
+
+    checkRole(): void {
+    this.isAdmin = this.tokenStorageService.isAdmin();
   }
 }   

@@ -6,7 +6,6 @@ import { NbActionsModule, NbAlertModule, NbBadgeModule, NbButtonModule, NbCardMo
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TranslateModule } from '@ngx-translate/core';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
-import { DashboardComponent } from './dashboard/dashboard.component';
 import { LayoutModule } from '../layout/layout.module';
 import { StrategicPlanningModule } from './strategic-planning/strategic-planning.module';
 import { BusinessPlanModule } from './business-plan/business-plan.module';
@@ -14,7 +13,6 @@ import { BusinessPlanModule } from './business-plan/business-plan.module';
 
 @NgModule({
   declarations: [
-    DashboardComponent,
   ],
   imports: [
     CommonModule,
@@ -45,7 +43,6 @@ import { BusinessPlanModule } from './business-plan/business-plan.module';
     NbToastrModule.forRoot(),
   ],
   exports: [
-    DashboardComponent
   ]
 })
 export class CoreModule { }

@@ -11,6 +11,7 @@ import { UpdateBusinessPlanComponent } from '../update-business-plan/update-busi
 import { Slide } from 'src/app/models/Slide';
 import { DownloadHelper } from 'src/app/_helpers/download.helper';
 import { PaginationInstance } from 'ngx-pagination';
+import { TokenStorageService } from 'src/app/_services/token-storage.service';
 
 @Component({
   selector: 'app-list-business-plan',
@@ -20,6 +21,8 @@ import { PaginationInstance } from 'ngx-pagination';
 export class ListBusinessPlanComponent implements OnInit {
   businessPlans: BusinessPlan[] = [];
   businessPlanDto: BusinessPlanDto[] = [];
+
+  isAdmin: boolean = false;
 
   @ViewChild('deleteDialog', { static: true }) deleteDialog!: TemplateRef<any>;
   @ViewChild('presentationOptionsDialog', { static: true }) presentationOptionsDialog!: TemplateRef<any>;
@@ -49,10 +52,12 @@ export class ListBusinessPlanComponent implements OnInit {
   constructor(
     private businessPlansService: BusinessPlanService,
     private dialogService: NbDialogService,
+    private tokenStorageService: TokenStorageService
   ) { }
 
   ngOnInit(): void {
     this.loadBusinessPlans();
+    this.checkRole();
   }
 
   loadBusinessPlans(): void {
@@ -293,6 +298,10 @@ export class ListBusinessPlanComponent implements OnInit {
       this.searchTerm = '';
       this.onSearch(); // Pour réinitialiser la liste si nécessaire
     }
+  }
+
+  checkRole(): void {
+    this.isAdmin = this.tokenStorageService.isAdmin();
   }
 
   onSearch() {

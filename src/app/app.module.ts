@@ -16,6 +16,7 @@ import { ZonedDateTimeInterceptorProviders } from './_helpers/ZonedDateTime.inte
 import { NbSecurityModule } from '@nebular/security';
 import { SharedModule } from './shared/shared.module';
 import { MarkdownModule } from 'ngx-markdown';
+import { UserModule } from './user/user.module';
 
 @NgModule({
   declarations: [
@@ -64,6 +65,7 @@ import { MarkdownModule } from 'ngx-markdown';
     CoreModule,
     LayoutModule,
     SharedModule,
+    UserModule
 
   ],
   providers: [LayoutService, authInterceptorProviders, ZonedDateTimeInterceptorProviders],

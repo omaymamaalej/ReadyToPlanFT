@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { TokenStorageService } from 'src/app/_services/token-storage.service';
 import { PasswordChangeDTO } from 'src/app/models/PasswordChange';
 import { User } from 'src/app/models/User';
 import { AccountService } from 'src/app/services/account.service';
@@ -29,7 +30,8 @@ export class AccountComponent implements OnInit {
   constructor(
     private accountService: AccountService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private tokenStorageService: TokenStorageService
   ) {}
 
   ngOnInit(): void {
@@ -40,13 +42,17 @@ export class AccountComponent implements OnInit {
     this.accountService.getAccount().subscribe({
       next: (response: User) => {
         this.currentUser = response;
+
+        this.tokenStorageService.saveUser(this.currentUser);
+
         console.log(this.currentUser);
       },
       error: (error: any) => {
         console.error(error);
       },
     });
-  }
+}
+
 
   update() {
     this.accountService.updateAccount(this.currentUser).subscribe({

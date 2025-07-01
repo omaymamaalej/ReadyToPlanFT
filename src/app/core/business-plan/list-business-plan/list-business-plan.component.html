@@ -13,7 +13,7 @@
         </button>
         
         <!-- Icône d'ajout -->
-        <a nbButton size="tiny" status="primary" ghost [routerLink]="'/home/businessPlan/createpresentation'"
+        <a *ngIf="!isAdmin" nbButton size="tiny" status="primary" ghost [routerLink]="'/home/businessPlan/createpresentation'"
            nbTooltip="Create a business plan" nbTooltipPlacement="bottom">
           <nb-icon icon="plus-outline"></nb-icon>
         </a>
@@ -41,7 +41,7 @@
           <td>{{ businessPlan.anticipatedProjectSize }} {{ businessPlan.currency }}</td>
           <td class="d-flex">
             <div class="actions-column">
-              <button nbButton size="tiny" status="primary" ghost (click)="openWithoutBackdrop(businessPlan)">
+              <button *ngIf="!isAdmin" nbButton size="tiny" status="primary" ghost (click)="openWithoutBackdrop(businessPlan)">
                 <nb-icon icon="edit-outline"></nb-icon>
               </button>
               <button nbButton status="success" size="tiny" (click)="openPresentationOptions(businessPlan)" ghost>
@@ -49,12 +49,12 @@
               </button>     
             </div>
 
-            <div class="actions-column">
+            <div class="actions-column" *ngIf="!isAdmin">
               <button nbButton size="tiny" status="danger" ghost (click)="openDeleteDialog(businessPlan.id)">
                 <nb-icon icon="trash-2-outline"></nb-icon>
               </button>
               
-              <button nbButton size="tiny" status="info" ghost (click)="openDownloadOptions(businessPlan)">
+              <button *ngIf="!isAdmin" nbButton size="tiny" status="info" ghost (click)="openDownloadOptions(businessPlan)">
                 <nb-icon icon="download-outline"></nb-icon>
               </button>
 
@@ -91,10 +91,10 @@
       <button nbButton status="primary" (click)="handlePresentationChoice('generated'); ref.close()">
         <nb-icon icon="file-text-outline"></nb-icon> Original version
       </button>
-      <button nbButton status="success" (click)="handlePresentationChoice('edited'); ref.close()">
+      <button *ngIf="!isAdmin" nbButton status="success" (click)="handlePresentationChoice('edited'); ref.close()">
         <nb-icon icon="edit-outline"></nb-icon> Edited version
       </button>
-      <button nbButton status="warning" (click)="handlePresentationChoice('regenerate'); ref.close()">
+      <button *ngIf="!isAdmin" nbButton status="warning" (click)="handlePresentationChoice('regenerate'); ref.close()">
         <nb-icon icon="refresh-outline"></nb-icon> Regenerate
       </button>
     </nb-card-footer>

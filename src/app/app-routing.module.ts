@@ -13,11 +13,11 @@ const routes: Routes = [
     loadChildren: () =>
       import('./pages/auth/auth.module').then(m => m.AuthModule),
   },
-  {
-    path: 'home',
-    loadChildren: () => import('./layout/layout.module').then(m => m.LayoutModule)
-  },
 
+  {
+    path: 'admin',
+    loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule)
+  }
 
 
 ];

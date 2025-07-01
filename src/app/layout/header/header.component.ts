@@ -1,11 +1,18 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { NbMediaBreakpointsService, NbMenuService, NbSidebarService, NbThemeService } from '@nebular/theme';
+import {
+  NbMediaBreakpointsService,
+  NbMenuService,
+  NbSidebarService,
+  NbThemeService,
+  NbMenuItem,
+} from '@nebular/theme';
 import { map, Subject, takeUntil } from 'rxjs';
-import { MENU_ITEMS } from 'src/app/@core/data/menu.data';
+import { ADMIN_MENU_ITEMS, USER_MENU_ITEMS } from 'src/app/@core/data/menu.data';
 import { LayoutService } from 'src/app/@core/utils/layout.service';
 import { TokenStorageService } from 'src/app/_services/token-storage.service';
 import { UserService } from 'src/app/services/user.service';
+
 
 @Component({
   selector: 'app-header',
@@ -14,68 +21,49 @@ import { UserService } from 'src/app/services/user.service';
 })
 export class HeaderComponent implements OnInit, OnDestroy {
 
-  menu = MENU_ITEMS;
-
+  menu: NbMenuItem[] = [];
 
   private destroy$: Subject<void> = new Subject<void>();
-  userPictureOnly: boolean = false;
-  user: { name: string; picture: string } = {
-    name: 'John Doe',
-    picture: 'https://example.com/path-to-image.jpg'
-  };
-
-  themes = [
-    {
-      value: 'default',
-      name: 'Light',
-    },
-    {
-      value: 'dark',
-      name: 'Dark',
-    },
-    {
-      value: 'cosmic',
-      name: 'Cosmic',
-    },
-    {
-      value: 'corporate',
-      name: 'Corporate',
-    },
-  ];
-
+  userPictureOnly = false;
   currentTheme = 'default';
 
-  userMenu = [{ title: 'Profile' }, { title: 'Log out' }];
-
-  constructor(private sidebarService: NbSidebarService,
+  constructor(
+    private sidebarService: NbSidebarService,
     private menuService: NbMenuService,
     private themeService: NbThemeService,
     private userService: UserService,
     private layoutService: LayoutService,
     private breakpointService: NbMediaBreakpointsService,
     public tokenStorageService: TokenStorageService,
-    private router: Router) { }
+    private router: Router
+  ) {}
 
   ngOnInit() {
+    this.updateMenu();
+
+    this.tokenStorageService.loggedIn$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(isLoggedIn => {
+        if (isLoggedIn) {
+          this.updateMenu();
+        } else {
+          this.menu = [];
+        }
+      });
+
     this.currentTheme = this.themeService.currentTheme;
 
     this.userService.get()
       .pipe(takeUntil(this.destroy$))
-      .subscribe((users: any) => {
-        this.user = {
-          name: users.nick?.name ?? 'Invité',
-          picture: users.nick?.picture ?? 'assets/images/default-avatar.png',
-        };
-      });
-
-
+      
     const { xl } = this.breakpointService.getBreakpointsMap();
+
     this.themeService.onMediaQueryChange()
       .pipe(
         map(([, currentBreakpoint]) => currentBreakpoint.width < xl),
         takeUntil(this.destroy$),
       )
-      .subscribe((isLessThanXl: boolean) => this.userPictureOnly = isLessThanXl);
+      .subscribe(isLessThanXl => this.userPictureOnly = isLessThanXl);
 
     this.themeService.onThemeChange()
       .pipe(
@@ -85,19 +73,18 @@ export class HeaderComponent implements OnInit, OnDestroy {
       .subscribe(themeName => this.currentTheme = themeName);
   }
 
+  private updateMenu() {
+    this.menu = this.tokenStorageService.isAdmin() ? ADMIN_MENU_ITEMS : USER_MENU_ITEMS;
+  }
+
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
   }
 
-  changeTheme(themeName: string) {
-    this.themeService.changeTheme(themeName);
-  }
-
   toggleSidebar(): boolean {
     this.sidebarService.toggle(true, 'menu-sidebar');
     this.layoutService.changeLayoutSize();
-
     return false;
   }
 
@@ -107,7 +94,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   logout(): void {
-
     this.tokenStorageService.signOut();
     this.router.navigate(['/login']);
   }

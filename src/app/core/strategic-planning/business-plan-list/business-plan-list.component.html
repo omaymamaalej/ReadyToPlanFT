@@ -10,7 +10,7 @@
           <nb-icon icon="search-outline"></nb-icon>
         </button>
         
-        <a nbButton size="tiny" status="primary" ghost [routerLink]="'/strategic-planning'"
+        <a *ngIf="!isAdmin" nbButton size="tiny" status="primary" ghost [routerLink]="'/strategic-planning'"
            nbTooltip="Create A Strategic-Planning" nbTooltipPlacement="bottom">
           <nb-icon icon="plus-outline"></nb-icon>
         </a>
@@ -30,21 +30,21 @@
       <tbody>
          <tr *ngFor="let plan of businessPlanDto">
           <td>{{ plan.title }}</td>
-          <td>{{ plan.creationDate | date: 'longDate' }}</td>
+          <td>{{ plan.creationDate | date: 'longDate' }}</td> 
           <td class="d-flex gap-2">
            <button nbButton status="success" size="tiny" (click)="viewPresentation(plan)" ghost>
               <nb-icon icon="eye-outline" pack="eva"></nb-icon> 
             </button>
 
-            <button nbButton status="info" size="tiny" (click)="openDownloadOptions(plan)">
+            <button *ngIf="!isAdmin" nbButton status="info" size="tiny" (click)="openDownloadOptions(plan)">
               <nb-icon icon="download-outline"></nb-icon>
             </button>
 
-            <button nbButton status="danger" size="tiny" (click)="openDeleteDialog(plan)">
+            <button *ngIf="!isAdmin" nbButton status="danger" size="tiny" (click)="openDeleteDialog(plan)">
               <nb-icon icon="trash-2-outline"></nb-icon>
             </button>
             
-            <button nbButton size="tiny" status="primary" ghost (click)="openEditDialog(plan)">
+            <button *ngIf="!isAdmin" nbButton size="tiny" status="primary" ghost (click)="openEditDialog(plan)">
               <nb-icon icon="edit-outline"></nb-icon>
             </button>
           </td>

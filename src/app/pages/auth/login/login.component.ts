@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { TokenStorageService } from 'src/app/_services/token-storage.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { User } from 'src/app/models/User';
+import { AccountService } from 'src/app/services/account.service';
 
 @Component({
   selector: 'app-login',
@@ -51,6 +52,7 @@ export class LoginComponent implements OnInit {
   };
 
   constructor(
+    private accountService: AccountService,
     private authService: AuthService,
     private tokenStorage: TokenStorageService,
     private router: Router
@@ -66,30 +68,61 @@ export class LoginComponent implements OnInit {
 
   login(): void {
     this.submitted = true;
+    this.isLoginFailed = false;
+    this.errorMessage = '';
+
     this.authService.login(this.user.username, this.user.password).subscribe({
-      next: data => {
-        const token = data.id_token;
-        this.tokenStorage.saveToken(token);
-        this.tokenStorage.saveUser({ ...this.user, token });
-
-        this.isLoginFailed = false;
-        this.isLoggedIn = true;
-        this.messages = ['Login successful!'];
-        this.errors = [];
-
-        this.router.navigate(['/home/dashboard']);
+      next: (authResponse) => {
+        // 1. Sauvegarde du token JWT
+        this.tokenStorage.saveToken(authResponse.id_token || authResponse.token);
+        
+        // 2. Récupération des infos utilisateur complètes
+        this.accountService.getAccount().subscribe({
+          next: (userData) => {
+            // 3. Sauvegarde des données utilisateur avec les authorities
+            const userWithToken = {
+              ...userData,
+              token: authResponse.id_token || authResponse.token
+            };
+            this.tokenStorage.saveUser(userWithToken);
+            
+            // 4. Redirection selon le rôle
+            if (this.isAdminUser(userData)) {
+              this.router.navigate(['/listUser']).then(() => {
+                window.location.reload();
+              });
+            } else {
+              this.router.navigate(['/profileInformation/account']);
+            }
+          },
+          error: (err) => {
+            console.error('Failed to fetch user account', err);
+            this.handleError("Échec de la récupération du profil utilisateur");
+          }
+        });
       },
-      error: err => {
-        this.errorMessage = err.error?.message || 'Login failed.';
-        this.errors = [this.errorMessage];
-        this.messages = [];
-        this.isLoginFailed = true;
-        this.submitted = false;
+      error: (err) => {
+        console.error('Login error', err);
+        this.handleError(err.error?.message || err.error?.title || 'Échec de la connexion');
       }
     });
   }
+
+  private isAdminUser(user: any): boolean {
+    return user?.authorities?.includes('ROLE_ADMIN');
+  }
+
+  private handleError(errorMsg: string): void {
+    this.errorMessage = errorMsg;
+    this.isLoginFailed = true;
+    this.submitted = false;
+    this.tokenStorage.signOut();
+  }
+
 
   reloadPage(): void {
     window.location.reload();
   }
 }
+
+
