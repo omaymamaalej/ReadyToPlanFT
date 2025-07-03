@@ -43,15 +43,16 @@ export class BusinessPlanFinalService {
     return this.http.put<void>(`${this.apiUrl}/${id}/presentation/${slideIndex}`, { content });
   }
 
-  delete(id: string): Observable<void> {
+  delete(id:string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/business-plan-finals/${id}`);
   }
   
-  download(id: string): Observable<Blob> {
-    return this.http.get(`${this.apiUrl}/${id}/download`, {
-      responseType: 'blob'
-    });
-  }
+downloadPresentation(planId: string, format: 'PDF'): Observable<Blob> {
+  return this.http.get(`${this.apiUrl}/business-plan-finals/download/pdf/${planId}`, {
+    responseType: 'blob'
+  });
+}
+
 
   update(plan: BusinessPlanFinal): Observable<any> {
     return this.http.put(`${this.apiUrl}/business-plan-finals/${plan.id}`, plan);

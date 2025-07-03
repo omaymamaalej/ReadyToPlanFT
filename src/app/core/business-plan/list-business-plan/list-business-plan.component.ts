@@ -263,7 +263,7 @@ export class ListBusinessPlanComponent implements OnInit {
     if (!this.currentBusinessPlanForDownload) return;
 
     this.businessPlansService.downloadPresentation(
-      this.currentBusinessPlanForDownload.companyName,
+      this.currentBusinessPlanForDownload.id,
       'PDF'
     ).subscribe(blob => {
       const filename = `business-plan-${this.currentBusinessPlanForDownload?.companyName}-${new Date().toISOString().slice(0, 10)}.pdf`;
