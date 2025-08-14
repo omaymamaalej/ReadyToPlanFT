@@ -46,7 +46,7 @@ export class BusinessPlanFinalService {
   delete(id: string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/business-plan-finals/${id}`);
   }
-  
+
   download(id: string): Observable<Blob> {
     return this.http.get(`${this.apiUrl}/${id}/download`, {
       responseType: 'blob'

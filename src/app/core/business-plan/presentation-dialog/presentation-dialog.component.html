@@ -57,6 +57,7 @@
               <div *ngIf="!isEditing" 
                   [innerHTML]="formatSlideContent(slides[currentSlideIndex].content, currentSlideIndex)"
                   [class.table-slide]="isTableSlide(currentSlideIndex)"
+                  [class.histogram-slide]="hasHistograms(currentSlideIndex)"
                   class="slide-content-container markdown-content">
               </div>
               

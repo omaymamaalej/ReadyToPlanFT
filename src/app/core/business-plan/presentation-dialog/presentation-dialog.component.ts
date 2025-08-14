@@ -1,4 +1,4 @@
-import { Component, HostListener, Input, OnInit } from '@angular/core';
+import { Component, HostListener, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { Slide } from 'src/app/models/Slide';
 import { BusinessPlanService } from 'src/app/services/business-plan.service';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
@@ -6,7 +6,8 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 @Component({
   selector: 'app-presentation-dialog',
   templateUrl: './presentation-dialog.component.html',
-  styleUrls: ['./presentation-dialog.component.css']
+  styleUrls: ['./presentation-dialog.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class PresentationDialogComponent implements OnInit {
   @Input() businessPlanId!: string;
@@ -22,7 +23,8 @@ export class PresentationDialogComponent implements OnInit {
   private originalContent = '';
   modifiedSlides: Set<number> = new Set();
 
-  private readonly TABLE_SLIDES = [9, 12, 13, 16, 17];
+  private readonly TABLE_SLIDES = [9, 12, 13, 15, 16, 17];
+
 
   constructor(
     private businessPlanService: BusinessPlanService,
@@ -105,6 +107,9 @@ export class PresentationDialogComponent implements OnInit {
     if (!content) return '';
     if (slideIndex === 0) return '';
 
+    // Détecter et formater les histogrammes en premier
+    content = this.formatHistograms(content);
+
     let html = content
       .replace(/^#+\s+(.*)/gm, '<h1>$1</h1>')
       .replace(/^##\s+(.*)/gm, '<h2>$1</h2>')
@@ -115,12 +120,113 @@ export class PresentationDialogComponent implements OnInit {
 
     if (this.isTableSlide(slideIndex)) {
       const formattedTables = this.formatTables(html, slideIndex);
-      const tableSlideClass = [9, 12, 13, 16, 17].includes(slideIndex) ? 'table-slide' : 'table-slide';
+      const tableSlideClass = [9, 12, 13, 15, 16, 17].includes(slideIndex) ? 'table-slide' : 'table-slide';
       html = `<div class="${tableSlideClass}">${formattedTables}</div>`;
     }
 
     return this.sanitizer.bypassSecurityTrustHtml(html);
-  }
+}
+
+private formatHistograms(content: string): string {
+  const histogramRegex = /```histogram([\s\S]*?)```/g;
+  return content.replace(histogramRegex, (match: string, content: string) => {
+    const lines: string[] = content.split('\n').filter(line => line.trim() !== '');
+    const data: any = {
+      title: '',
+      xAxis: '',
+      yAxis: '',
+      colors: [],
+      data: []
+    };
+
+    lines.forEach((line: string) => {
+      if (line.includes('title:')) {
+        data.title = line.split('title:')[1].trim().replace(/"/g, '');
+      } else if (line.includes('x-axis:')) {
+        data.xAxis = line.split('x-axis:')[1].trim().replace(/"/g, '');
+      } else if (line.includes('y-axis:')) {
+        data.yAxis = line.split('y-axis:')[1].trim().replace(/"/g, '');
+      } else if (line.includes('colors:')) {
+        const colorsStr = line.split('colors:')[1].trim();
+        data.colors = JSON.parse(colorsStr.replace(/'/g, '"'));
+      } else if (line.startsWith('|') && line.includes('|')) {
+        data.data.push(line);
+      }
+    });
+
+    return this.generateHistogramHTML(data);
+  });
+}
+
+private generateHistogramHTML(data: any): string {
+  if (data.data.length < 2) return '';
+
+  const headers: string[] = data.data[0].split('|').slice(1, -1).map((h: string) => h.trim());
+  const rows: string[][] = data.data.slice(1).map((row: string) =>
+    row.split('|').slice(1, -1).map((cell: string) => cell.trim())
+  );
+
+  let html = `<div class="histogram-container">
+    <h3>${data.title}</h3>
+    <div class="histogram-axis-labels">
+      <span class="y-axis-label">${data.yAxis}</span>
+      <div class="histogram-chart-container">
+        <div class="histogram-bars">`;
+
+  let maxValue = 0;
+  rows.forEach((row: string[]) => {
+    row.slice(1).forEach((cell: string) => {
+      const num = parseFloat(cell.replace('%', '').replace(/,/g, ''));
+      if (!isNaN(num)) maxValue = Math.max(maxValue, num);
+    });
+  });
+
+  rows.forEach((row: string[], _rowIndex: number) => {
+    const label: string = row[0];
+    const values: number[] = row.slice(1).map((value: string) =>
+      parseFloat(value.replace('%', '').replace(/,/g, ''))
+    );
+
+    html += `<div class="histogram-row">
+      <div class="histogram-label">${label}</div>
+      <div class="histogram-bars-row">`;
+
+    values.forEach((value: number, i: number) => {
+      const percentage = (value / maxValue) * 100;
+      const color = data.colors[i % data.colors.length];
+      html += `<div class="histogram-bar-container" title="${headers[i + 1]}: ${value}${data.yAxis.includes('%') ? '%' : ''}">
+        <div class="histogram-bar" style="height: ${percentage}%; background-color: ${color};"></div>
+        <div class="histogram-value">${value}${data.yAxis.includes('%') ? '%' : ''}</div>
+      </div>`;
+    });
+
+    html += `</div></div>`;
+  });
+
+  html += `</div>
+      <div class="histogram-x-axis">
+        <div class="histogram-x-axis-label">${data.xAxis}</div>
+        <div class="histogram-legend">`;
+
+  headers.slice(1).forEach((header: string, i: number) => {
+    const color = data.colors[i % data.colors.length];
+    html += `<div class="legend-item">
+      <span class="legend-color" style="background-color: ${color};"></span>
+      <span class="legend-text">${header}</span>
+    </div>`;
+  });
+
+  html += `</div></div></div></div></div>`;
+
+  return html;
+}
+
+
+
+
+hasHistograms(index: number): boolean {
+    return this.slides[index]?.content?.includes('```histogram') ?? false;
+}
 
   private formatTables(html: string, slideIndex: number): string {
     const tableSections = html.split(/(TABLE \d+:)/g);

@@ -40,6 +40,8 @@ export class ListBusinessPlanComponent implements OnInit {
   showSearchBar = false;
   searchTerm = '';
 
+  isLoadingPresentation = false;
+
 
   public readonly paginationConfig: PaginationInstance = {
     id: 'businessPlanPagination',  // This is now a required string
@@ -79,8 +81,6 @@ export class ListBusinessPlanComponent implements OnInit {
         country: businessPlan.country || Country.FRANCE,
         languages: businessPlan.languages || Languages.ENGLISH,
         companyDescription: businessPlan.companyDescription,
-        anticipatedProjectSize: businessPlan.anticipatedProjectSize,
-        currency: businessPlan.currency || Currency.EUR,
       };
       tempBusinessPlanDto.push(restDto);
     });
@@ -96,6 +96,8 @@ export class ListBusinessPlanComponent implements OnInit {
   handlePresentationChoice(choice: 'generated' | 'edited' | 'regenerate'): void {
     if (!this.currentBusinessPlanForPresentation) return;
 
+    this.isLoadingPresentation = true;
+
     switch (choice) {
       case 'generated':
         this.getExistingPresentation(false);
@@ -107,6 +109,9 @@ export class ListBusinessPlanComponent implements OnInit {
         this.regeneratePresentation();
         break;
     }
+
+
+    
   }
 
   private getExistingPresentation(preferEdited: boolean): void {
@@ -141,9 +146,7 @@ export class ListBusinessPlanComponent implements OnInit {
       companyStartDate: this.currentBusinessPlanForPresentation.companyStartDate,
       country: this.currentBusinessPlanForPresentation.country,
       languages: this.currentBusinessPlanForPresentation.languages,
-      companyDescription: this.currentBusinessPlanForPresentation.companyDescription,
-      anticipatedProjectSize: this.currentBusinessPlanForPresentation.anticipatedProjectSize,
-      currency: this.currentBusinessPlanForPresentation.currency
+      companyDescription: this.currentBusinessPlanForPresentation.companyDescription
     };
 
     this.businessPlansService.generateBusinessPlan(businessPlanToSend).subscribe({
@@ -168,9 +171,7 @@ export class ListBusinessPlanComponent implements OnInit {
       companyStartDate: businessPlan.companyStartDate,
       country: businessPlan.country,
       languages: businessPlan.languages,
-      companyDescription: businessPlan.companyDescription,
-      anticipatedProjectSize: businessPlan.anticipatedProjectSize,
-      currency: businessPlan.currency
+      companyDescription: businessPlan.companyDescription
     };
 
     this.businessPlansService.generateBusinessPlan(businessPlanToSend).subscribe({
@@ -308,6 +309,17 @@ export class ListBusinessPlanComponent implements OnInit {
     // Implémentez votre logique de recherche ici
     // Par exemple, filtrer businessPlanDto en fonction de searchTerm
   }
+
+
+
+  generatePresentation(choice: string): Promise<void> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve();
+      }, 3000); 
+    });
+  }
+
 
 
 }

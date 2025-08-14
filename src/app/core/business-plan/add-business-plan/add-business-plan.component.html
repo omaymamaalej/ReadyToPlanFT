@@ -3,7 +3,7 @@
         <nb-card>
             <nb-card-header>
                 <div class="d-flex justify-content-between align-items-center">
-                    <span>Create A New Presentation</span>
+                    <span>Create A New Business Plan</span>
                     <a nbButton size="tiny" status="info" ghost [routerLink]="'/home/businessPlan/listBusinessPlan'"
                         nbTooltip="View all business plans" nbTooltipPlacement="bottom">
                         <nb-icon icon="list-outline"></nb-icon>
@@ -59,29 +59,6 @@
                         <textarea formControlName="companyDescription" rows="5" nbInput fullWidth shape="round"
                             placeholder="Company Description"></textarea>
                     </div>
-
-                    <div class="row">
-                        <div class="col-sm-12 col-md-6 col-lg-3">
-                            <div class="form-group">
-                                <label for="anticipatedProjectSize" class="label">Anticipated Project Size :</label>
-                                <div class="full-name-inputs">
-                                    <input formControlName="anticipatedProjectSize" nbInput fullWidth type="number"
-                                        min="0" step="0.01" placeholder="0.01$" />
-                                </div>
-                            </div>
-                        </div>
-
-
-                        <div class="col-sm-12 col-md-6 col-lg-3">
-                            <div class="form-group">
-                                <label for="currencySelect" class="label">Currency :</label>
-                                <nb-select formControlName="currency" id="currencySelect" placeholder="Select Currency">
-                                    <nb-option *ngFor="let cur of currencies" [value]="cur[0]">{{ cur[1] }}</nb-option>
-                                </nb-select>
-                            </div>
-                        </div>
-                    </div>
-
 
                     <div class="buttons-row">
                         <button type="button" (click)="submit()" nbButton status="primary">Generate Presentation</button>

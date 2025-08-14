@@ -32,8 +32,6 @@ export class AddBusinessPlanComponent implements OnInit {
       country: [null, Validators.required],
       languages: [null, Validators.required],
       companyDescription: [''],
-      anticipatedProjectSize: [0, [Validators.required, Validators.min(0)]],
-      currency: [null, Validators.required],
     });
   }
 

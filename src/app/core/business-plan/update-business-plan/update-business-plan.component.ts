@@ -22,7 +22,6 @@ export class UpdateBusinessPlanComponent implements OnInit {
 
   countries = Object.entries(Country);
   languages = Object.entries(Languages);
-  currencies = Object.entries(Currency);
 
   businessPlanForm: BusinessPlan = {
 
@@ -32,8 +31,7 @@ export class UpdateBusinessPlanComponent implements OnInit {
     country: Country.FRANCE,
     languages: Languages.ENGLISH,
     companyDescription: '',
-    anticipatedProjectSize: 0,
-    currency: Currency.EUR,
+
   };
 
   constructor(private dialogService: NbDialogService,
@@ -50,8 +48,6 @@ export class UpdateBusinessPlanComponent implements OnInit {
       country: Country.FRANCE,
       languages: Languages.ENGLISH,
       companyDescription: '',
-      anticipatedProjectSize: 0,
-      currency: Currency.EUR,
       regeneratePresentation: false
     });
 
@@ -81,8 +77,6 @@ export class UpdateBusinessPlanComponent implements OnInit {
         country: this.businessPlanForm.country,
         languages: this.businessPlanForm.languages,
         companyDescription: this.businessPlanForm.companyDescription,
-        anticipatedProjectSize: this.businessPlanForm.anticipatedProjectSize,
-        currency: this.businessPlanForm.currency,
         regeneratePresentation: false 
       });
 

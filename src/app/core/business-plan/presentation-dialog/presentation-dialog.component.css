@@ -268,3 +268,147 @@ textarea {
 }
 
 
+
+
+/* Styles pour les histogrammes */
+.histogram-container {
+    margin: 20px 0;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.histogram-chart-container {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+}
+
+.histogram-axis-labels {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.y-axis-label {
+    transform: rotate(-90deg);
+    transform-origin: left bottom;
+    white-space: nowrap;
+    margin-right: 20px;
+    font-size: 12px;
+    color: #555;
+}
+
+.histogram-row {
+    display: flex;
+    margin-bottom: 10px;
+    align-items: flex-end;
+}
+
+.histogram-label {
+    width: 80px;
+    font-size: 12px;
+    text-align: right;
+    padding-right: 10px;
+    color: #555;
+}
+
+.histogram-bars-row {
+    display: flex;
+    flex-grow: 1;
+    align-items: flex-end;
+    height: 200px;
+}
+
+.histogram-bar-container {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    margin: 0 5px;
+    position: relative;
+}
+
+.histogram-bar {
+    width: 80%;
+    transition: height 0.5s ease;
+    border-radius: 4px 4px 0 0;
+    position: relative;
+}
+
+.histogram-value {
+    font-size: 10px;
+    margin-top: 5px;
+    text-align: center;
+}
+
+.histogram-x-axis {
+    margin-top: 10px;
+    padding-left: 80px;
+}
+
+.histogram-x-axis-label {
+    text-align: center;
+    font-size: 12px;
+    color: #555;
+    margin-top: 5px;
+}
+
+.histogram-legend {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 15px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    margin: 0 10px;
+}
+
+.legend-color {
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+    margin-right: 5px;
+}
+
+.legend-text {
+    font-size: 11px;
+    color: #555;
+}
+
+.histogram-slide {
+    overflow-x: auto;
+    padding: 15px;
+}
+
+.histogram-slide .histogram-container {
+    max-width: 100%;
+    min-width: 600px;
+}
+
+.slide-content-container {
+    transition: all 0.3s ease;
+}
+
+.slide-content-container.histogram-slide {
+    background-color: #f5f7fa;
+    border-radius: 8px;
+    padding: 20px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .histogram-bars-row {
+        height: 150px;
+    }
+    
+    .histogram-label {
+        width: 60px;
+        font-size: 10px;
+    }
+}

@@ -1,6 +1,5 @@
 import { Country } from '../enumerations/country.enum';
 import { Languages } from '../enumerations/languages.enum';
-import { Currency } from '../enumerations/currency.enum';
 import * as dayjs from 'dayjs';
 
 export class BusinessPlan {
@@ -10,8 +9,6 @@ export class BusinessPlan {
   country: Country;
   languages: Languages;
   companyDescription: string;
-  anticipatedProjectSize: number;
-  currency: Currency;
 
   constructor(){
     this.id = '';
@@ -20,8 +17,6 @@ export class BusinessPlan {
     this.country = Country.FRANCE; 
     this.languages =Languages.ENGLISH;
     this.companyDescription ='';
-    this.anticipatedProjectSize =0;
-    this.currency = Currency.EUR;
   }
 }
 
@@ -32,8 +27,6 @@ export interface BusinessPlanDto {
   country: Country;
   languages: Languages;
   companyDescription: string;
-  anticipatedProjectSize: number;
-  currency: Currency;
   generatedPresentation?: string;
-  regeneratePresentation?: boolean;
+  // regeneratePresentation?: boolean;
 }
