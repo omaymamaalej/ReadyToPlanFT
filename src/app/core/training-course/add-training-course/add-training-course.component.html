@@ -1,0 +1,101 @@
+<nb-layout>
+  <nb-layout-column>
+    <nb-card class="creative-card">
+      <nb-card-header>
+        <h2>✨ Create a Course</h2>
+      </nb-card-header>
+      <nb-card-body>
+        <form [formGroup]="trainingCourseForm" (ngSubmit)="onSubmit()" class="creative-form">
+
+          <div class="form-row">
+            <label for="title"> <nb-icon icon="edit-outline"></nb-icon> Title *</label>
+            <input id="title" nbInput placeholder="Course Title" formControlName="title" required>
+          </div>
+
+          <div class="form-row">
+            <label for="summary"><nb-icon icon="file-text-outline"></nb-icon> Summary</label>
+            <textarea id="summary" nbInput placeholder="Course Summary" formControlName="summary" rows="3"></textarea>
+          </div>
+
+          <div class="form-row">
+            <label for="targetAudience"> <nb-icon icon="people-outline"></nb-icon> Target Audience *</label>
+            <nb-select id="targetAudience" placeholder="Select an audience" formControlName="targetAudience" required>
+              <nb-option *ngFor="let audience of targetAudiences" [value]="audience[0]">
+                {{ audience[1] }}
+              </nb-option>
+            </nb-select>
+          </div>
+
+          <div class="form-row" *ngIf="allRequiredFilled()">
+            <label for="studyClass"> <nb-icon icon="book-outline"></nb-icon> Study Class *</label>
+            <nb-select id="studyClass" placeholder="Select a class" formControlName="studyClass" required>
+              <nb-option *ngFor="let sc of studyClasses" [value]="sc[0]">
+                {{ sc[1] }}
+              </nb-option>
+            </nb-select>
+          </div>
+
+          <div class="form-row" *ngIf="allRequiredFilled()">
+            <label for="level"> <nb-icon icon="award-outline"></nb-icon> Level *</label>
+            <nb-select id="level" placeholder="Select a level" formControlName="level" required>
+              <nb-option *ngFor="let lvl of levels" [value]="lvl[0]">
+                {{ lvl[1] }}
+              </nb-option>
+            </nb-select>
+          </div>
+
+          <div class="form-row" *ngIf="allRequiredFilled() && trainingCourseForm.get('targetAudience')?.value !== 'STUDENTS'">
+            <label for="instructor"> <nb-icon icon="person-outline"></nb-icon> Instructor</label>
+            <input id="instructor" nbInput placeholder="Instructor Name" formControlName="instructor">
+          </div>
+
+          <div class="form-row" *ngIf="allRequiredFilled() && trainingCourseForm.get('targetAudience')?.value !== 'STUDENTS'">
+            <label for="duration"> <nb-icon icon="clock-outline"></nb-icon> Duration</label>
+            <input id="duration" nbInput placeholder="Course Duration" formControlName="duration">
+          </div>
+
+          <div class="form-row" *ngIf="allRequiredFilled()">
+            <label for="languages"> <nb-icon icon="globe-outline"></nb-icon> Language *</label>
+            <nb-select id="languages" placeholder="Select a language" formControlName="languages" required>
+              <nb-option *ngFor="let lang of languages" [value]="lang[0]">
+                {{ lang[1] }}
+              </nb-option>
+            </nb-select>
+          </div>
+
+          <div class="form-row" *ngIf="allRequiredFilled() && trainingCourseForm.get('targetAudience')?.value !== 'STUDENTS'">
+            <label for="locationType"><nb-icon icon="pin-outline"></nb-icon> Location Type</label>
+            <nb-select id="locationType" placeholder="Select a type" formControlName="locationType">
+              <nb-option *ngFor="let loc of locationTypes" [value]="loc[0]">
+                {{ loc[1] }}
+              </nb-option>
+            </nb-select>
+          </div>
+
+          <div class="buttons-row">
+            <button nbButton status="success" size="large" type="submit">
+              <nb-icon icon="checkmark-circle-2-outline"></nb-icon>
+              Save
+            </button>
+          </div>
+
+        </form>
+      </nb-card-body>
+    </nb-card>
+  </nb-layout-column>
+</nb-layout>
+
+
+
+<!-- Affichage de la présentation générée -->
+<!-- <div *ngIf="presentationText" class="presentation-card">
+  <nb-card>
+    <nb-card-header>📝 Generated Presentation</nb-card-header>
+    <nb-card-body>
+      <p>{{ presentationText }}</p>
+      <button nbButton status="primary" (click)="downloadPresentation(presentationText)">
+        <nb-icon icon="download-outline"></nb-icon> Download PPTX
+      </button>
+    </nb-card-body>
+  </nb-card>
+</div> -->

@@ -9,6 +9,8 @@ import { AccountComponent } from '../pages/auth/account/account.component';
 import { PasswordSettingsComponent } from '../pages/auth/password-settings/password-settings.component';
 import { BusinessPlanListComponent } from '../core/strategic-planning/business-plan-list/business-plan-list.component';
 import { ListUserComponent } from '../user/list-user/list-user.component';
+import { AddTrainingCourseComponent } from '../core/training-course/add-training-course/add-training-course.component';
+import { ListTrainingCourseComponent } from '../core/training-course/list-training-course/list-training-course.component';
 
 
 const routes: Routes = [
@@ -24,7 +26,11 @@ const routes: Routes = [
       { path: 'profileInformation/account', component: AccountComponent },
       { path: 'auth/password', component: PasswordSettingsComponent },
       { path: 'business-plan-list', component: BusinessPlanListComponent },
-      { path: 'listUser', component: ListUserComponent }
+      { path: 'listUser', component: ListUserComponent },
+      { path: 'trainingCourse/addTrainingCourse', component: AddTrainingCourseComponent },
+      { path: 'trainingCourse/AllTrainingCourse', component: ListTrainingCourseComponent },
+
+      
 
 
 

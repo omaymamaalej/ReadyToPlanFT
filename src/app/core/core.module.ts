@@ -9,6 +9,7 @@ import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { LayoutModule } from '../layout/layout.module';
 import { StrategicPlanningModule } from './strategic-planning/strategic-planning.module';
 import { BusinessPlanModule } from './business-plan/business-plan.module';
+import { TrainingCourseModule } from './training-course/training-course.module';
 
 
 @NgModule({
@@ -19,6 +20,7 @@ import { BusinessPlanModule } from './business-plan/business-plan.module';
     CoreRoutingModule,
     BusinessPlanModule,
     StrategicPlanningModule,
+    TrainingCourseModule,
     NbLayoutModule,
     LayoutModule,
     NbDatepickerModule,

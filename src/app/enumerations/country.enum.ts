@@ -1,5 +1,5 @@
 export enum Country {
-ALGERIA = 'ALGERIA',
+  ALGERIA = 'ALGERIA',
 
   ARGENTINA = 'ARGENTINA',
 

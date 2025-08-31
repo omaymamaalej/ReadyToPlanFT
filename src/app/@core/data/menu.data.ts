@@ -60,6 +60,20 @@ export const USER_MENU_ITEMS: NbMenuItem[] = [
     group: true,
   },
   {
+    title: 'Training Course',
+    icon: 'book-outline',
+    children: [
+      {
+        title: 'All Courses',
+        link: 'trainingCourse/AllTrainingCourse',
+      },
+      {
+        title: 'Add New Course',
+        link: 'trainingCourse/addTrainingCourse',
+      },
+    ],
+  },
+  {
     title: 'Business Plans',
     icon: 'briefcase-outline',
     children: [

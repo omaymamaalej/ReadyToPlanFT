@@ -1,0 +1,36 @@
+.creative-form {
+  .form-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+
+    label {
+      width: 180px; 
+      font-weight: 600;
+      color: #222;
+      margin-right: 1rem;
+      text-align: right;
+    }
+
+    input, nb-select, textarea {
+      flex: 1;
+    }
+  }
+
+  .form-row.full-width {
+    flex-direction: column;
+    label {
+      text-align: left;
+      margin-bottom: 0.5rem;
+    }
+    input, nb-select, textarea {
+      width: 100%;
+    }
+  }
+
+  .buttons-row {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 2rem;
+  }
+}

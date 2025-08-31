@@ -1,0 +1,75 @@
+<nb-layout>
+  <nb-layout-column>
+    <nb-card class="creative-card">
+      <nb-card-header>
+        <h2>📋 Course List</h2>
+      </nb-card-header>
+      <nb-card-body>
+
+        <nb-spinner *ngIf="loading" status="primary"></nb-spinner>
+
+        <table *ngIf="!loading && trainingCourses.length" class="training-table">
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Summary</th>
+              <th>Audience</th>
+              <th>Study Class</th>
+              <th>Level</th>
+              <th>Instructor</th>
+              <th>Duration</th>
+              <th>Language</th>
+              <th>Location Type</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let course of trainingCourses">
+              <td>{{ course.title }}</td>
+
+              <td>
+                <span *ngIf="course.summary">
+                    <span *ngIf="!course.showFullSummary">
+                    {{ course.summary | slice:0:40 }}<span *ngIf="course.summary.length > 40">... </span>
+                    <a href="#" *ngIf="course.summary.length > 40" (click)="toggleSummary(course, $event)">
+                        <nb-icon icon="arrow-down-outline"></nb-icon>
+                    </a>
+                    </span>
+                    <span *ngIf="course.showFullSummary">
+                    {{ course.summary }}
+                    <a href="#" (click)="toggleSummary(course, $event)">
+                        <nb-icon icon="arrow-up-outline"></nb-icon>
+                    </a>
+                    </span>
+                </span>
+                </td>
+
+
+              <td>{{ course.targetAudience }}</td>
+              <td>{{ course.studyClass }}</td>
+              <td>{{ course.level }}</td>
+              <td>{{ course.instructor || 'N/A' }}</td>
+              <td>{{ course.duration || 'N/A' }}</td>
+              <td>{{ course.languages }}</td>
+              <td>{{ course.locationType || 'N/A' }}</td>
+              <td class="actions">
+                <button nbButton size="small" status="info" (click)="editCourse(course.id)">
+                  <nb-icon icon="edit-outline"></nb-icon>
+                </button>
+                <button nbButton size="small" status="danger" (click)="deleteCourse(course.id)">
+                  <nb-icon icon="trash-2-outline"></nb-icon>
+                </button>
+                <button nbButton size="small" status="primary" (click)="viewPresentation(course)">
+                  <nb-icon icon="eye-outline"></nb-icon>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p *ngIf="!loading && trainingCourses.length === 0">No courses found.</p>
+
+      </nb-card-body>
+    </nb-card>
+  </nb-layout-column>
+</nb-layout>

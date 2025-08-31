@@ -33,6 +33,7 @@
     "ng2-smart-table": "^1.7.2",
     "ngx-markdown": "^14.0.1",
     "ngx-pagination": "^6.0.3",
+    "pptxgenjs": "^3.12.0",
     "ready-to-plan-ft": "file:",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
