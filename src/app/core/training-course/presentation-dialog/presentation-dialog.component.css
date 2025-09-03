@@ -4,6 +4,9 @@
   background: white;
   border-radius: 12px;
   overflow: hidden;
+  height: 80vh; /* Hauteur fixe pour le dialog */
+  display: flex;
+  flex-direction: column;
 }
 
 nb-card-header {
@@ -11,6 +14,7 @@ nb-card-header {
   color: white;
   padding: 1.2rem 1.5rem;
   border-bottom: none;
+  flex-shrink: 0; /* Empêche le header de rétrécir */
 }
 
 nb-card-header h3 {
@@ -24,33 +28,33 @@ nb-card-header h3 {
 /* Container principal */
 .slides-container {
   display: flex;
-  height: 100%;
-  min-height: 400px;
-  max-height: 70vh; /* s'adapte à la taille de l'écran */
+  flex: 1; /* Prend tout l'espace disponible */
+  min-height: 0; /* Important pour le flex en combinaison avec overflow */
   background: #f0f2f5;
-  overflow: hidden;
 }
 
 /* Sidebar fixe */
 .slides-sidebar {
   flex: 0 0 260px; /* largeur fixe */
-  max-width: 280px;
-  min-width: 220px;
   overflow-y: auto;
   border-right: 1px solid #e1e5eb;
   padding: 1rem;
   background: #fafafa;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .slide-thumb {
   cursor: pointer;
   padding: 1rem;
-  margin-bottom: 0.8rem;
   background: white;
   border-radius: 8px;
   transition: all 0.2s ease-in-out;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
   border-left: 4px solid #4b6cb7;
+  display: flex;
+  flex-direction: column;
 }
 
 .slide-thumb:hover {
@@ -65,11 +69,16 @@ nb-card-header h3 {
   box-shadow: 0 4px 12px rgba(0, 170, 255, 0.2);
 }
 
-.slide-thumb p {
+.slide-thumb .slide-title {
   margin: 0;
   font-size: 0.9rem;
   color: #444;
   line-height: 1.4;
+  /* Empêcher le texte de dépasser */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
 }
 
 .slide-thumb .slide-number {
@@ -87,51 +96,96 @@ nb-card-header h3 {
   padding: 1.5rem;
   background: #f8f9fa;
   overflow: hidden;
+  min-width: 0; /* Important pour le flex */
 }
 
-/* Slide content fixé en taille */
+/* Slide content */
 .slide-content {
   flex: 1;
   background: #ffffff;
   border-radius: 12px;
   padding: 2.5rem;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-
-  /* Toujours même taille */
-  min-height: 400px;
-  max-height: calc(80vh - 120px);
   overflow-y: auto;
+  /* Styles pour le contenu HTML */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  min-width: 0;
+}
 
-  /* Centrage type PowerPoint */
+/* Styles pour le contenu HTML des slides */
+.slide-content h1 {
+  color: #2C3E50;
+  font-size: 2.2rem;
+  text-align: center;
+  margin: 0 0 1.5rem 0;
+  font-weight: 700;
+  border-bottom: 2px solid #4b6cb7;
+  padding-bottom: 0.5rem;
+}
+
+.slide-content h2 {
+  color: #3498DB;
+  font-size: 1.8rem;
+  margin: 1.5rem 0 1rem 0;
+  font-weight: 600;
+}
+
+.slide-content h3 {
+  color: #2C3E50;
+  font-size: 1.4rem;
+  margin: 1.2rem 0 0.8rem 0;
+  font-weight: 600;
+}
+
+.slide-content p {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: #333;
+  margin-bottom: 1.2rem;
+  text-align: justify;
+}
+
+.slide-content ul, .slide-content ol {
+  font-size: 1.1rem;
+  color: #2C3E50;
+  margin: 0 0 1.5rem 1.5rem;
+  padding: 0;
+}
+
+.slide-content li {
+  margin-bottom: 0.5rem;
+  line-height: 1.5;
+}
+
+.slide-content .cover-content {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-}
-
-.slide-title {
+  height: 100%;
   text-align: center;
-  color: #4b6cb7;
-  margin-bottom: 1.5rem;
-  font-weight: 700;
-  font-size: 2rem;
 }
 
-.slide-subtitle {
+.slide-content .cover-content h1 {
+  font-size: 2.8rem;
+  margin-bottom: 2rem;
+  color: #2C3E50;
+  border: none;
+}
+
+.slide-content .cover-content div {
+  background: rgba(255, 255, 255, 0.9);
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  max-width: 80%;
+}
+
+.slide-content .cover-content p {
+  font-size: 1.3rem;
+  margin: 1rem 0;
   text-align: center;
-  color: #6c757d;
-  margin-bottom: 2.5rem;
-  font-weight: 500;
-  font-size: 1.4rem;
-}
-
-.slide-text {
-  text-align: left;
-  color: #333;
-  font-size: 1.2rem;
-  line-height: 1.6;
-  width: 100%;
-  word-wrap: break-word;
+  color: #2C3E50;
 }
 
 .slide-controls {
@@ -139,16 +193,24 @@ nb-card-header h3 {
   justify-content: space-between;
   align-items: center;
   margin-top: 1.5rem;
+  flex-shrink: 0; /* Empêche les contrôles de rétrécir */
 }
 
 .slide-indicator {
   font-weight: 500;
   color: #6c757d;
+  font-size: 0.9rem;
 }
 
 .nav-buttons {
   display: flex;
   gap: 1rem;
+}
+
+.btn-prev, .btn-next {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .btn-prev {
@@ -171,10 +233,12 @@ nb-card-header h3 {
 
 .dialog-footer {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
+  gap: 1rem;
   padding: 1.2rem 1.5rem;
   background: #f8f9fa;
   border-top: 1px solid #e1e5eb;
+  flex-shrink: 0; /* Empêche le footer de rétrécir */
 }
 
 /* Scrollbar sidebar */
@@ -195,29 +259,290 @@ nb-card-header h3 {
   background: #a8a8a8;
 }
 
+/* Scrollbar slide content */
+.slide-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.slide-content::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 0 4px 4px 0;
+}
+
+.slide-content::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+.slide-content::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Styles pour les graphiques */
+.chart-container {
+  margin: 1.5rem 0;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e1e5eb;
+  text-align: center;
+}
+
+.chart-placeholder {
+  color: #6c757d;
+  font-style: italic;
+  padding: 2rem;
+  background: #f0f2f5;
+  border-radius: 6px;
+}
+
 /* Responsive */
-@media (max-width: 768px) {
+@media (max-width: 968px) {
+  .modern-dialog {
+    min-width: auto;
+    width: 95vw;
+    height: 85vh;
+  }
+
   .slides-container {
     flex-direction: column;
-    height: auto;
-    max-height: none;
   }
 
   .slides-sidebar {
-    width: 100%;
-    max-height: 200px;
-    flex: none;
+    flex: 0 0 auto;
+    max-height: 180px;
     border-right: none;
     border-bottom: 1px solid #e1e5eb;
+    flex-direction: row;
+    overflow-x: auto;
+    padding: 0.5rem;
+  }
+
+  .slide-thumb {
+    min-width: 200px;
+    margin-bottom: 0;
+    margin-right: 0.5rem;
   }
 
   .slides-view {
-    width: 100%;
     padding: 1rem;
   }
 
   .slide-content {
-    min-height: 300px;
-    max-height: none;
+    padding: 1.5rem;
+  }
+}
+
+/* ===== REMPLACER PAR CES STYLES RENFORCÉS ===== */
+/* STYLES SPÉCIFIQUES POUR LES TABLEAUX AVEC CLASSES */
+.slide-content .table-container {
+  overflow-x: auto;
+  margin: 25px 0;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.08) !important;
+}
+
+.slide-content .styled-table {
+  border-collapse: collapse !important;
+  width: 100% !important;
+  font-size: 0.95em !important;
+  min-width: 600px;
+  margin: 1.5rem 0 !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+  border-radius: 8px !important;
+  overflow: hidden !important;
+}
+
+.slide-content .styled-table thead tr {
+  background: linear-gradient(135deg, #4b6cb7 0%, #182848 100%) !important;
+  color: #ffffff !important;
+  text-align: left !important;
+}
+
+.slide-content .styled-table th,
+.slide-content .styled-table td {
+  padding: 12px 15px !important;
+  border: 1px solid #ddd !important;
+  text-align: left !important;
+}
+
+.slide-content .styled-table th {
+  background: #3498DB !important;
+  color: white !important;
+  font-weight: 600 !important;
+  font-size: 1.05em !important;
+}
+
+.slide-content .styled-table td {
+  background: #ECF0F1 !important;
+  color: #333 !important;
+}
+
+.slide-content .styled-table tbody tr {
+  border-bottom: 1px solid #ddd !important;
+}
+
+.slide-content .styled-table tbody tr:last-child td {
+  border-bottom: none !important;
+}
+
+.slide-content .styled-table tbody tr.highlight td {
+  background: #e3f2fd !important;
+  font-weight: 600 !important;
+  color: #1976d2 !important;
+}
+
+.slide-content .styled-table tbody tr:hover td {
+  background: #f1f8ff !important;
+}
+
+/* STYLES POUR LES TABLEAUX SANS CLASSES (fallback) */
+.slide-content table:not(.styled-table) {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 1rem;
+  margin: 1.5rem 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.slide-content table:not(.styled-table) th {
+  background: #3498DB;
+  color: white;
+  text-align: left;
+  padding: 12px 15px;
+  font-weight: 600;
+}
+
+.slide-content table:not(.styled-table) td {
+  background: #ECF0F1;
+  padding: 10px 15px;
+  border-bottom: 1px solid #ddd;
+}
+
+.slide-content table:not(.styled-table) tr:last-child td {
+  border-bottom: none;
+}
+
+
+
+/* FORCER LES STYLES DES TABLEAUX DANS LE CONTENU DYNAMIQUE */
+.slide-content ::ng-deep .table-container {
+  overflow-x: auto;
+  margin: 25px 0;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.08) !important;
+}
+
+.slide-content ::ng-deep .styled-table {
+  border-collapse: collapse !important;
+  width: 100% !important;
+  font-size: 0.95em !important;
+  min-width: 600px;
+  margin: 1.5rem 0 !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+  border-radius: 8px !important;
+  overflow: hidden !important;
+}
+
+.slide-content ::ng-deep .styled-table thead tr {
+  background: linear-gradient(135deg, #4b6cb7 0%, #182848 100%) !important;
+  color: #ffffff !important;
+  text-align: left !important;
+}
+
+.slide-content ::ng-deep .styled-table th,
+.slide-content ::ng-deep .styled-table td {
+  padding: 12px 15px !important;
+  border: 1px solid #ddd !important;
+  text-align: left !important;
+}
+
+.slide-content ::ng-deep .styled-table th {
+  background: #3498DB !important;
+  color: white !important;
+  font-weight: 600 !important;
+  font-size: 1.05em !important;
+}
+
+.slide-content ::ng-deep .styled-table td {
+  background: #ECF0F1 !important;
+  color: #333 !important;
+}
+
+.slide-content ::ng-deep .styled-table tbody tr {
+  border-bottom: 1px solid #ddd !important;
+}
+
+.slide-content ::ng-deep .styled-table tbody tr:last-child td {
+  border-bottom: none !important;
+}
+
+.slide-content ::ng-deep .styled-table tbody tr.highlight td {
+  background: #e3f2fd !important;
+  font-weight: 600 !important;
+  color: #1976d2 !important;
+}
+
+.slide-content ::ng-deep .styled-table tbody tr:hover td {
+  background: #f1f8ff !important;
+}
+
+/* Styles de secours pour tous les tableaux */
+.slide-content ::ng-deep table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 1rem;
+  margin: 1.5rem 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.slide-content ::ng-deep table th {
+  background: #3498DB;
+  color: white;
+  text-align: left;
+  padding: 12px 15px;
+  font-weight: 600;
+}
+
+.slide-content ::ng-deep table td {
+  background: #ECF0F1;
+  padding: 10px 15px;
+  border-bottom: 1px solid #ddd;
+}
+
+.slide-content ::ng-deep table tr:last-child td {
+  border-bottom: none;
+}
+
+
+@media (max-width: 768px) {
+  nb-card-header h3 {
+    font-size: 1.2rem;
+  }
+
+  .slide-content {
+    padding: 1rem;
+  }
+
+  .slide-content h1 {
+    font-size: 1.8rem;
+  }
+
+  .slide-content h2 {
+    font-size: 1.5rem;
+  }
+
+  .dialog-footer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .dialog-footer button {
+    width: 100%;
+    margin: 0.2rem 0;
   }
 }

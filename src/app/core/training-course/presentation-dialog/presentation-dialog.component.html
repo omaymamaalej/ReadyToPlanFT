@@ -1,46 +1,95 @@
 <nb-card class="modern-dialog">
   <nb-card-header>
-    <h3>📝 Course Presentation</h3>
+    <h3>📝 Présentation du Cours</h3>
   </nb-card-header>
 
   <nb-card-body class="slides-container">
     <!-- Sidebar des slides -->
+    <div class="slides-sidebar">
+      <div *ngFor="let slide of presentationSlidesRaw; let i = index"
+           class="slide-thumb"
+           [class.active]="i === currentSlideIndex"
+           (click)="goToSlide(i)">
+        <div class="slide-number">Slide {{ i + 1 }}</div>
+        <p class="slide-title">{{ getSlideTitleFromRaw(slide) }}</p>
+      </div>
+    </div>
+
+    <!-- Vue principale des slides -->
+    <div class="slides-view">
+      <div class="slide-content" [innerHTML]="presentationSlidesHtml[currentSlideIndex]"></div>
+    </div>
+  </nb-card-body>
+
+  <nb-card-footer class="dialog-footer">
+    <button nbButton status="primary" (click)="downloadPresentation()">
+      <nb-icon icon="download-outline"></nb-icon> Télécharger PPTX
+    </button>
+    <button nbButton status="danger" (click)="close()">Fermer</button>
+  </nb-card-footer>
+</nb-card>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- <nb-card class="modern-dialog">
+  <nb-card-header>
+    <h3>📝 Présentation du Cours</h3>
+  </nb-card-header>
+
+  <nb-card-body class="slides-container">
     <div class="slides-sidebar">
       <div *ngFor="let slide of presentationSlides; let i = index" 
            class="slide-thumb"
            [class.active]="i === currentSlideIndex"
            (click)="goToSlide(i)">
         <div class="slide-number">Slide {{ i + 1 }}</div>
-        <p>{{ getSlideTitle(slide) | slice:0:40 }}{{ getSlideTitle(slide).length > 40 ? '...' : '' }}</p>
+        <p class="slide-title">{{ getSlideTitle(slide) }}</p>
       </div>
     </div>
 
-    <!-- Vue principale des slides -->
     <div class="slides-view">
-      <div class="slide-content">
-        <h1 class="slide-title">{{ getSlideTitle(presentationSlides[currentSlideIndex]) }}</h1>
-        <h2 class="slide-subtitle">{{ getSlideSubtitle(presentationSlides[currentSlideIndex]) }}</h2>
-        <div class="slide-text" [innerHTML]="getSlideContent(presentationSlides[currentSlideIndex])"></div>
-      </div>
+      <div class="slide-content" [innerHTML]="presentationSlides[currentSlideIndex]"></div>
 
       <div class="slide-controls">
-        <div class="slide-indicator">Slide {{ currentSlideIndex + 1 }} of {{ presentationSlides.length }}</div>
+        <div class="slide-indicator">Slide {{ currentSlideIndex + 1 }} sur {{ presentationSlides.length }}</div>
         <div class="nav-buttons">
           <button nbButton size="small" class="btn-prev" (click)="prevSlide()" [disabled]="currentSlideIndex === 0">
-            <nb-icon icon="arrow-ios-back-outline"></nb-icon> Prev
+            <nb-icon icon="arrow-ios-back-outline"></nb-icon> Précédent
           </button>
           <button nbButton size="small" class="btn-next" (click)="nextSlide()" [disabled]="currentSlideIndex === presentationSlides.length - 1">
-            Next <nb-icon icon="arrow-ios-forward-outline"></nb-icon>
+            Suivant <nb-icon icon="arrow-ios-forward-outline"></nb-icon>
           </button>
         </div>
       </div>
+
     </div>
   </nb-card-body>
 
   <nb-card-footer class="dialog-footer">
     <button nbButton status="primary" (click)="downloadPresentation()">
-      <nb-icon icon="download-outline"></nb-icon> Download PPTX
+      <nb-icon icon="download-outline"></nb-icon> Télécharger PPTX
     </button>
-    <button nbButton status="danger" (click)="close()">Close</button>
+    <button nbButton status="danger" (click)="close()">Fermer</button>
   </nb-card-footer>
-</nb-card>
+</nb-card> -->
