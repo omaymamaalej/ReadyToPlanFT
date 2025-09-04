@@ -59,19 +59,39 @@ export class ListTrainingCourseComponent implements OnInit {
     }
   }
 
+  // viewPresentation(course: any) {
+  //   this.trainingService.getPresentation(course.id).subscribe({
+  //     next: (presentation: string) => {
+  //       this.dialogService.open(PresentationDialogComponent, {
+  //         context: { presentationText: presentation },
+  //         autoFocus: true,
+  //         closeOnBackdropClick: true,
+  //       });
+  //     },
+  //     error: (err) => {
+  //       console.error(err);
+  //       alert("Impossible de récupérer la présentation.");
+  //     }
+  //   });
+  // }
+
   viewPresentation(course: any) {
+    course.loadingPresentation = true; // Ajouter cette propriété
+    
     this.trainingService.getPresentation(course.id).subscribe({
-      next: (presentation: string) => {
-        this.dialogService.open(PresentationDialogComponent, {
-          context: { presentationText: presentation },
-          autoFocus: true,
-          closeOnBackdropClick: true,
-        });
-      },
-      error: (err) => {
-        console.error(err);
-        alert("Impossible de récupérer la présentation.");
-      }
+        next: (presentation: string) => {
+            course.loadingPresentation = false;
+            this.dialogService.open(PresentationDialogComponent, {
+                context: { presentationText: presentation },
+                autoFocus: true,
+                closeOnBackdropClick: true,
+            });
+        },
+        error: (err) => {
+            course.loadingPresentation = false;
+            console.error(err);
+            alert("Impossible de récupérer la présentation.");
+        }
     });
   }
 

@@ -1,15 +1,37 @@
-<nb-card class="modern-dialog">
-  <nb-card-header>
-    <h3>📝 Présentation du Cours</h3>
+<nb-card 
+  class="modern-dialog"
+  [ngStyle]="{
+    width: isSlideshow ? '100vw' : '1200px',
+    height: isSlideshow ? '100vh' : '90vh' }">
+
+  <nb-card-header class="modern-dialog-header">
+    <h3>📝 Course Presentation</h3>
+    <div class="header-actions">
+      <button nbButton ghost status="primary" (click)="downloadPresentation()">
+        <nb-icon icon="download-outline"></nb-icon> Download PPTX
+      </button>
+      <nb-icon 
+        [icon]="isSlideshow ? 'collapse-outline' : 'expand-outline'" 
+        class="slideshow-toggle" 
+        (click)="toggleSlideshow()"
+        [title]="isSlideshow ? 'Exit Fullscreen' : 'Enter Fullscreen'">
+      </nb-icon>
+      <nb-icon 
+        icon="close-outline" 
+        class="close-icon" 
+        (click)="close()" 
+        title="Close">
+      </nb-icon>
+    </div>
   </nb-card-header>
 
   <nb-card-body class="slides-container">
     <!-- Sidebar des slides -->
     <div class="slides-sidebar">
       <div *ngFor="let slide of presentationSlidesRaw; let i = index"
-           class="slide-thumb"
-           [class.active]="i === currentSlideIndex"
-           (click)="goToSlide(i)">
+          class="slide-thumb"
+          [class.active]="i === currentSlideIndex"
+          (click)="goToSlide(i)">
         <div class="slide-number">Slide {{ i + 1 }}</div>
         <p class="slide-title">{{ getSlideTitleFromRaw(slide) }}</p>
       </div>
@@ -17,79 +39,17 @@
 
     <!-- Vue principale des slides -->
     <div class="slides-view">
-      <div class="slide-content" [innerHTML]="presentationSlidesHtml[currentSlideIndex]"></div>
-    </div>
-  </nb-card-body>
-
-  <nb-card-footer class="dialog-footer">
-    <button nbButton status="primary" (click)="downloadPresentation()">
-      <nb-icon icon="download-outline"></nb-icon> Télécharger PPTX
-    </button>
-    <button nbButton status="danger" (click)="close()">Fermer</button>
-  </nb-card-footer>
-</nb-card>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!-- <nb-card class="modern-dialog">
-  <nb-card-header>
-    <h3>📝 Présentation du Cours</h3>
-  </nb-card-header>
-
-  <nb-card-body class="slides-container">
-    <div class="slides-sidebar">
-      <div *ngFor="let slide of presentationSlides; let i = index" 
-           class="slide-thumb"
-           [class.active]="i === currentSlideIndex"
-           (click)="goToSlide(i)">
-        <div class="slide-number">Slide {{ i + 1 }}</div>
-        <p class="slide-title">{{ getSlideTitle(slide) }}</p>
-      </div>
-    </div>
-
-    <div class="slides-view">
-      <div class="slide-content" [innerHTML]="presentationSlides[currentSlideIndex]"></div>
-
-      <div class="slide-controls">
-        <div class="slide-indicator">Slide {{ currentSlideIndex + 1 }} sur {{ presentationSlides.length }}</div>
-        <div class="nav-buttons">
-          <button nbButton size="small" class="btn-prev" (click)="prevSlide()" [disabled]="currentSlideIndex === 0">
-            <nb-icon icon="arrow-ios-back-outline"></nb-icon> Précédent
-          </button>
-          <button nbButton size="small" class="btn-next" (click)="nextSlide()" [disabled]="currentSlideIndex === presentationSlides.length - 1">
-            Suivant <nb-icon icon="arrow-ios-forward-outline"></nb-icon>
-          </button>
+      <div class="slide-wrapper">
+        <div class="slide-content" [innerHTML]="presentationSlidesHtml[currentSlideIndex]"></div>
+        <div class="slide-footer">
+          <span class="page-number">Page {{ getPageNumber() }}</span>
         </div>
       </div>
-
     </div>
   </nb-card-body>
 
-  <nb-card-footer class="dialog-footer">
-    <button nbButton status="primary" (click)="downloadPresentation()">
-      <nb-icon icon="download-outline"></nb-icon> Télécharger PPTX
-    </button>
-    <button nbButton status="danger" (click)="close()">Fermer</button>
-  </nb-card-footer>
-</nb-card> -->
+  <!-- plus de footer -->
+  <div class="slide-navigation-hint" *ngIf="isSlideshow">
+    ← Previous | Next → 
+  </div>
+</nb-card>

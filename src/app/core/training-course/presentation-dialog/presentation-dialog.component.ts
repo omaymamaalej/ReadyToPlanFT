@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, ElementRef, HostListener, Input, OnInit, Renderer2 } from '@angular/core';
 import { NbDialogRef } from '@nebular/theme';
 import PptxGenJS from 'pptxgenjs';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
@@ -18,9 +18,14 @@ export class PresentationDialogComponent implements OnInit {
   presentationSlidesHtml: SafeHtml[] = [];
   private styleElement: HTMLStyleElement | null = null;
 
+  isSlideshow: boolean = false;
+
   constructor(
     protected ref: NbDialogRef<PresentationDialogComponent>,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private renderer: Renderer2,
+    private elementRef: ElementRef
+    
   ) {}
 
   ngOnInit() {
@@ -206,26 +211,78 @@ export class PresentationDialogComponent implements OnInit {
     this.currentSlideIndex = index;
   }
 
+  // Ajoutez cet écouteur d'événements pour la navigation au clavier
+  @HostListener('window:keydown', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent) {
+    switch (event.key) {
+      case 'ArrowRight':
+      case ' ':
+      case 'PageDown':
+        if (this.isSlideshow) this.nextSlide();
+        event.preventDefault();
+        break;
+      case 'ArrowLeft':
+      case 'PageUp':
+        if (this.isSlideshow) this.previousSlide();
+        event.preventDefault();
+        break;
+      case 'Escape':
+        if (this.isSlideshow) this.toggleSlideshow(); // <-- même action que l'icône
+        event.preventDefault();
+        break;
+    }
+  }
+
+  toggleSlideshow() {
+    this.isSlideshow = !this.isSlideshow;
+
+    const dialogContainer = this.elementRef.nativeElement.closest('nb-dialog-container');
+
+    if (this.isSlideshow) {
+      this.renderer.addClass(document.body, 'slideshow-active');
+      if (dialogContainer) this.renderer.addClass(dialogContainer, 'fullscreen-dialog');
+      
+      // Optionnel : plein écran natif
+      if (dialogContainer?.requestFullscreen) dialogContainer.requestFullscreen();
+    } else {
+      this.renderer.removeClass(document.body, 'slideshow-active');
+      if (dialogContainer) this.renderer.removeClass(dialogContainer, 'fullscreen-dialog');
+      
+      if (document.fullscreenElement) document.exitFullscreen();
+    }
+  }
+
+
+
   nextSlide() {
     if (this.currentSlideIndex < this.presentationSlidesRaw.length - 1) {
       this.currentSlideIndex++;
     }
   }
 
-  prevSlide() {
+  previousSlide() {
     if (this.currentSlideIndex > 0) {
       this.currentSlideIndex--;
     }
   }
 
+
   close() {
     this.ref.close();
+  }
+
+  getPageNumber(): string {
+    if (this.presentationSlidesRaw.length <= 1) return '0/0';
+    
+    const totalPages = this.presentationSlidesRaw.length - 1;
+    const currentPage = this.currentSlideIndex > 0 ? this.currentSlideIndex : 1;
+    
+    return `${currentPage}/${totalPages}`;
   }
 
   async downloadPresentation() {
     const pptx = new PptxGenJS();
 
-    // Master slide
     pptx.defineSlideMaster({
       title: 'MASTER_SLIDE',
       background: { color: 'FFFFFF' },
@@ -242,7 +299,6 @@ export class PresentationDialogComponent implements OnInit {
 
       const pptxSlide = pptx.addSlide({ masterName: 'MASTER_SLIDE' });
 
-      // Première slide -> page de garde spéciale
       if (index === 0) {
         pptxSlide.background = { color: '4B6CB7' };
         pptxSlide.addText(this.courseData.title || 'Titre du cours', {

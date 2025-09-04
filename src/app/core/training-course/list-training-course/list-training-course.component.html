@@ -59,8 +59,9 @@
                 <button nbButton size="small" status="danger" (click)="deleteCourse(course.id)">
                   <nb-icon icon="trash-2-outline"></nb-icon>
                 </button>
-                <button nbButton size="small" status="primary" (click)="viewPresentation(course)">
-                  <nb-icon icon="eye-outline"></nb-icon>
+                <button nbButton size="small" status="primary" (click)="viewPresentation(course)" [disabled]="course.loadingPresentation">
+                  <nb-icon *ngIf="!course.loadingPresentation" icon="eye-outline"></nb-icon>
+                  <nb-spinner *ngIf="course.loadingPresentation" size="tiny"></nb-spinner>
                 </button>
               </td>
             </tr>
