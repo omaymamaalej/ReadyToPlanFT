@@ -9,7 +9,7 @@ import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { AuthModule } from './pages/auth/auth.module';
 import { NbAuthModule } from '@nebular/auth';
 import { LayoutService } from './@core/utils/layout.service';
-import { CoreModule } from './core/core.module';
+import { FeaturesModule } from './core/core.module';
 import { LayoutModule } from './layout/layout.module';
 import { authInterceptorProviders } from './_helpers/auth.interceptor';
 import { ZonedDateTimeInterceptorProviders } from './_helpers/ZonedDateTime.interceptor';
@@ -62,7 +62,7 @@ import { UserModule } from './user/user.module';
       strategies: [],
       forms: {},
     }),
-    CoreModule,
+    FeaturesModule,
     LayoutModule,
     SharedModule,
     UserModule

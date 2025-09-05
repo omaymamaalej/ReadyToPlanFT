@@ -26,5 +26,9 @@ export class UserService {
   update(user: User): Observable<User> {
     return this.http.put<User>('http://localhost:8080/api/admin/users', user);
   }
+
+  getUserStats(): Observable<any> {
+    return this.http.get<any>('http://localhost:8080/api/admin/users/stats');
+  }
   
 }

@@ -10,10 +10,13 @@ import { LayoutModule } from '../layout/layout.module';
 import { StrategicPlanningModule } from './strategic-planning/strategic-planning.module';
 import { BusinessPlanModule } from './business-plan/business-plan.module';
 import { TrainingCourseModule } from './training-course/training-course.module';
+import { DashboardComponent } from './dashboard/dashboard.component';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 
 @NgModule({
   declarations: [
+    DashboardComponent
   ],
   imports: [
     CommonModule,
@@ -43,8 +46,10 @@ import { TrainingCourseModule } from './training-course/training-course.module';
     NbUserModule,
     NbEvaIconsModule,
     NbToastrModule.forRoot(),
+    NgxChartsModule
+    
   ],
   exports: [
   ]
 })
-export class CoreModule { }
+export class FeaturesModule  { }

@@ -1,1 +1,192 @@
-<p>dashboard works!</p>
+<nb-layout>
+  <nb-layout-column>
+    <div class="dashboard-container">
+      
+      <nb-card class="dashboard-header">
+        <nb-card-header>
+          <div class="header-content">
+            <h1>📊 Tableau de Bord Administratif</h1>
+            <p>Vue d'ensemble des présentations et statistiques</p>
+          </div>
+        </nb-card-header>
+      </nb-card>
+
+      <div class="dashboard-grid">
+        
+        <!-- Colonne de gauche - Présentations partagées -->
+        <div class="left-column">
+          <nb-card class="presentations-card">
+            <nb-card-header>
+              <h3>🌐 Présentations Partagées</h3>
+              <p>Liste des présentations accessibles publiquement</p>
+            </nb-card-header>
+            <nb-card-body>
+              <div class="table-responsive">
+                <table class="presentations-table">
+                  <thead>
+                    <tr>
+                      <th>Créé par</th>
+                      <th>Titre</th>
+                      <th>Public</th>
+                      <th>Satisfaction</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let course of publicCourses">
+                      
+                      <td class="creator-cell">
+                        <div class="user-info">
+                          <nb-icon icon="person-outline"></nb-icon>
+                          <span>{{ getCreatedBy(course) }}</span>
+                        </div>
+                      </td>
+
+
+
+                      <td>{{ course.title }}</td>
+                      <td>
+                        <span class="audience-badge">{{ course.targetAudience }}</span>
+                      </td>
+                      <td>
+                        <div class="satisfaction-rating">
+                          <span *ngIf="course.satisfaction === 3" class="rating satisfied">
+                            ✅ Satisfait
+                          </span>
+                          <span *ngIf="course.satisfaction === 1" class="rating not-satisfied">
+                            ❌ Non satisfait
+                          </span>
+                          <span *ngIf="!course.satisfaction" class="rating not-rated">
+                            ⏳ Non évalué
+                          </span>
+                        </div>
+                      </td>
+                      <td class="actions-cell">
+                        <div class="action-buttons">
+                          <button nbButton size="tiny" status="primary" 
+                                  (click)="viewPresentation(course)"
+                                  [disabled]="course.loadingPresentation">
+                            <nb-icon icon="eye-outline"></nb-icon>
+                          </button>
+                          
+                          <button nbButton size="tiny" status="warning" 
+                                  (click)="toggleFavorite(course)"
+                                  [class.favorited]="course.isFavorite">
+                            <nb-icon [icon]="course.isFavorite ? 'star' : 'star-outline'"></nb-icon>
+                          </button>
+                          
+                          <button nbButton size="tiny" status="success" 
+                                  (click)="evaluateCourse(course.id, 3)"
+                                  [disabled]="course.satisfaction === 3">
+                            <nb-icon icon="thumbs-up-outline"></nb-icon>
+                          </button>
+                          
+                          <button nbButton size="tiny" status="danger" 
+                                  (click)="evaluateCourse(course.id, 1)"
+                                  [disabled]="course.satisfaction === 1">
+                            <nb-icon icon="thumbs-down-outline"></nb-icon>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              
+              <div *ngIf="publicCourses.length === 0" class="no-data">
+                <nb-icon icon="file-text-outline" class="no-data-icon"></nb-icon>
+                <p>Aucune présentation partagée pour le moment</p>
+              </div>
+            </nb-card-body>
+          </nb-card>
+        </div>
+
+        <!-- Colonne de droite - Statistiques -->
+        <div class="right-column">
+          
+          <!-- Carte Statistiques de Satisfaction -->
+          <nb-card class="stats-card">
+            <nb-card-header>
+              <h3>📈 Statistiques de Satisfaction</h3>
+              <p>Répartition des évaluations des cours</p>
+            </nb-card-header>
+            <nb-card-body>
+              <div *ngIf="stats" class="chart-container">
+                <ngx-charts-pie-chart
+                  [results]="[
+                    { name: 'Satisfaits', value: stats.Satisfied || 0 },
+                    { name: 'Non satisfaits', value: stats.NotSatisfied || 0 },
+                    { name: 'Non évalués', value: stats.NotRated || 0 }
+                  ]"
+                  [legend]="true"
+                  [doughnut]="true"
+                  [gradient]="false"
+                  [scheme]="colorScheme">
+                </ngx-charts-pie-chart>
+                
+                <div class="stats-numbers">
+                  <div class="stat-item">
+                    <span class="stat-value">{{ totalCourses }}</span>
+                    <span class="stat-label">Total Cours</span>
+                  </div>
+                  <div class="stat-item">
+                    <span class="stat-value">{{ stats.Satisfied || 0 }}</span>
+                    <span class="stat-label">Satisfaits</span>
+                  </div>
+                  <div class="stat-item">
+                    <span class="stat-value">{{ publicCourses.length }}</span>
+                    <span class="stat-label">Partagés</span>
+                  </div>
+                </div>
+              </div>
+            </nb-card-body>
+          </nb-card>
+
+          <!-- Carte Utilisateurs -->
+          <nb-card class="users-card">
+            <nb-card-header>
+              <h3>👥 Statistiques Utilisateurs</h3>
+              <p>Activité des utilisateurs sur la plateforme</p>
+            </nb-card-header>
+            <nb-card-body>
+              <div class="users-stats">
+                <div class="user-stat">
+                  <div class="stat-icon">
+                    <nb-icon icon="people-outline"></nb-icon>
+                  </div>
+                  <div class="stat-content">
+                    <span class="stat-number">{{ userStats.totalUsers || 0 }}</span>
+                    <span class="stat-label">Utilisateurs total</span>
+                  </div>
+                </div>
+                
+                <div class="user-stat">
+                  <div class="stat-icon">
+                    <nb-icon icon="person-add-outline"></nb-icon>
+                  </div>
+                  <div class="stat-content">
+                    <span class="stat-number">{{ userStats.activeUsers || 0 }}</span>
+                    <span class="stat-label">Utilisateurs actifs</span>
+                  </div>
+                </div>
+                
+                <div class="user-stat">
+                  <div class="stat-icon">
+                    <nb-icon icon="file-text-outline"></nb-icon>
+                  </div>
+                  <div class="stat-content">
+                    <span class="stat-number">{{ userStats.coursesCreated || 0 }}</span>
+                    <span class="stat-label">Cours créés</span>
+                  </div>
+                </div>
+              </div>
+            </nb-card-body>
+          </nb-card>
+
+        </div>
+      </div>
+
+    </div>
+  </nb-layout-column>
+</nb-layout>
+

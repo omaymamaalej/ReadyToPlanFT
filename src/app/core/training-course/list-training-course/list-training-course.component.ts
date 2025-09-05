@@ -5,6 +5,7 @@ import { PresentationDialogComponent } from '../presentation-dialog/presentation
 import { NbDialogService } from '@nebular/theme';
 import { ConfirmDialogComponent } from 'src/app/shared/confirm-dialog/confirm-dialog.component';
 import { AlertDialogComponent } from 'src/app/shared/alert-dialog/alert-dialog.component';
+import { CommunicationService } from 'src/app/services/communication.service';
 
 @Component({
   selector: 'app-list-training-course',
@@ -19,16 +20,18 @@ export class ListTrainingCourseComponent implements OnInit {
   constructor(
     private trainingService: TrainingCourseService,
     private router: Router,
-    private dialogService: NbDialogService
+    private dialogService: NbDialogService,
+    private communicationService: CommunicationService
   ) { }
 
   ngOnInit(): void {
     this.getAllTrainingCourses();
   }
 
+
   getAllTrainingCourses() {
     this.loading = true;
-    this.trainingService.getAll().subscribe({
+    this.trainingService.getMyCourses().subscribe({
       next: (data) => {
         this.trainingCourses = data;
         this.trainingCourses.forEach(course => course.showFullSummary = false);
@@ -92,18 +95,19 @@ export class ListTrainingCourseComponent implements OnInit {
     });
   }
 
-  regeneratePresentation(course: any) { 
-    course.loadingPresentation = true; 
-    this.trainingService.regeneratePresentation(course.id).subscribe({ 
-      next: (newPresentation: string) => { course.loadingPresentation = false; 
-        const dialogRef = this.dialogService.open(PresentationDialogComponent, { 
-          context: { presentationText: newPresentation, isTemporary: true }, 
-          autoFocus: true, closeOnBackdropClick: false, 
-        }); dialogRef.onClose.subscribe((save: boolean) => { 
-          if (save) { 
-            this.trainingService.savePresentation(course.id, newPresentation).subscribe({ 
-              next: (updatedCourse) => { 
-                course.presentation = updatedCourse.presentation; 
+  regeneratePresentation(course: any) {
+    course.loadingPresentation = true;
+    this.trainingService.regeneratePresentation(course.id).subscribe({
+      next: (newPresentation: string) => {
+        course.loadingPresentation = false;
+        const dialogRef = this.dialogService.open(PresentationDialogComponent, {
+          context: { presentationText: newPresentation, isTemporary: true },
+          autoFocus: true, closeOnBackdropClick: false,
+        }); dialogRef.onClose.subscribe((save: boolean) => {
+          if (save) {
+            this.trainingService.savePresentation(course.id, newPresentation).subscribe({
+              next: (updatedCourse) => {
+                course.presentation = updatedCourse.presentation;
                 this.dialogService.open(AlertDialogComponent, {
                   context: {
                     title: 'Presentation Saved',
@@ -112,9 +116,9 @@ export class ListTrainingCourseComponent implements OnInit {
                     status: 'success'
                   }
                 });
- 
-              }, error: (err) => { 
-                console.error(err); 
+
+              }, error: (err) => {
+                console.error(err);
                 this.dialogService.open(AlertDialogComponent, {
                   context: {
                     title: 'Save Failed',
@@ -123,13 +127,13 @@ export class ListTrainingCourseComponent implements OnInit {
                     status: 'danger'
                   }
                 });
-               } 
-            }); 
-          } 
-        }); 
-      }, error: (err) => { 
-        course.loadingPresentation = false; 
-        console.error(err); 
+              }
+            });
+          }
+        });
+      }, error: (err) => {
+        course.loadingPresentation = false;
+        console.error(err);
         this.dialogService.open(AlertDialogComponent, {
           context: {
             title: 'Generation Failed',
@@ -138,10 +142,63 @@ export class ListTrainingCourseComponent implements OnInit {
             status: 'warning'
           }
         });
-       } 
-    }); 
+      }
+    });
   }
 
+  evaluateCourse(id: string, satisfaction: number) {
+    this.trainingService.evaluate(id, satisfaction).subscribe({
+      next: () => {
+        this.getAllTrainingCourses();
+        this.communicationService.notifyStatsUpdate(); // ← Notifier la mise à jour
+        this.showEvaluationNotification(satisfaction);
+      },
+      error: (err) => console.error(err)
+    });
+  }
+
+  togglePublic(id: string, isPublic: boolean) {
+    this.trainingService.setPublic(id, isPublic).subscribe({
+      next: () => {
+        this.getAllTrainingCourses();
+        this.communicationService.notifyStatsUpdate();
+
+        // Notifier qu'une présentation a été partagée
+        const course = this.trainingCourses.find(c => c.id === id);
+        if (course && isPublic) {
+          this.communicationService.notifyPresentationShared(course);
+          this.showSharingNotification(course);
+        }
+      },
+      error: (err) => console.error(err)
+    });
+  }
+
+  private showEvaluationNotification(satisfaction: number) {
+    const message = satisfaction === 3
+      ? '✅ Course rated as Satisfied!'
+      : '❌ Course rated as Not Satisfied!';
+
+    this.dialogService.open(AlertDialogComponent, {
+      context: {
+        title: 'Evaluation Submitted',
+        message: message,
+        icon: satisfaction === 3 ? 'smiling-face-outline' : 'frown-outline',
+        status: satisfaction === 3 ? 'success' : 'warning'
+      }
+    });
+  }
+
+  private showSharingNotification(course: any) {
+    this.dialogService.open(AlertDialogComponent, {
+      context: {
+        title: 'Presentation Shared',
+        message: `"${course.title}" is now public and available in the dashboard!`,
+        icon: 'unlock-outline',
+        status: 'info'
+      }
+    });
+  }
 }
 
 

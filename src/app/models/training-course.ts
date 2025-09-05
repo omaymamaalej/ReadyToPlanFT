@@ -16,6 +16,11 @@ export class TrainingCourse  {
   duration: string;
   languages: Languages;
   presentation: string;
+  publicPresentation: boolean; 
+  satisfaction: number;
+  createdBy: string;          
+  createdByLogin: string;     
+  createdDate: Date;          
 
   constructor(){
     this.id = '';
@@ -27,12 +32,15 @@ export class TrainingCourse  {
     this.level = Level.BEGINNER;
     this.locationType = LocationType.SITE;
     this.duration = '';
-    this.languages =Languages.ENGLISH;
-    this.presentation ='';
+    this.languages = Languages.ENGLISH;
+    this.presentation = '';
+    this.publicPresentation = false;
+    this.satisfaction = 0; 
+    this.createdBy = '';      
+    this.createdByLogin = ''; 
+    this.createdDate = new Date(); 
   }
 }
-
-
 
 export interface TrainingCourseDto {
   id: string;
@@ -42,8 +50,13 @@ export interface TrainingCourseDto {
   instructor: string;
   studyClass: StudyClass;
   level: Level;
-  locationType: string;
+  locationType: LocationType; 
   duration: string;
   languages: Languages;
   presentation: string;
+  publicPresentation: boolean; 
+  satisfaction: number;
+  createdBy: string;          
+  createdByLogin: string;     
+  createdDate: Date;          
 }

@@ -20,17 +20,33 @@ export class AuthService {
 
   login(username: string, password: string): Observable<any> {
     return this.http.post('http://localhost:8080/api/authenticate', {
-      'username' : username,
-      'password' : password
+      'username': username,
+      'password': password
     }, httpOptions);
   }
 
   register(username: string, email: string, password: string): Observable<any> {
     return this.http.post('http://localhost:8080/api/register', {
-      'login' : username,
-      'email' : email,
-      'password' : password,
+      'login': username,
+      'email': email,
+      'password': password,
       'langKey': 'en'
     }, httpOptions);
+  }
+
+  getCurrentUser(): { username: string, email: string } | null {
+    const token = localStorage.getItem('token');
+    if (!token) return null;
+
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      return {
+        username: payload.sub || payload.username,
+        email: payload.email
+      };
+    } catch (e) {
+      console.error('Erreur décodage JWT', e);
+      return null;
+    }
   }
 }

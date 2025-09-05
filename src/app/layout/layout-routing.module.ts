@@ -11,6 +11,7 @@ import { BusinessPlanListComponent } from '../core/strategic-planning/business-p
 import { ListUserComponent } from '../user/list-user/list-user.component';
 import { AddTrainingCourseComponent } from '../core/training-course/add-training-course/add-training-course.component';
 import { ListTrainingCourseComponent } from '../core/training-course/list-training-course/list-training-course.component';
+import { DashboardComponent } from '../core/dashboard/dashboard.component';
 
 
 const routes: Routes = [
@@ -20,6 +21,7 @@ const routes: Routes = [
     path: '',
     component: LayoutComponent, 
     children: [
+      { path: 'dashboard', component: DashboardComponent },
       { path: 'businessPlan/createpresentation', component: AddBusinessPlanComponent },
       { path: 'businessPlan/listBusinessPlan', component: ListBusinessPlanComponent },
       { path: 'strategic-planning', component: StrategicPlanningComponent },
@@ -29,10 +31,6 @@ const routes: Routes = [
       { path: 'listUser', component: ListUserComponent },
       { path: 'trainingCourse/addTrainingCourse', component: AddTrainingCourseComponent },
       { path: 'trainingCourse/AllTrainingCourse', component: ListTrainingCourseComponent },
-
-      
-
-
 
     ],
   },

@@ -85,6 +85,23 @@
                   </button>
                 </div>
 
+                <div class="actions-column">
+                  <button nbButton size="tiny" status="success" ghost (click)="evaluateCourse(course.id, 3)">
+                    <nb-icon icon="smiling-face-outline"></nb-icon>
+                  </button>
+                  <button nbButton size="tiny" status="danger" ghost (click)="evaluateCourse(course.id, 1)">
+                    <nb-icon icon="frown-outline"></nb-icon>
+                  </button>
+                </div>
+
+                <div class="actions-column">
+                  <button nbButton size="tiny" status="warning" ghost 
+                          (click)="togglePublic(course.id, !course.publicPresentation)">
+                    <nb-icon [icon]="course.publicPresentation ? 'unlock-outline' : 'lock-outline'"></nb-icon>
+                  </button>
+                </div>
+
+
               </td>
             </tr>
           </tbody>
