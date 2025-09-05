@@ -10,6 +10,16 @@
       <button nbButton ghost status="primary" (click)="downloadPresentation()">
         <nb-icon icon="download-outline"></nb-icon> Download PPTX
       </button>
+
+      <!-- Icon tic visible uniquement si mode regenerate -->
+      <nb-icon 
+        *ngIf="isTemporary"
+        icon="checkmark-outline"
+        class="save-tic"
+        title="Save Presentation"
+        (click)="confirmSavePresentation()">
+      </nb-icon>
+
       <nb-icon 
         [icon]="isSlideshow ? 'collapse-outline' : 'expand-outline'" 
         class="slideshow-toggle" 

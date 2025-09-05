@@ -2,6 +2,12 @@ import { NbMenuItem } from '@nebular/theme';
 
 export const ADMIN_MENU_ITEMS: NbMenuItem[] = [
   {
+    title: 'Dashboard',
+    icon: 'home-outline', 
+    link: '/dashboard',
+  },
+
+  {
     title: 'List User',
     icon: 'list-outline',
     link: '/listUser',
@@ -55,6 +61,11 @@ export const ADMIN_MENU_ITEMS: NbMenuItem[] = [
 ];
 
 export const USER_MENU_ITEMS: NbMenuItem[] = [
+  {
+    title: 'Dashboard',
+    icon: 'home-outline', 
+    link: '/dashboard',
+  },
   {
     title: 'FEATURES',
     group: true,

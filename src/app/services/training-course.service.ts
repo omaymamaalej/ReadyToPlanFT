@@ -39,4 +39,15 @@ export class TrainingCourseService {
   getPresentation(id: string): Observable<string> {
     return this.http.get(`${this.apiUrl}/training-courses/${id}/presentation`, { responseType: 'text' });
   }
+
+  // Récupérer une nouvelle présentation générée (non sauvegardée)
+  regeneratePresentation(id: string): Observable<string> {
+    return this.http.post(`${this.apiUrl}/training-courses/${id}/regenerate-presentation`, null, { responseType: 'text' });
+  }
+
+  // Sauvegarder la nouvelle présentation générée
+  savePresentation(id: string, newPresentation: string): Observable<TrainingCourseDto> {
+    return this.http.post<TrainingCourseDto>(`${this.apiUrl}/training-courses/${id}/save-presentation`, newPresentation);
+  }
+
 }

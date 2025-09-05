@@ -30,6 +30,9 @@ export class AddTrainingCourseComponent implements OnInit {
 
   presentationText: string = ''; 
 
+  isLoading: boolean = false;
+  isSuccess: boolean = false;
+
   constructor(
     private fb: FormBuilder,
     private trainingService: TrainingCourseService,
@@ -78,18 +81,21 @@ export class AddTrainingCourseComponent implements OnInit {
   }
 
   onSubmit() {
-    this.trainingService.create(this.trainingCourseForm.value)
+    if (this.trainingCourseForm.invalid) return;
+
+    this.isLoading = true;
+
+    this.trainingService.create(this.trainingCourseForm.getRawValue())
       .subscribe({
         next: (data) => {
           console.log('Course created with id:', data.id);
 
-          if(data.presentation) {
-            this.showPresentation(data.presentation);
-
-          }
+          this.isLoading = false;
+          this.isSuccess = true; // ⬅️ passe en mode succès
         },
         error: (err) => {
           console.log(err);
+          this.isLoading = false;
         }
       });
   }

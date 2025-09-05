@@ -1,7 +1,8 @@
 import { Component, ElementRef, HostListener, Input, OnInit, Renderer2 } from '@angular/core';
-import { NbDialogRef } from '@nebular/theme';
+import { NbDialogRef, NbDialogService } from '@nebular/theme';
 import PptxGenJS from 'pptxgenjs';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { ConfirmDialogComponent } from 'src/app/shared/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-presentation-dialog',
@@ -12,6 +13,7 @@ export class PresentationDialogComponent implements OnInit {
 
   @Input() presentationText: string = '';
   @Input() courseData: any = {};
+  @Input() isTemporary: boolean = false;
 
   currentSlideIndex: number = 0;
   presentationSlidesRaw: string[] = [];
@@ -20,11 +22,15 @@ export class PresentationDialogComponent implements OnInit {
 
   isSlideshow: boolean = false;
 
+  // Indique si l’utilisateur a confirmé la sauvegarde
+  saveConfirmed: boolean = false;
+
   constructor(
     protected ref: NbDialogRef<PresentationDialogComponent>,
     private sanitizer: DomSanitizer,
     private renderer: Renderer2,
-    private elementRef: ElementRef
+    private elementRef: ElementRef,
+    private dialogService: NbDialogService,
     
   ) {}
 
@@ -227,7 +233,7 @@ export class PresentationDialogComponent implements OnInit {
         event.preventDefault();
         break;
       case 'Escape':
-        if (this.isSlideshow) this.toggleSlideshow(); // <-- même action que l'icône
+        if (this.isSlideshow) this.toggleSlideshow(); 
         event.preventDefault();
         break;
     }
@@ -266,9 +272,27 @@ export class PresentationDialogComponent implements OnInit {
     }
   }
 
+  confirmSavePresentation() {
+    this.dialogService.open(ConfirmDialogComponent, {
+      context: {
+        title: 'Save Presentation',
+        message: 'Do you want to save this new presentation? The previous one will be permanently replaced.',
+        confirmText: 'Yes, Save',
+        cancelText: 'Cancel',
+        icon: 'save-outline',
+        status: 'warning',
+      },
+    }).onClose.subscribe((confirmed: boolean) => {
+      if (confirmed) {
+        this.saveConfirmed = true;
+        this.ref.close(true);
+      }
+    });
+  }
+
 
   close() {
-    this.ref.close();
+    this.ref.close(this.saveConfirmed); 
   }
 
   getPageNumber(): string {
@@ -380,8 +404,6 @@ export class PresentationDialogComponent implements OnInit {
         }
       });
 
-      // Tableaux
-      // Tableaux - rechercher les tableaux avec la classe styled-table
       const tables = doc.querySelectorAll('.styled-table, table');
       tables.forEach(table => {
         const rows: any[] = [];
@@ -394,8 +416,8 @@ export class PresentationDialogComponent implements OnInit {
             return {
               text: (cell.textContent || '').trim(),
               options: {
-                fill: '4B6CB7', // Header background
-                color: 'FFFFFF', // Header text color
+                fill: '4B6CB7', 
+                color: 'FFFFFF', 
                 fontSize: 12,
                 bold: true,
                 align: 'center'
@@ -471,20 +493,17 @@ export class PresentationDialogComponent implements OnInit {
       for (const img of Array.from(images)) {
         const src = img.getAttribute('src') || '';
         if (src.startsWith('data:image')) {
-          // add image to slide
           try {
             pptxSlide.addImage({
-              data: src, // PptxGenJS accepte data urls
+              data: src, 
               x: 1, y: yPos, w: 8, h: 3
             });
             yPos += 3.2;
           } catch (err) {
-            // si erreur, ajouter un texte fallback
             pptxSlide.addText('[Image non insérée]', { x: 1, y: yPos, w: 8, h: 0.3, color: '888888' });
             yPos += 0.5;
           }
         } else if (src.startsWith('http')) {
-          // On pourrait fetch l'image et la convertir en base64 si nécessaire. Ici on met un placeholder.
           pptxSlide.addText('[Image externe non intégrée]', { x: 1, y: yPos, w: 8, h: 0.3, color: '888888' });
           yPos += 0.5;
         }
