@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { TrainingCourse, TrainingCourseDto } from '../models/training-course';
 import { map, Observable } from 'rxjs';
 import { TokenStorageService } from '../_services/token-storage.service';
+import { SatisfactionStats } from '../models/SatisfactionStats';
 
 @Injectable({
   providedIn: 'root'
@@ -74,9 +75,10 @@ export class TrainingCourseService {
     return this.http.post(url, {});
   }
 
-  getStats(): Observable<{ [key: string]: number }> {
-    return this.http.get<{ [key: string]: number }>(`${this.apiUrl}/training-courses/stats/satisfaction`);
+  getStats(): Observable<SatisfactionStats> {
+    return this.http.get<SatisfactionStats>(`${this.apiUrl}/training-courses/stats/satisfaction`);
   }
+
 
   getMyCourses(): Observable<TrainingCourseDto[]> {
     return this.http.get<TrainingCourseDto[]>(`${this.apiUrl}/training-courses/mine`);
@@ -84,5 +86,9 @@ export class TrainingCourseService {
 
   getPublicCourses(): Observable<TrainingCourseDto[]> {
     return this.http.get<TrainingCourseDto[]>(`${this.apiUrl}/training-courses/public`);
+  }
+
+  getUserStats(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/users/stats`);
   }
 }

@@ -6,7 +6,7 @@ import { CommunicationService } from 'src/app/services/communication.service';
 import { PresentationDialogComponent } from '../training-course/presentation-dialog/presentation-dialog.component';
 import { UserService } from 'src/app/services/user.service';
 import { TokenStorageService } from 'src/app/_services/token-storage.service';
-import { User } from 'src/app/models/User';
+import { SatisfactionStats } from 'src/app/models/SatisfactionStats';
 
 @Component({
   selector: 'app-dashboard',
@@ -15,7 +15,12 @@ import { User } from 'src/app/models/User';
 })
 export class DashboardComponent implements OnInit {
 
-  stats: any;
+  stats: SatisfactionStats = {
+    Satisfied: 0,
+    NotSatisfied: 0,
+    NotRated: 0
+  };
+
   publicCourses: any[] = [];
   totalCourses: number = 0;
   userStats: any = {
@@ -40,14 +45,8 @@ export class DashboardComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.trainingService.getPublicCourses().subscribe({
-      next: (courses) => {
-        this.publicCourses = courses;
-      },
-      error: (err) => console.error(err)
-    });
+    this.loadAllData();
   }
-
 
   loadAllData() {
     this.loadStats();
@@ -59,10 +58,14 @@ export class DashboardComponent implements OnInit {
   loadStats() {
     this.trainingService.getStats().subscribe({
       next: (data) => {
-        this.stats = data;
-        if (this.totalCourses > 0) {
-          this.stats.NotRated = this.totalCourses - (this.stats.Satisfied + this.stats.NotSatisfied);
-        }
+        this.stats = {
+          Satisfied: data.Satisfied || 0,
+          NotSatisfied: data.NotSatisfied || 0,
+          NotRated: 0
+        };
+
+        this.stats.NotRated = this.totalCourses - (this.stats.Satisfied + this.stats.NotSatisfied);
+        if (this.stats.NotRated < 0) this.stats.NotRated = 0;
       },
       error: (err) => console.error(err),
     });
@@ -98,28 +101,33 @@ export class DashboardComponent implements OnInit {
         this.totalCourses = courses.length;
         if (this.stats) {
           this.stats.NotRated = this.totalCourses - (this.stats.Satisfied + this.stats.NotSatisfied);
+          if (this.stats.NotRated < 0) this.stats.NotRated = 0;
         }
+
+        // Mettre à jour aussi les cours créés côté userStats
+        this.userStats.coursesCreated = this.totalCourses;
+
+        this.loadUserStats();
       },
       error: (err) => console.error(err),
     });
   }
 
   loadUserStats() {
-    if (this.tokenStorage.isAdmin()) {
-      this.userService.getUserStats().subscribe({
-        next: (stats) => {
-          this.userStats = stats;
-        },
-        error: (err) => {
-          console.error('Error loading user stats:', err);
-          this.userStats = {
-            totalUsers: 0,
-            activeUsers: 0,
-            coursesCreated: this.totalCourses
-          };
-        }
+    const currentUser = this.tokenStorage.getUser();
+
+    if (currentUser && currentUser.roles && currentUser.roles.includes('ROLE_ADMIN')) {
+      this.userService.getAdminStats().subscribe({
+        next: (stats) => this.userStats = stats,
+        error: (err) => console.error(err)
+      });
+    } else if (currentUser) {
+      this.trainingService.getUserStats().subscribe({
+        next: (stats) => this.userStats = stats,
+        error: (err) => console.error(err)
       });
     } else {
+      console.warn('Aucun utilisateur connecté');
       this.userStats = {
         totalUsers: 0,
         activeUsers: 0,
@@ -127,6 +135,8 @@ export class DashboardComponent implements OnInit {
       };
     }
   }
+
+
 
   viewPresentation(course: any) {
     course.loadingPresentation = true;
