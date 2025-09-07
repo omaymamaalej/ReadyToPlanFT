@@ -6,10 +6,35 @@
       </nb-card-header>
 
       <nb-card-body>
+        <!-- 🔎 Barre de recherche + filtres -->
+        <div class="filters-container">
+          <input nbInput fullWidth placeholder="🔍 Search by title or instructor"
+                [(ngModel)]="searchTerm" (input)="applyFilters()" />
+
+          <!-- Filtre par Audience -->
+          <nb-select placeholder="Filter by Audience"
+                     [(selected)]="selectedAudience"
+                     (selectedChange)="applyFilters()">
+            <nb-option value="">All Audiences</nb-option>
+            <nb-option value="STUDENTS">Students</nb-option>
+            <nb-option value="TEACHERS">Teachers</nb-option>
+            <nb-option value="PROFESSIONALS">Professionals</nb-option>
+          </nb-select>
+
+          <!-- Filtre par Niveau -->
+          <nb-select placeholder="Filter by Level"
+                     [(selected)]="selectedLevel"
+                     (selectedChange)="applyFilters()">
+            <nb-option value="">All Levels</nb-option>
+            <nb-option value="BEGINNER">Beginner</nb-option>
+            <nb-option value="INTERMEDIATE">Intermediate</nb-option>
+            <nb-option value="ADVANCED">Advanced</nb-option>
+          </nb-select>
+        </div>
 
         <nb-spinner *ngIf="loading" status="primary"></nb-spinner>
 
-        <table *ngIf="!loading && trainingCourses.length" class="training-table modern-table">
+        <table *ngIf="!loading && filteredCourses.length" class="training-table modern-table">
           <thead>
             <tr>
               <th>Fav</th>
@@ -27,7 +52,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let course of trainingCourses">
+            <tr *ngFor="let course of filteredCourses">
 
               <td class="fav-cell">
                 <nb-icon [icon]="course.isFavorite ? 'star' : 'star-outline'" status="warning" class="favorite-icon"
@@ -137,7 +162,7 @@
           </tbody>
         </table>
 
-        <p *ngIf="!loading && trainingCourses.length === 0">No courses found.</p>
+        <p *ngIf="!loading && filteredCourses.length === 0">No courses found.</p>
       </nb-card-body>
     </nb-card>
   </nb-layout-column>

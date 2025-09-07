@@ -36,6 +36,11 @@ export class DashboardComponent implements OnInit {
     domain: ['#5AA454', '#A10A28', '#C9C9C9']
   };
 
+  searchTerm: string = '';
+  selectedAudience: string = '';
+  selectedSatisfaction: string = '';
+  filteredCourses: any[] = [];
+
   constructor(
     private trainingService: TrainingCourseService,
     private userService: UserService,
@@ -106,6 +111,7 @@ export class DashboardComponent implements OnInit {
               userSatisfaction: course.userSatisfaction || 0,
               isFavorite: favIds.includes(course.id)
             }));
+            this.applyFilters();
           },
           error: (err) => console.error(err)
         });
@@ -208,6 +214,48 @@ export class DashboardComponent implements OnInit {
       },
       error: (err) => console.error(err)
     });
+  }
+
+  applyFilters() {
+    this.filteredCourses = this.publicCourses.filter(course => {
+      let matchesSearch = true;
+      let matchesAudience = true;
+      let matchesSatisfaction = true;
+
+      // 🔍 Recherche par titre ou créateur (insensible à la casse)
+      if (this.searchTerm) {
+        const term = this.searchTerm.toLowerCase();
+        matchesSearch =
+          course.title?.toLowerCase().includes(term) ||
+          this.getCreatedBy(course).toLowerCase().includes(term);
+      }
+
+      // 🎯 Filtre audience
+      if (this.selectedAudience) {
+        matchesAudience = course.targetAudience === this.selectedAudience;
+      }
+
+      // 😊 Filtre satisfaction
+      if (this.selectedSatisfaction) {
+        if (this.selectedSatisfaction === 'Satisfied') {
+          matchesSatisfaction = course.satisfiedCount > 0;
+        } else if (this.selectedSatisfaction === 'NotSatisfied') {
+          matchesSatisfaction = course.notSatisfiedCount > 0;
+        } else if (this.selectedSatisfaction === 'NotRated') {
+          matchesSatisfaction =
+            course.satisfiedCount === 0 && course.notSatisfiedCount === 0;
+        }
+      }
+
+      return matchesSearch && matchesAudience && matchesSatisfaction;
+    });
+
+    // Optionnel : trier en fonction de satisfaction
+    if (this.selectedSatisfaction === 'Satisfied') {
+      this.filteredCourses.sort((a, b) => b.satisfiedCount - a.satisfiedCount);
+    } else if (this.selectedSatisfaction === 'NotSatisfied') {
+      this.filteredCourses.sort((a, b) => b.notSatisfiedCount - a.notSatisfiedCount);
+    }
   }
 
 }

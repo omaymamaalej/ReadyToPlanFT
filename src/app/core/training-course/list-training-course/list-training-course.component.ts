@@ -16,9 +16,15 @@ import { forkJoin } from 'rxjs';
 export class ListTrainingCourseComponent implements OnInit {
 
   trainingCourses: any[] = [];
-  favorites: string[] = [];
+  filteredCourses: any[] = [];
 
+  favorites: string[] = [];
   loading = true;
+
+  // 🔎 Filtres
+  searchTerm: string = '';
+  selectedAudience: string = '';
+  selectedLevel: string = '';
 
   constructor(
     private trainingService: TrainingCourseService,
@@ -42,6 +48,7 @@ export class ListTrainingCourseComponent implements OnInit {
 
           userSatisfaction: course.userSatisfaction || 0
         }));
+        this.applyFilters();
         this.loading = false;
       },
       error: (err) => {
@@ -54,6 +61,7 @@ export class ListTrainingCourseComponent implements OnInit {
       this.trainingCourses.forEach(course => {
         course.isFavorite = !!favCourses.find(f => f.id === course.id);
       });
+      this.applyFilters();
     });
   }
 
@@ -301,6 +309,35 @@ export class ListTrainingCourseComponent implements OnInit {
         icon: 'unlock-outline',
         status: 'info'
       }
+    });
+  }
+
+   // 🔥 Nouvelle méthode pour appliquer les filtres
+  applyFilters() {
+    this.filteredCourses = this.trainingCourses.filter(course => {
+      let matchesSearch = true;
+      let matchesAudience = true;
+      let matchesLevel = true;
+
+      // Recherche
+      if (this.searchTerm) {
+        const term = this.searchTerm.toLowerCase();
+        matchesSearch =
+          course.title?.toLowerCase().includes(term) ||
+          course.instructor?.toLowerCase().includes(term);
+      }
+
+      // Audience
+      if (this.selectedAudience) {
+        matchesAudience = course.targetAudience === this.selectedAudience;
+      }
+
+      // Niveau
+      if (this.selectedLevel) {
+        matchesLevel = course.level === this.selectedLevel;
+      }
+
+      return matchesSearch && matchesAudience && matchesLevel;
     });
   }
 }

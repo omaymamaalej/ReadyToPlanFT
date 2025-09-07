@@ -133,3 +133,14 @@ nb-layout-column {
   box-shadow:0 3px 3px 0 rgba(61, 175, 255,1);
   animation:spin 1.5s linear infinite;
 }
+
+.filters-container {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+  align-items: center;
+}
+.filters-container nb-select,
+.filters-container input {
+  flex: 1;
+}

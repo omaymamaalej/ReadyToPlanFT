@@ -301,3 +301,15 @@ nb-layout-column {
   background-color: #ffd700 !important;
   border-color: #ffd700 !important;
 }
+
+
+.filters-container {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+  align-items: center;
+}
+.filters-container nb-select,
+.filters-container input {
+  flex: 1;
+}
