@@ -1,4 +1,75 @@
-.bandtit{
+.account-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  margin: 1rem;
+}
+
+.profile-card {
+  flex: 1 1 25%;
+}
+
+.details-card {
+  flex: 1 1 70%;
+  color: #4a6ea9;
+}
+
+.profile-header {
+  display: flex;
+  justify-content: center;
+  background: #4a6ea9;
+  color: #fff;
+}
+
+.about-section {
+  text-align: center;
+  margin-top: 1rem;
+}
+
+nb-card-header h5 {
+color: #4a6ea9;
+}
+
+.about-section h5 {
+  color: #4a6ea9;
+  margin-bottom: 0.5rem;
+}
+
+.about-section p, .about-section ul {
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.personal-form .form-row {
+  margin-bottom: 1rem;
+}
+
+.personal-form label {
+  font-weight: 600;
+  display: block;
+  margin-bottom: 0.3rem;
+  color: #3b3f5c;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1rem;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* .bandtit{
 	font-family: 'Varela Round', sans-serif;
 	background: #435d7d;
 	color: #fff;
@@ -77,4 +148,4 @@ body {
 	font-family: 'Varela Round', sans-serif;
 	font-size: 15px;
 }
-
+ */

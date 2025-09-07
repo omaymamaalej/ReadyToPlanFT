@@ -1,4 +1,69 @@
-<div style="margin: -0.9rem 1rem 0rem -0.09rem ; background:none">
+<nb-layout>
+  <nb-layout-column>
+    <div class="account-wrapper">
+      <div class="profile-card">
+        <nb-card>
+          <nb-card-header class="profile-header">
+           <nb-user [name]="currentUser.login || 'User'"
+                    [title]="currentUser.email || 'No Email'"
+                    [picture]="'https://bootdey.com/img/Content/avatar/avatar7.png'"
+                    size="giant">
+            </nb-user>
+
+          </nb-card-header>
+
+          <nb-card-body>
+            <div class="about-section">
+              <h5>About Me</h5>
+              <p>Full Name: {{ currentUser.firstName }} {{ currentUser.lastName }}</p>
+              <p>Profile created on: {{ currentUser.createdDate | date:'dd/MM/yyyy HH:mm' }}</p>
+              <p>Roles in Slide Forge:</p>
+                <h5 *ngFor="let authority of currentUser.authorities">{{ authority }}</h5>
+            </div>
+          </nb-card-body>
+        </nb-card>
+      </div>
+
+      <div class="details-card">
+        <nb-card>
+          <nb-card-header>
+            <h5>Profile</h5>
+          </nb-card-header>
+
+          <nb-card-body>
+            <div class="personal-form">
+              <div class="form-row">
+                <label>First Name</label>
+                <input nbInput fullWidth [(ngModel)]="currentUser.firstName" placeholder="Enter first name"/>
+              </div>
+
+              <div class="form-row">
+                <label>Last Name</label>
+                <input nbInput fullWidth [(ngModel)]="currentUser.lastName" placeholder="Enter last name"/>
+              </div>
+
+              <div class="form-row">
+                <label>Email</label>
+                <input nbInput fullWidth [(ngModel)]="currentUser.email" placeholder="Enter email"/>
+              </div>
+
+              <div class="form-actions">
+                <button nbButton status="primary" (click)="update()">Save</button>
+              </div>
+            </div>
+          </nb-card-body>
+        </nb-card>
+      </div>
+    </div>
+  </nb-layout-column>
+</nb-layout>
+
+
+
+
+
+
+<!-- <div style="margin: -0.9rem 1rem 0rem -0.09rem ; background:none">
   <div class="row gutters">
     <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12">
       <div class="card h-100" style="font-family: 'Varela Round', sans-serif;
@@ -79,4 +144,4 @@
       </div>
     </div>
   </div>
-</div>
+</div> -->

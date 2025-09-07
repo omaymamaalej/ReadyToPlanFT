@@ -2,15 +2,17 @@
   <nb-layout-column>
     <nb-card class="creative-card">
       <nb-card-header>
-        <h2>📋 Course List</h2>
+        <h2 class="title-header">📋 Course List</h2>
       </nb-card-header>
+
       <nb-card-body>
 
         <nb-spinner *ngIf="loading" status="primary"></nb-spinner>
 
-        <table *ngIf="!loading && trainingCourses.length" class="training-table">
+        <table *ngIf="!loading && trainingCourses.length" class="training-table modern-table">
           <thead>
             <tr>
+              <th>Fav</th>
               <th>Title</th>
               <th>Summary</th>
               <th>Audience</th>
@@ -21,28 +23,40 @@
               <th>Language</th>
               <th>Location Type</th>
               <th>Actions</th>
+              <th>Share</th>
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let course of trainingCourses">
+
+              <td class="fav-cell">
+                <nb-icon [icon]="course.isFavorite ? 'star' : 'star-outline'" status="warning" class="favorite-icon"
+                  (click)="toggleFavorite(course)"
+                  [attr.title]="course.isFavorite ? 'Remove from favorites' : 'Add to favorites'">
+
+                </nb-icon>
+              </td>
+
               <td>{{ course.title }}</td>
 
+              <!-- Résumé avec toggle -->
               <td>
                 <span *ngIf="course.summary">
-                    <span *ngIf="!course.showFullSummary">
-                    {{ course.summary | slice:0:40 }}<span *ngIf="course.summary.length > 40">... </span>
+                  <span *ngIf="!course.showFullSummary">
+                    {{ course.summary | slice:0:40 }}
+                    <span *ngIf="course.summary.length > 40">... </span>
                     <a href="#" *ngIf="course.summary.length > 40" (click)="toggleSummary(course, $event)">
-                        <nb-icon icon="arrow-down-outline"></nb-icon>
+                      <nb-icon icon="arrow-down-outline"></nb-icon>
                     </a>
-                    </span>
-                    <span *ngIf="course.showFullSummary">
+                  </span>
+                  <span *ngIf="course.showFullSummary">
                     {{ course.summary }}
                     <a href="#" (click)="toggleSummary(course, $event)">
-                        <nb-icon icon="arrow-up-outline"></nb-icon>
+                      <nb-icon icon="arrow-up-outline"></nb-icon>
                     </a>
-                    </span>
+                  </span>
                 </span>
-                </td>
+              </td>
 
               <td>{{ course.targetAudience }}</td>
               <td>{{ course.studyClass }}</td>
@@ -51,17 +65,21 @@
               <td>{{ course.duration || 'N/A' }}</td>
               <td>{{ course.languages }}</td>
               <td>{{ course.locationType || 'N/A' }}</td>
-              <td class="d-flex">
+
+              <!-- Actions -->
+              <td class="action-cell">
                 <div class="actions-column">
-                  <button nbButton size="small" status="info" ghost (click)="editCourse(course.id)">
+                  <button nbButton size="tiny" status="info" ghost (click)="editCourse(course.id)" title="Update">
                     <nb-icon icon="edit-outline"></nb-icon>
                   </button>
-                  <button nbButton size="small" status="danger" ghost (click)="deleteCourse(course.id)">
+                  <button nbButton size="tiny" status="danger" ghost (click)="deleteCourse(course.id)" title="Delete">
                     <nb-icon icon="trash-2-outline"></nb-icon>
                   </button>
                 </div>
+
                 <div class="actions-column">
-                  <button nbButton size="small" status="primary" ghost (click)="viewPresentation(course)" [disabled]="course.loadingPresentation">
+                  <button nbButton size="tiny" status="primary" ghost (click)="viewPresentation(course)"
+                    [disabled]="course.loadingPresentation" title="View Presentation">
                     <nb-icon *ngIf="!course.loadingPresentation" icon="eye-outline"></nb-icon>
                     <div *ngIf="course.loadingPresentation" class="spinner">
                       <div class="blob blob-0"></div>
@@ -72,7 +90,8 @@
                       <div class="blob blob-5"></div>
                     </div>
                   </button>
-                  <button nbButton size="small" status="warning" ghost (click)="regeneratePresentation(course)" [disabled]="course.loadingPresentation">
+                  <button nbButton size="tiny" status="warning" ghost (click)="regeneratePresentation(course)"
+                    [disabled]="course.loadingPresentation" title="Regenerate New Presentation">
                     <nb-icon *ngIf="!course.loadingPresentation" icon="refresh-outline"></nb-icon>
                     <div *ngIf="course.loadingPresentation" class="spinner">
                       <div class="blob blob-0"></div>
@@ -86,29 +105,39 @@
                 </div>
 
                 <div class="actions-column">
-                  <button nbButton size="tiny" status="success" ghost (click)="evaluateCourse(course.id, 3)">
+                  <!-- Satisfait -->
+                  <button nbButton size="tiny" status="success" ghost
+                          (click)="evaluateCourse(course.id, 3)"
+                          [disabled]="course.userSatisfaction === 3"
+                          title="Satisfied">
                     <nb-icon icon="smiling-face-outline"></nb-icon>
                   </button>
-                  <button nbButton size="tiny" status="danger" ghost (click)="evaluateCourse(course.id, 1)">
-                    <nb-icon icon="frown-outline"></nb-icon>
+
+                  <!-- Non satisfait -->
+                  <button nbButton size="tiny" status="danger" ghost
+                          (click)="evaluateCourse(course.id, 1)"
+                          [disabled]="course.userSatisfaction === 1"
+                          title="Not Satisfied">
+                    <nb-icon icon="alert-circle-outline"></nb-icon>
                   </button>
+
+
                 </div>
-
-                <div class="actions-column">
-                  <button nbButton size="tiny" status="warning" ghost 
-                          (click)="togglePublic(course.id, !course.publicPresentation)">
-                    <nb-icon [icon]="course.publicPresentation ? 'unlock-outline' : 'lock-outline'"></nb-icon>
-                  </button>
-                </div>
-
-
               </td>
+
+              <!-- Share -->
+              <td class="share-cell">
+                <button nbButton size="tiny" ghost [status]="course.publicPresentation ? 'success' : 'basic'"
+                  (click)="togglePublic(course.id, !course.publicPresentation)" title="Share">
+                  <nb-icon icon="share-outline"></nb-icon>
+                </button>
+              </td>
+
             </tr>
           </tbody>
         </table>
 
         <p *ngIf="!loading && trainingCourses.length === 0">No courses found.</p>
-
       </nb-card-body>
     </nb-card>
   </nb-layout-column>

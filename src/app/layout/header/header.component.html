@@ -5,7 +5,28 @@
         <a (click)="toggleSidebar()" href="#" class="sidebar-toggle">
           <nb-icon icon="menu-2-outline"></nb-icon>
         </a>
-        <a class="logo" href="#" (click)="navigateHome()">Ready To <span>Plan</span></a>
+        <a class="logo" href="#" (click)="navigateHome()">
+          <img src="assets/images/logo1.png" alt="Ready To Plan" class="logo-img" />
+        </a>
+      </div>
+
+      <div class="header-right">
+        <nb-actions>
+          <!-- Fav courses dropdown -->
+          <nb-action [nbContextMenu]="favMenu" nbContextMenuTag="favMenuTag" title="Favorite Courses">
+            <nb-icon icon="star-outline" status="warning"></nb-icon>
+          </nb-action>
+
+
+          <nb-action class="user-info" (click)="toggleUserMenu()">
+            <nb-icon icon="person-outline"></nb-icon>
+            <span>Welcome, {{ userName }}</span>
+
+            <nb-action class="logout-btn" (click)="logout()" title="Logout">
+              <nb-icon icon="log-out-outline"></nb-icon>
+            </nb-action>
+          </nb-action>
+        </nb-actions>
       </div>
 
     </div>
@@ -14,7 +35,6 @@
   <nb-sidebar tag="menu-sidebar" state="expanded" responsive>
     <nb-menu [items]="menu"></nb-menu>
   </nb-sidebar>
-  
 
   <nb-layout-column>
     <router-outlet></router-outlet>

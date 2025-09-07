@@ -6,6 +6,7 @@ import { NbDialogService } from '@nebular/theme';
 import { ConfirmDialogComponent } from 'src/app/shared/confirm-dialog/confirm-dialog.component';
 import { AlertDialogComponent } from 'src/app/shared/alert-dialog/alert-dialog.component';
 import { CommunicationService } from 'src/app/services/communication.service';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-list-training-course',
@@ -15,6 +16,8 @@ import { CommunicationService } from 'src/app/services/communication.service';
 export class ListTrainingCourseComponent implements OnInit {
 
   trainingCourses: any[] = [];
+  favorites: string[] = [];
+
   loading = true;
 
   constructor(
@@ -24,20 +27,92 @@ export class ListTrainingCourseComponent implements OnInit {
     private communicationService: CommunicationService
   ) { }
 
-  ngOnInit(): void {
-    this.getAllTrainingCourses();
-  }
+  ngOnInit() {
+    this.loading = true;
 
+    forkJoin({
+      courses: this.trainingService.getMyCourses(),
+      favorites: this.trainingService.getFavorites()
+    }).subscribe({
+      next: ({ courses, favorites }) => {
+        this.trainingCourses = courses.map(course => ({
+          ...course,
+          showFullSummary: false,
+          isFavorite: favorites.includes(course.id),
+
+          userSatisfaction: course.userSatisfaction || 0
+        }));
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error(err);
+        this.loading = false;
+      }
+    });
+
+    this.communicationService.favoriteCourses$.subscribe((favCourses) => {
+      this.trainingCourses.forEach(course => {
+        course.isFavorite = !!favCourses.find(f => f.id === course.id);
+      });
+    });
+  }
 
   getAllTrainingCourses() {
     this.loading = true;
     this.trainingService.getMyCourses().subscribe({
       next: (data) => {
-        this.trainingCourses = data;
-        this.trainingCourses.forEach(course => course.showFullSummary = false);
+        this.trainingCourses = data.map(course => ({
+          ...course,
+          showFullSummary: false,
+          userSatisfaction: course.userSatisfaction || null
+        }));
         this.loading = false;
       },
       error: (err) => {
+        console.error(err);
+        this.loading = false;
+      }
+    });
+  }
+
+  loadFavorites() {
+    this.trainingService.getFavorites().subscribe({
+      next: (favIds: string[]) => {
+        this.trainingCourses.forEach(course => {
+          course.isFavorite = favIds.includes(course.id);
+        });
+      },
+      error: err => console.error(err)
+    });
+  }
+
+  /**
+   * Charge les cours et la liste des favoris, puis synchronise les favoris avec les cours
+   */
+  loadFavoritesAndCourses() {
+    this.loading = true;
+    this.trainingService.getFavorites().subscribe({
+      next: (favIds: string[]) => {
+
+        this.trainingService.getMyCourses().subscribe({
+          next: (data) => {
+            this.trainingCourses = data;
+            this.trainingCourses.forEach(course => {
+              course.showFullSummary = false;
+              course.isFavorite = favIds.includes(course.id);
+            });
+
+            const favCourses = this.trainingCourses.filter(course => course.isFavorite);
+
+            this.loading = false;
+          },
+          error: (err) => {
+            console.error(err);
+            this.loading = false;
+          }
+        });
+      },
+      error: err => {
         console.error(err);
         this.loading = false;
       }
@@ -146,12 +221,27 @@ export class ListTrainingCourseComponent implements OnInit {
     });
   }
 
-  evaluateCourse(id: string, satisfaction: number) {
-    this.trainingService.evaluate(id, satisfaction).subscribe({
+  evaluateCourse(courseId: string, satisfaction: number) {
+    this.trainingService.evaluate(courseId, satisfaction).subscribe({
       next: () => {
-        this.getAllTrainingCourses();
-        this.communicationService.notifyStatsUpdate(); // ← Notifier la mise à jour
-        this.showEvaluationNotification(satisfaction);
+        const course = this.trainingCourses.find(c => c.id === courseId);
+        if (course) {
+          if (course.userSatisfaction === 3) {
+            course.satisfiedCount--;
+          } else if (course.userSatisfaction === 1) {
+            course.notSatisfiedCount--;
+          }
+
+          if (satisfaction === 3) {
+            course.satisfiedCount++;
+          } else if (satisfaction === 1) {
+            course.notSatisfiedCount++;
+          }
+
+          course.userSatisfaction = satisfaction;
+        }
+
+        this.communicationService.notifyStatsUpdate();
       },
       error: (err) => console.error(err)
     });
@@ -163,7 +253,6 @@ export class ListTrainingCourseComponent implements OnInit {
         this.getAllTrainingCourses();
         this.communicationService.notifyStatsUpdate();
 
-        // Notifier qu'une présentation a été partagée
         const course = this.trainingCourses.find(c => c.id === id);
         if (course && isPublic) {
           this.communicationService.notifyPresentationShared(course);
@@ -189,6 +278,21 @@ export class ListTrainingCourseComponent implements OnInit {
     });
   }
 
+  toggleFavorite(course: any) {
+    this.trainingService.toggleFavorite(course.id).subscribe({
+      next: (isFav: boolean) => {
+        course.isFavorite = isFav;
+
+        if (isFav) {
+          this.communicationService.addFavorite(course);
+        } else {
+          this.communicationService.removeFavorite(course.id);
+        }
+      },
+      error: err => console.error(err)
+    });
+  }
+
   private showSharingNotification(course: any) {
     this.dialogService.open(AlertDialogComponent, {
       context: {
@@ -200,6 +304,3 @@ export class ListTrainingCourseComponent implements OnInit {
     });
   }
 }
-
-
-

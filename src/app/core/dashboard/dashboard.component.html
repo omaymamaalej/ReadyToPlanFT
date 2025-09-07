@@ -5,35 +5,47 @@
       <nb-card class="dashboard-header">
         <nb-card-header>
           <div class="header-content">
-            <h1>📊 Tableau de Bord Administratif</h1>
-            <p>Vue d'ensemble des présentations et statistiques</p>
+            <h1>📊 Dashboard</h1>
+            <p>Overview of presentations and statistics</p>
           </div>
         </nb-card-header>
       </nb-card>
 
       <div class="dashboard-grid">
         
-        <!-- Colonne de gauche - Présentations partagées -->
+        <!-- Left Column - Shared Presentations -->
         <div class="left-column">
           <nb-card class="presentations-card">
             <nb-card-header>
-              <h3>🌐 Présentations Partagées</h3>
-              <p>Liste des présentations accessibles publiquement</p>
+              <h3>🌐 Shared Presentations</h3>
+              <p>List of publicly accessible presentations</p>
             </nb-card-header>
             <nb-card-body>
               <div class="table-responsive">
-                <table class="presentations-table">
+                <table class="modern-table">
                   <thead>
                     <tr>
-                      <th>Créé par</th>
-                      <th>Titre</th>
-                      <th>Public</th>
+                      <th>Fav</th>
+                      <th>Created By</th>
+                      <th>Title</th>
+                      <th>Audience</th>
                       <th>Satisfaction</th>
                       <th>Actions</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr *ngFor="let course of publicCourses">
+
+                      <!-- Favorite -->
+                      <td class="fav-cell">
+                        <nb-icon 
+                          [icon]="course.isFavorite ? 'star' : 'star-outline'" 
+                          status="warning"
+                          class="favorite-icon"
+                          (click)="toggleFavoriteFromDashboard(course)"
+                          [attr.title]="course.isFavorite ? 'Remove from favorites' : 'Add to favorites'">
+                        </nb-icon>
+                      </td>
                       
                       <td class="creator-cell">
                         <div class="user-info">
@@ -46,75 +58,80 @@
                       <td>
                         <span class="audience-badge">{{ course.targetAudience }}</span>
                       </td>
+
                       <td>
-                        <div class="satisfaction-rating">
-                          <span *ngIf="course.satisfaction === 3" class="rating satisfied">
-                            ✅ Satisfait
-                          </span>
-                          <span *ngIf="course.satisfaction === 1" class="rating not-satisfied">
-                            ❌ Non satisfait
-                          </span>
-                          <span *ngIf="!course.satisfaction" class="rating not-rated">
-                            ⏳ Non évalué
-                          </span>
+                        <div class="satisfaction-counts">
+                          <span class="satisfied-count">✅ {{ course?.satisfiedCount || 0 }}</span> /
+                          <span class="not-satisfied-count">❌ {{ course?.notSatisfiedCount || 0 }}</span>
                         </div>
                       </td>
-                      <td class="actions-cell">
-                        <div class="action-buttons">
+
+                      <td class="action-cell">
+                        <div class="actions-column">
+
                           <button nbButton size="tiny" status="primary" 
-                                  (click)="viewPresentation(course)"
-                                  [disabled]="course.loadingPresentation">
-                            <nb-icon icon="eye-outline"></nb-icon>
+                                  (click)="viewPresentation(course)" 
+                                  [disabled]="course.loadingPresentation" 
+                                  title="View Presentation">
+                            <nb-icon *ngIf="!course.loadingPresentation" icon="eye-outline"></nb-icon>
+                            <div *ngIf="course.loadingPresentation" class="spinner">
+                              <div class="blob blob-0"></div>
+                              <div class="blob blob-1"></div>
+                              <div class="blob blob-2"></div>
+                              <div class="blob blob-3"></div>
+                              <div class="blob blob-4"></div>
+                              <div class="blob blob-5"></div>
+                            </div>
                           </button>
-                          
-                          <button nbButton size="tiny" status="warning" 
-                                  (click)="toggleFavorite(course)"
-                                  [class.favorited]="course.isFavorite">
-                            <nb-icon [icon]="course.isFavorite ? 'star' : 'star-outline'"></nb-icon>
+
+                          <!-- Satisfait -->
+                          <button nbButton size="tiny" status="success" ghost 
+                                  (click)="evaluateCourse(course.id, 3)" 
+                                  [disabled]="course.userSatisfaction === 3" 
+                                  title="Satisfied">
+                            <nb-icon icon="smiling-face-outline"></nb-icon>
                           </button>
-                          
-                          <button nbButton size="tiny" status="success" 
-                                  (click)="evaluateCourse(course.id, 3)"
-                                  [disabled]="course.satisfaction === 3">
-                            <nb-icon icon="thumbs-up-outline"></nb-icon>
-                          </button>
-                          
-                          <button nbButton size="tiny" status="danger" 
-                                  (click)="evaluateCourse(course.id, 1)"
-                                  [disabled]="course.satisfaction === 1">
-                            <nb-icon icon="thumbs-down-outline"></nb-icon>
+
+                          <!-- Non satisfait -->
+                          <button nbButton size="tiny" status="danger" ghost 
+                                  (click)="evaluateCourse(course.id, 1)" 
+                                  [disabled]="course.userSatisfaction === 1" 
+                                  title="Not Satisfied">
+                            <nb-icon icon="alert-circle-outline"></nb-icon>
                           </button>
                         </div>
                       </td>
+
                     </tr>
                   </tbody>
                 </table>
               </div>
+
               
               <div *ngIf="publicCourses.length === 0" class="no-data">
                 <nb-icon icon="file-text-outline" class="no-data-icon"></nb-icon>
-                <p>Aucune présentation partagée pour le moment</p>
+                <p>No shared presentations available at the moment</p>
               </div>
             </nb-card-body>
           </nb-card>
         </div>
 
-        <!-- Colonne de droite - Statistiques -->
+        <!-- Right Column - Statistics -->
         <div class="right-column">
           
-          <!-- Carte Statistiques de Satisfaction -->
+          <!-- Satisfaction Statistics Card -->
           <nb-card class="stats-card">
             <nb-card-header>
-              <h3>📈 Statistiques de Satisfaction</h3>
-              <p>Répartition des évaluations des cours</p>
+              <h3>📈 Satisfaction Statistics</h3>
+              <p>Distribution of course ratings</p>
             </nb-card-header>
             <nb-card-body>
               <div *ngIf="stats" class="chart-container">
                 <ngx-charts-pie-chart
                   [results]="[
-                    { name: 'Satisfaits', value: stats.Satisfied || 0 },
-                    { name: 'Non satisfaits', value: stats.NotSatisfied || 0 },
-                    { name: 'Non évalués', value: stats.NotRated || 0 }
+                    { name: 'Satisfied', value: stats.Satisfied || 0 },
+                    { name: 'Not Satisfied', value: stats.NotSatisfied || 0 },
+                    { name: 'Not Rated', value: stats.NotRated || 0 }
                   ]"
                   [legend]="true"
                   [doughnut]="true"
@@ -125,26 +142,26 @@
                 <div class="stats-numbers">
                   <div class="stat-item">
                     <span class="stat-value">{{ totalCourses }}</span>
-                    <span class="stat-label">Total Cours</span>
+                    <span class="stat-label">Total Courses</span>
                   </div>
                   <div class="stat-item">
                     <span class="stat-value">{{ stats.Satisfied || 0 }}</span>
-                    <span class="stat-label">Satisfaits</span>
+                    <span class="stat-label">Satisfied</span>
                   </div>
                   <div class="stat-item">
                     <span class="stat-value">{{ publicCourses.length }}</span>
-                    <span class="stat-label">Partagés</span>
+                    <span class="stat-label">Shared</span>
                   </div>
                 </div>
               </div>
             </nb-card-body>
           </nb-card>
 
-          <!-- Carte Utilisateurs -->
+          <!-- Users Card -->
           <nb-card class="users-card">
             <nb-card-header>
-              <h3>👥 Statistiques Utilisateurs</h3>
-              <p>Activité des utilisateurs sur la plateforme</p>
+              <h3>👥 User Statistics</h3>
+              <p>Platform user activity</p>
             </nb-card-header>
             <nb-card-body>
               <div class="users-stats">
@@ -154,7 +171,7 @@
                   </div>
                   <div class="stat-content">
                     <span class="stat-number">{{ userStats.totalUsers || 0 }}</span>
-                    <span class="stat-label">Utilisateurs total</span>
+                    <span class="stat-label">Total Users</span>
                   </div>
                 </div>
                 
@@ -164,7 +181,7 @@
                   </div>
                   <div class="stat-content">
                     <span class="stat-number">{{ userStats.activeUsers || 0 }}</span>
-                    <span class="stat-label">Utilisateurs actifs</span>
+                    <span class="stat-label">Active Users</span>
                   </div>
                 </div>
                 
@@ -174,7 +191,7 @@
                   </div>
                   <div class="stat-content">
                     <span class="stat-number">{{ userStats.coursesCreated || 0 }}</span>
-                    <span class="stat-label">Cours créés</span>
+                    <span class="stat-label">Courses Created</span>
                   </div>
                 </div>
               </div>
@@ -187,4 +204,3 @@
     </div>
   </nb-layout-column>
 </nb-layout>
-

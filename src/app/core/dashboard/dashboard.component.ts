@@ -46,6 +46,27 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadAllData();
+
+    // 🔔 Synchroniser quand une évaluation est faite ailleurs
+    this.communicationService.courseEvaluated$.subscribe(({ courseId, satisfaction }) => {
+      const course = this.publicCourses.find(c => c.id === courseId);
+      if (course) {
+        if (course.userSatisfaction === 3) {
+          course.satisfiedCount--;
+        } else if (course.userSatisfaction === 1) {
+          course.notSatisfiedCount--;
+        }
+
+        if (satisfaction === 3) {
+          course.satisfiedCount++;
+        } else if (satisfaction === 1) {
+          course.notSatisfiedCount++;
+        }
+
+        course.userSatisfaction = satisfaction;
+      }
+    });
+
   }
 
   loadAllData() {
@@ -72,26 +93,24 @@ export class DashboardComponent implements OnInit {
   }
 
   loadPublicCourses() {
-    this.trainingService.getAll().subscribe({
-      next: (courses) => {
-        this.publicCourses = courses
-          .filter(course => course.publicPresentation === true)
-          .map(course => ({
-            ...course,
-            createdBy: course.createdBy || '',
-            createdByLogin: course.createdByLogin || '',
-            isFavorite: false
-          }));
+    const currentUser = this.tokenStorage.getUser();
 
-        console.log('Public courses with creator info:', this.publicCourses.map(c => ({
-          id: c.id,
-          title: c.title,
-          createdBy: c.createdBy,
-          createdByLogin: c.createdByLogin,
-          publicPresentation: c.publicPresentation
-        })));
+    this.trainingService.getFavorites().subscribe({
+      next: (favIds: string[]) => {
+        this.trainingService.getPublicCoursesWithSatisfaction().subscribe({
+          next: (courses) => {
+            this.publicCourses = courses.map(course => ({
+              ...course,
+              satisfiedCount: course.satisfiedCount || 0,
+              notSatisfiedCount: course.notSatisfiedCount || 0,
+              userSatisfaction: course.userSatisfaction || 0,
+              isFavorite: favIds.includes(course.id)
+            }));
+          },
+          error: (err) => console.error(err)
+        });
       },
-      error: (err) => console.error(err),
+      error: (err) => console.error(err)
     });
   }
 
@@ -99,15 +118,7 @@ export class DashboardComponent implements OnInit {
     this.trainingService.getAll().subscribe({
       next: (courses) => {
         this.totalCourses = courses.length;
-        if (this.stats) {
-          this.stats.NotRated = this.totalCourses - (this.stats.Satisfied + this.stats.NotSatisfied);
-          if (this.stats.NotRated < 0) this.stats.NotRated = 0;
-        }
-
-        // Mettre à jour aussi les cours créés côté userStats
         this.userStats.coursesCreated = this.totalCourses;
-
-        this.loadUserStats();
       },
       error: (err) => console.error(err),
     });
@@ -136,8 +147,6 @@ export class DashboardComponent implements OnInit {
     }
   }
 
-
-
   viewPresentation(course: any) {
     course.loadingPresentation = true;
     this.trainingService.getPresentation(course.id).subscribe({
@@ -160,8 +169,15 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  toggleFavorite(course: any) {
-    course.isFavorite = !course.isFavorite;
+  toggleFavoriteFromDashboard(course: any) {
+    this.trainingService.toggleFavorite(course.id).subscribe({
+      next: (isFav: boolean) => {
+        course.isFavorite = isFav;
+
+        this.communicationService.refreshFavorites();
+      },
+      error: err => console.error(err)
+    });
   }
 
   getCreatedBy(course: any): string {
@@ -171,10 +187,27 @@ export class DashboardComponent implements OnInit {
   evaluateCourse(courseId: string, satisfaction: number) {
     this.trainingService.evaluate(courseId, satisfaction).subscribe({
       next: () => {
-        this.loadAllData();
+        const course = this.publicCourses.find(c => c.id === courseId);
+        if (course) {
+          if (course.userSatisfaction === 3) {
+            course.satisfiedCount--;
+          } else if (course.userSatisfaction === 1) {
+            course.notSatisfiedCount--;
+          }
+
+          if (satisfaction === 3) {
+            course.satisfiedCount++;
+          } else if (satisfaction === 1) {
+            course.notSatisfiedCount++;
+          }
+
+          course.userSatisfaction = satisfaction;
+        }
+
         this.communicationService.notifyStatsUpdate();
       },
       error: (err) => console.error(err)
     });
   }
+
 }

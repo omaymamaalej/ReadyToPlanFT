@@ -18,6 +18,9 @@ export class TrainingCourse  {
   presentation: string;
   publicPresentation: boolean; 
   satisfaction: number;
+  satisfiedCount?: number;
+  notSatisfiedCount?: number;
+  userSatisfaction?: number;
   createdBy: string;          
   createdByLogin: string;     
   createdDate: Date;          
@@ -36,6 +39,9 @@ export class TrainingCourse  {
     this.presentation = '';
     this.publicPresentation = false;
     this.satisfaction = 0; 
+    this.satisfiedCount = 0; 
+    this.notSatisfiedCount = 0; 
+    this.userSatisfaction = 0; 
     this.createdBy = '';      
     this.createdByLogin = ''; 
     this.createdDate = new Date(); 
@@ -56,6 +62,9 @@ export interface TrainingCourseDto {
   presentation: string;
   publicPresentation: boolean; 
   satisfaction: number;
+  satisfiedCount: number;
+  notSatisfiedCount: number;
+  userSatisfaction: number;
   createdBy: string;          
   createdByLogin: string;     
   createdDate: Date;          

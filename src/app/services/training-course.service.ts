@@ -79,7 +79,6 @@ export class TrainingCourseService {
     return this.http.get<SatisfactionStats>(`${this.apiUrl}/training-courses/stats/satisfaction`);
   }
 
-
   getMyCourses(): Observable<TrainingCourseDto[]> {
     return this.http.get<TrainingCourseDto[]>(`${this.apiUrl}/training-courses/mine`);
   }
@@ -91,4 +90,18 @@ export class TrainingCourseService {
   getUserStats(): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/users/stats`);
   }
+
+  getFavorites(): Observable<string[]> {
+    return this.http.get<string[]>(`${this.apiUrl}/training-courses/favorites`);
+  }
+
+  toggleFavorite(courseId: string): Observable<boolean> {
+    return this.http.post<boolean>(`${this.apiUrl}/training-courses/${courseId}/favorite`, {});
+  }
+
+  getPublicCoursesWithSatisfaction(): Observable<TrainingCourseDto[]> {
+    return this.http.get<TrainingCourseDto[]>(`${this.apiUrl}/training-courses/public/with-satisfaction`);
+  }
+
+
 }

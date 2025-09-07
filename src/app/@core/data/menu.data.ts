@@ -17,29 +17,29 @@ export const ADMIN_MENU_ITEMS: NbMenuItem[] = [
     title: 'FEATURES',
     group: true,
   },
+  // {
+  //   title: 'Business Plans',
+  //   icon: 'briefcase-outline',
+  //   children: [
+  //     {
+  //       title: 'All Business Plans',
+  //       link: 'businessPlan/listBusinessPlan',
+  //     },
+  //   ],
+  // },
+  // {
+  //   title: 'Strategic Planning',
+  //   icon: 'pie-chart-outline',
+  //   children: [
+  //     {
+  //       title: 'All Strategies',
+  //       link: '/business-plan-list/',
+  //     },
+  //   ],
+  // },
   {
-    title: 'Business Plans',
-    icon: 'briefcase-outline',
-    children: [
-      {
-        title: 'All Business Plans',
-        link: 'businessPlan/listBusinessPlan',
-      },
-    ],
-  },
-  {
-    title: 'Strategic Planning',
-    icon: 'pie-chart-outline',
-    children: [
-      {
-        title: 'All Strategies',
-        link: '/business-plan-list/',
-      },
-    ],
-  },
-  {
-    title: 'Personal Information',
-    icon: 'person-outline',
+    title: 'Profile',
+    icon: 'edit-outline',
     link: 'profileInformation/account',
   },
   {
@@ -52,12 +52,12 @@ export const ADMIN_MENU_ITEMS: NbMenuItem[] = [
       },
     ],
   },
-  {
-    title: 'Log Out',
-    icon: 'log-out-outline',
-    link: '/login',
-    data: { action: 'logout' },
-  },
+  // {
+  //   title: 'Log Out',
+  //   icon: 'log-out-outline',
+  //   link: '/login',
+  //   data: { action: 'logout' },
+  // },
 ];
 
 export const USER_MENU_ITEMS: NbMenuItem[] = [
@@ -65,6 +65,11 @@ export const USER_MENU_ITEMS: NbMenuItem[] = [
     title: 'Dashboard',
     icon: 'home-outline', 
     link: '/dashboard',
+  },
+  {
+    title: 'Profile',
+    icon: 'edit-outline',
+    link: 'profileInformation/account',
   },
   {
     title: 'FEATURES',
@@ -84,39 +89,39 @@ export const USER_MENU_ITEMS: NbMenuItem[] = [
       },
     ],
   },
-  {
-    title: 'Business Plans',
-    icon: 'briefcase-outline',
-    children: [
-      {
-        title: 'All Business Plans',
-        link: 'businessPlan/listBusinessPlan',
-      },
-      {
-        title: 'Create New Business Plans',
-        link: 'businessPlan/createpresentation',
-      },
-    ],
-  },
-  {
-    title: 'Strategic Planning',
-    icon: 'pie-chart-outline',
-    children: [
-      {
-        title: 'Add Strategy',
-        link: '/strategic-planning/',
-      },
-      {
-        title: 'All Strategies',
-        link: '/business-plan-list/',
-      },
-    ],
-  },
-  {
-    title: 'Personal Information',
-    icon: 'person-outline',
-    link: 'profileInformation/account',
-  },
+  // {
+  //   title: 'Business Plans',
+  //   icon: 'briefcase-outline',
+  //   children: [
+  //     {
+  //       title: 'All Business Plans',
+  //       link: 'businessPlan/listBusinessPlan',
+  //     },
+  //     {
+  //       title: 'Create New Business Plans',
+  //       link: 'businessPlan/createpresentation',
+  //     },
+  //   ],
+  // },
+  // {
+  //   title: 'Strategic Planning',
+  //   icon: 'pie-chart-outline',
+  //   children: [
+  //     {
+  //       title: 'Add Strategy',
+  //       link: '/strategic-planning/',
+  //     },
+  //     {
+  //       title: 'All Strategies',
+  //       link: '/business-plan-list/',
+  //     },
+  //   ],
+  // },
+  // {
+  //   title: 'Profile',
+  //   icon: 'edit-outline',
+  //   link: 'profileInformation/account',
+  // },
   {
     title: 'Auth',
     icon: 'lock-outline',
@@ -127,10 +132,10 @@ export const USER_MENU_ITEMS: NbMenuItem[] = [
       },
     ],
   },
-  {
-    title: 'Log Out',
-    icon: 'log-out-outline',
-    link: '/login',
-    data: { action: 'logout' },
-  },
+  // {
+  //   title: 'Log Out',
+  //   icon: 'log-out-outline',
+  //   link: '/login',
+  //   data: { action: 'logout' },
+  // },
 ];

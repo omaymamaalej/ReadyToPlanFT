@@ -13,7 +13,9 @@ import {
   NbCheckboxModule,
   NbIconModule,
   NbInputModule,
+  NbLayoutModule,
   NbThemeModule,
+  NbUserModule,
 } from '@nebular/theme';
 
 
@@ -45,7 +47,10 @@ import { PasswordSettingsComponent } from './password-settings/password-settings
     NbAuthModule.forRoot(),
     NbIconModule,
     NbThemeModule,
-    NbActionsModule
+    NbActionsModule,
+    NbUserModule,
+    NbLayoutModule,
+    
 
     
   ],

@@ -1,5 +1,15 @@
 .dashboard-container {
-  padding: 20px;
+  padding: 0;
+}
+
+nb-layout-column {
+  padding: 0 10px !important; 
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 16px;
 }
 
 .dashboard-header {
@@ -7,6 +17,7 @@
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
 }
+
 
 .header-content h1 {
   margin: 0;
@@ -19,11 +30,7 @@
   opacity: 0.9;
 }
 
-.dashboard-grid {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 24px;
-}
+
 
 .left-column,
 .right-column {
@@ -92,11 +99,6 @@
 .action-buttons {
   gap: 4px;
 }
-
-/* .presentations-table td {
-  padding: 16px;
-  border-bottom: 1px solid #f0f0f0;
-} */
 
 .presentations-table tr:hover {
   background-color: #f8f9fa;
@@ -236,3 +238,66 @@
   }
 }
 
+
+
+
+/* Tableau moderne pour Shared Presentations */
+.modern-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 6px;
+}
+
+.modern-table th,
+.modern-table td {
+  padding: 0.55rem 0.75rem;
+  text-align: left;
+  font-size: 0.85rem;
+  color: #444;
+}
+
+.modern-table th {
+  background-color: #f4f6fb;
+  font-weight: 600;
+  color: #374151;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.modern-table tbody tr {
+  background: #fff;
+  transition: all 0.2s ease-in-out;
+  border-radius: 8px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.modern-table tbody tr:hover {
+  background: #eaebec;
+  transform: scale(1.01);
+}
+
+.action-cell, .creator-cell {
+  text-align: center;
+  white-space: nowrap;
+}
+
+.actions-column {
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
+  justify-content: center;
+}
+
+.actions-column button {
+  border-radius: 6px;
+}
+
+.creator-cell .user-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.favorited {
+  background-color: #ffd700 !important;
+  border-color: #ffd700 !important;
+}

@@ -5,7 +5,7 @@
 
 // Animation de fade
 @include nb-install-component() {
-  ::ng-deep router-outlet + * {
+  ::ng-deep router-outlet+* {
     display: block;
     animation: fade 1s;
 
@@ -13,10 +13,100 @@
       from {
         opacity: 0;
       }
+
       to {
         opacity: 1;
       }
     }
+  }
+}
+
+.logo-img {
+  max-height: 50px;
+  height: auto;
+  width: auto;
+  display: block;
+}
+
+nb-action {
+  display: flex;
+  align-items: center;
+  gap: 0.1rem;
+
+  .control-item,
+  .user-action {
+    display: flex;
+    align-items: center;
+  }
+
+  ::ng-deep nb-search button {
+    padding: 0 !important;
+  }
+
+  nb-user {
+    cursor: pointer;
+  }
+
+  span {
+    font-size: 1rem;
+  }
+}
+
+
+.user-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  .user-profile {
+    display: flex;
+    align-items: center;
+    background: nb-theme(card-background-color);
+    padding: 0.4rem 0.8rem;
+    border-radius: 2rem;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    transition: background 0.3s ease;
+
+    nb-user {
+      margin-right: 0.5rem;
+    }
+
+    nb-icon {
+      cursor: pointer;
+      font-size: 1.2rem;
+    }
+
+    &:hover {
+      background: nb-theme(color-primary-hover);
+      color: #fff;
+    }
+  }
+
+  .logout-btn {
+    display: flex;
+    align-items: center;
+    padding: 0.6rem 0.8rem;
+    border-radius: 2rem;
+    background: nb-theme(color-danger);
+    color: #fff;
+    transition: all 0.3s ease;
+
+
+    nb-icon {
+      margin-right: 0.4rem;
+    }
+
+    &:hover {
+      background: var(--color-danger);
+      filter: brightness(0.85);
+    }
+  }
+
+}
+
+.logout-btn {
+  nb-icon {
+    cursor: pointer;
   }
 }
 
@@ -37,20 +127,21 @@
   .logo-container {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 0.5rem;
 
     .sidebar-toggle {
-      @include nb-ltr(padding-right, 1.25rem);
+      @include nb-ltr(padding-right, 0.5rem);
       @include nb-rtl(padding-left, 1.25rem);
       text-decoration: none;
       color: nb-theme(text-hint-color);
+
       nb-icon {
         font-size: 1.75rem;
       }
     }
 
     .logo {
-      padding: 0 1.25rem;
+      padding: 0 0.5rem;
       font-size: 1.75rem;
       @include nb-ltr(border-left, 1px solid nb-theme(divider-color));
       @include nb-rtl(border-right, 1px solid nb-theme(divider-color));
@@ -69,7 +160,7 @@
   nb-actions {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 0.1rem;
 
     .control-item,
     .user-action {
@@ -103,3 +194,46 @@
     }
   }
 }
+
+
+.user-info {
+  position: relative; // IMPORTANT pour que le dropdown soit aligné à user-info
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+
+  .user-dropdown {
+    position: absolute; // positionné par rapport à user-info
+    top: 110%; // décale le dropdown sous l'icône
+    right: 0;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    padding: 0.5rem 0;
+    min-width: 200px;
+    z-index: 1000;
+
+    .dropdown-item {
+      display: flex;
+      align-items: center;
+      padding: 0.75rem 1rem;
+      font-size: 0.95rem;
+      color: #333;
+      text-decoration: none;
+      transition: background 0.2s;
+
+      nb-icon {
+        margin-right: 0.5rem;
+        font-size: 1.2rem;
+      }
+
+      &:hover {
+        background: nb-theme(color-primary-hover);
+        color: #fff;
+      }
+    }
+  }
+}
+
+

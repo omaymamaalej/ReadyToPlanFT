@@ -88,11 +88,11 @@ export class LoginComponent implements OnInit {
             
             // 4. Redirection selon le rôle
             if (this.isAdminUser(userData)) {
-              this.router.navigate(['/listUser']).then(() => {
+              this.router.navigate(['/dashboard']).then(() => {
                 window.location.reload();
               });
             } else {
-              this.router.navigate(['/profileInformation/account']);
+              this.router.navigate(['/dashboard']);
             }
           },
           error: (err) => {
