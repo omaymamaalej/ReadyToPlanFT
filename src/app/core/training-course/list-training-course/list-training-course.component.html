@@ -8,7 +8,7 @@
       <nb-card-body>
         <!-- 🔎 Barre de recherche + filtres -->
         <div class="filters-container">
-          <input nbInput fullWidth placeholder="🔍 Search by title or instructor"
+          <input nbInput fullWidth placeholder="🔍 Search by title"
                 [(ngModel)]="searchTerm" (input)="applyFilters()" />
 
           <!-- Filtre par Audience -->
@@ -34,7 +34,7 @@
 
         <nb-spinner *ngIf="loading" status="primary"></nb-spinner>
 
-        <table *ngIf="!loading && filteredCourses.length" class="training-table modern-table">
+        <table *ngIf="!loading && pagedCourses.length" class="training-table modern-table">
           <thead>
             <tr>
               <th>Fav</th>
@@ -52,7 +52,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let course of filteredCourses">
+            <tr *ngFor="let course of pagedCourses">
 
               <td class="fav-cell">
                 <nb-icon [icon]="course.isFavorite ? 'star' : 'star-outline'" status="warning" class="favorite-icon"
@@ -161,6 +161,28 @@
             </tr>
           </tbody>
         </table>
+
+        <!-- Pagination -->
+        <div class="pagination-controls" *ngIf="totalPages >= 1">
+          <button nbButton size="tiny" ghost (click)="prevPage()" [disabled]="currentPage === 1">
+            «
+          </button>
+
+          <ng-container *ngFor="let page of [].constructor(totalPages); let i = index">
+            <button 
+              nbButton 
+              size="tiny" 
+              [status]="currentPage === i+1 ? 'primary' : 'basic'" 
+              (click)="goToPage(i+1)">
+              {{ i + 1 }}
+            </button>
+          </ng-container>
+
+          <button nbButton size="tiny" ghost (click)="nextPage()" [disabled]="currentPage === totalPages">
+            »
+          </button>
+        </div>
+        
 
         <p *ngIf="!loading && filteredCourses.length === 0">No courses found.</p>
       </nb-card-body>

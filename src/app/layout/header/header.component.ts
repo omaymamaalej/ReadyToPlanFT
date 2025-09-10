@@ -6,13 +6,15 @@ import {
   NbSidebarService,
   NbThemeService,
   NbMenuItem,
+  NbDialogService,
 } from '@nebular/theme';
 import { map, Subject, takeUntil } from 'rxjs';
 import { ADMIN_MENU_ITEMS, USER_MENU_ITEMS } from 'src/app/@core/data/menu.data';
 import { LayoutService } from 'src/app/@core/utils/layout.service';
 import { TokenStorageService } from 'src/app/_services/token-storage.service';
+import { PresentationDialogComponent } from 'src/app/core/training-course/presentation-dialog/presentation-dialog.component';
 import { CommunicationService } from 'src/app/services/communication.service';
-
+import { TrainingCourseService } from 'src/app/services/training-course.service';
 
 @Component({
   selector: 'app-header',
@@ -21,9 +23,8 @@ import { CommunicationService } from 'src/app/services/communication.service';
 })
 export class HeaderComponent implements OnInit, OnDestroy {
   menu: NbMenuItem[] = [];
-  favMenu: any[] = [];
+  favCourses: any[] = [];
   userName: string = '';
-  userMenu = [{ title: 'Personal Information', link: 'profileInformation/account' }];
   isUserMenuOpen = false;
 
   private destroy$: Subject<void> = new Subject<void>();
@@ -39,15 +40,22 @@ export class HeaderComponent implements OnInit, OnDestroy {
     public tokenStorageService: TokenStorageService,
     private router: Router,
     private communicationService: CommunicationService,
+    private trainingService: TrainingCourseService,
+    private dialogService: NbDialogService,
   ) { }
 
   ngOnInit() {
     this.updateMenu();
-    const user = this.tokenStorageService.getUser();
-    if (user) {
-      this.userName = user.login;
-    }
 
+    const user = this.tokenStorageService.getUser();
+    if (user) this.userName = user.login;
+
+    // Mettre à jour la liste des favoris dynamiquement
+    this.communicationService.favoriteCourses$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(courses => this.favCourses = courses);
+
+    // Gestion des menus utilisateur
     this.tokenStorageService.loggedIn$
       .pipe(takeUntil(this.destroy$))
       .subscribe(isLoggedIn => {
@@ -61,43 +69,47 @@ export class HeaderComponent implements OnInit, OnDestroy {
         }
       });
 
-    this.currentTheme = this.themeService.currentTheme;
+    // Media & Theme
     const { xl } = this.breakpointService.getBreakpointsMap();
-
     this.themeService.onMediaQueryChange()
-      .pipe(
-        map(([, currentBreakpoint]) => currentBreakpoint.width < xl),
-        takeUntil(this.destroy$),
-      )
+      .pipe(map(([, currentBreakpoint]) => currentBreakpoint.width < xl), takeUntil(this.destroy$))
       .subscribe(isLessThanXl => this.userPictureOnly = isLessThanXl);
 
     this.themeService.onThemeChange()
-      .pipe(
-        map(({ name }) => name),
-        takeUntil(this.destroy$),
-      )
+      .pipe(map(({ name }) => name), takeUntil(this.destroy$))
       .subscribe(themeName => this.currentTheme = themeName);
-
-    this.communicationService.favoriteCourses$.subscribe((courses: any[]) => {
-      this.favMenu = courses.map(course => ({
-        title: course.title,
-        icon: 'eye-outline',
-        data: course
-      }));
-    });
-
-    this.menuService.onItemClick()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(({ tag, item }) => {
-        if (tag === 'favMenuTag' && item.data) {
-          this.viewPresentation(item.data);
-        }
-      });
   }
+
+  // viewPresentation(course: any) {
+  //   this.router.navigate(['/trainingCourse/view', course.id]);
+  // }
 
   viewPresentation(course: any) {
-    this.router.navigate(['/trainingCourse/view', course.id]);
+    course.loadingPresentation = true;
+    this.trainingService.getPresentation(course.id).subscribe({
+      next: (presentation: string) => {
+        course.loadingPresentation = false;
+        this.dialogService.open(PresentationDialogComponent, {
+          context: {
+            presentationText: presentation,
+            courseData: course
+          },
+          autoFocus: true,
+          closeOnBackdropClick: true,
+        });
+      },
+      error: (err) => {
+        course.loadingPresentation = false;
+        console.error(err);
+        alert("Impossible de récupérer la présentation.");
+      }
+    });
   }
+
+  removeFromFav(course: any) {
+    this.communicationService.removeFavorite(course);
+  }
+
 
   private updateMenu() {
     this.menu = this.tokenStorageService.isAdmin() ? ADMIN_MENU_ITEMS : USER_MENU_ITEMS;

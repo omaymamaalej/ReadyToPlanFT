@@ -26,6 +26,12 @@ export class ListTrainingCourseComponent implements OnInit {
   selectedAudience: string = '';
   selectedLevel: string = '';
 
+  // Pagination
+  currentPage: number = 1;      
+  itemsPerPage: number = 5;     
+  pagedCourses: any[] = [];     
+  totalPages: number = 0;       
+
   constructor(
     private trainingService: TrainingCourseService,
     private router: Router,
@@ -319,7 +325,6 @@ export class ListTrainingCourseComponent implements OnInit {
       let matchesAudience = true;
       let matchesLevel = true;
 
-      // Recherche
       if (this.searchTerm) {
         const term = this.searchTerm.toLowerCase();
         matchesSearch =
@@ -327,17 +332,43 @@ export class ListTrainingCourseComponent implements OnInit {
           course.instructor?.toLowerCase().includes(term);
       }
 
-      // Audience
       if (this.selectedAudience) {
         matchesAudience = course.targetAudience === this.selectedAudience;
       }
 
-      // Niveau
       if (this.selectedLevel) {
         matchesLevel = course.level === this.selectedLevel;
       }
 
       return matchesSearch && matchesAudience && matchesLevel;
     });
+
+    this.currentPage = 1; // revenir à la première page après filtrage
+    this.updatePagedCourses();
   }
+
+  updatePagedCourses() {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    this.pagedCourses = this.filteredCourses.slice(startIndex, endIndex);
+    this.totalPages = Math.ceil(this.filteredCourses.length / this.itemsPerPage);
+    console.log('pagedCourses', this.pagedCourses, 'totalPages', this.totalPages);
+  }
+
+
+  goToPage(page: number) {
+    if (page < 1 || page > this.totalPages) return;
+    this.currentPage = page;
+    this.updatePagedCourses();
+  }
+
+  nextPage() {
+    this.goToPage(this.currentPage + 1);
+  }
+
+  prevPage() {
+    this.goToPage(this.currentPage - 1);
+  }
+
+
 }

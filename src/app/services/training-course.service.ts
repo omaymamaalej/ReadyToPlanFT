@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { TrainingCourse, TrainingCourseDto } from '../models/training-course';
+import { TrainingCourseDto } from '../models/training-course';
 import { map, Observable } from 'rxjs';
 import { TokenStorageService } from '../_services/token-storage.service';
 import { SatisfactionStats } from '../models/SatisfactionStats';

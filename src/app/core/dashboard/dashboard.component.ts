@@ -15,11 +15,14 @@ import { SatisfactionStats } from 'src/app/models/SatisfactionStats';
 })
 export class DashboardComponent implements OnInit {
 
+
   stats: SatisfactionStats = {
     Satisfied: 0,
     NotSatisfied: 0,
     NotRated: 0
   };
+
+  legendPosition: 'right' | 'left' | 'top' | 'bottom' = 'bottom';
 
   publicCourses: any[] = [];
   totalCourses: number = 0;
@@ -40,6 +43,20 @@ export class DashboardComponent implements OnInit {
   selectedAudience: string = '';
   selectedSatisfaction: string = '';
   filteredCourses: any[] = [];
+
+
+  audienceStats: any[] = [];
+  colorSchemeHistogramme = {
+    name: 'audienceScheme',
+    selectable: true,
+    group: ScaleType.Ordinal,
+    domain: ['#3366CC', '#DC3912', '#FF9900'],
+  };
+
+  currentPage: number = 1;
+  itemsPerPage: number = 5;
+  pagedCourses: any[] = [];
+  totalPages: number = 0;
 
   constructor(
     private trainingService: TrainingCourseService,
@@ -79,7 +96,26 @@ export class DashboardComponent implements OnInit {
     this.loadPublicCourses();
     this.loadTotalCourses();
     this.loadUserStats();
+    this.trainingService.getAll().subscribe({
+      next: (courses) => {
+        this.totalCourses = courses.length;
+        this.userStats.coursesCreated = this.totalCourses;
+
+        // Charger stats après avoir totalCourses
+        this.trainingService.getStats().subscribe({
+          next: (data) => {
+            this.stats = {
+              Satisfied: data.Satisfied || 0,
+              NotSatisfied: data.NotSatisfied || 0,
+              NotRated: this.totalCourses - ((data.Satisfied || 0) + (data.NotSatisfied || 0))
+            };
+            if (this.stats.NotRated < 0) this.stats.NotRated = 0;
+          }
+        });
+      }
+    });
   }
+
 
   loadStats() {
     this.trainingService.getStats().subscribe({
@@ -112,6 +148,8 @@ export class DashboardComponent implements OnInit {
               isFavorite: favIds.includes(course.id)
             }));
             this.applyFilters();
+            this.updatePagedCourses();
+            this.calculateAudienceStats(); 
           },
           error: (err) => console.error(err)
         });
@@ -119,6 +157,7 @@ export class DashboardComponent implements OnInit {
       error: (err) => console.error(err)
     });
   }
+
 
   loadTotalCourses() {
     this.trainingService.getAll().subscribe({
@@ -222,7 +261,6 @@ export class DashboardComponent implements OnInit {
       let matchesAudience = true;
       let matchesSatisfaction = true;
 
-      // 🔍 Recherche par titre ou créateur (insensible à la casse)
       if (this.searchTerm) {
         const term = this.searchTerm.toLowerCase();
         matchesSearch =
@@ -230,12 +268,10 @@ export class DashboardComponent implements OnInit {
           this.getCreatedBy(course).toLowerCase().includes(term);
       }
 
-      // 🎯 Filtre audience
       if (this.selectedAudience) {
         matchesAudience = course.targetAudience === this.selectedAudience;
       }
 
-      // 😊 Filtre satisfaction
       if (this.selectedSatisfaction) {
         if (this.selectedSatisfaction === 'Satisfied') {
           matchesSatisfaction = course.satisfiedCount > 0;
@@ -250,12 +286,57 @@ export class DashboardComponent implements OnInit {
       return matchesSearch && matchesAudience && matchesSatisfaction;
     });
 
-    // Optionnel : trier en fonction de satisfaction
     if (this.selectedSatisfaction === 'Satisfied') {
       this.filteredCourses.sort((a, b) => b.satisfiedCount - a.satisfiedCount);
     } else if (this.selectedSatisfaction === 'NotSatisfied') {
       this.filteredCourses.sort((a, b) => b.notSatisfiedCount - a.notSatisfiedCount);
     }
+
+    this.currentPage = 1;
+    this.updatePagedCourses();
   }
+
+
+  calculateAudienceStats() {
+    const total = this.publicCourses.length;
+    const counts: { [key: string]: number } = {
+      STUDENTS: 0,
+      TEACHERS: 0,
+      PROFESSIONALS: 0
+    };
+
+    this.publicCourses.forEach(course => {
+      if (counts[course.targetAudience] !== undefined) {
+        counts[course.targetAudience]++;
+      }
+    });
+
+    this.audienceStats = Object.keys(counts).map(key => ({
+      name: key,
+      value: total > 0 ? Math.round((counts[key] / total) * 100) : 0
+    }));
+  }
+
+  updatePagedCourses() {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    this.pagedCourses = this.filteredCourses.slice(startIndex, endIndex);
+    this.totalPages = Math.ceil(this.filteredCourses.length / this.itemsPerPage);
+  }
+
+  goToPage(page: number) {
+    if (page < 1 || page > this.totalPages) return;
+    this.currentPage = page;
+    this.updatePagedCourses();
+  }
+
+  nextPage() {
+    this.goToPage(this.currentPage + 1);
+  }
+
+  prevPage() {
+    this.goToPage(this.currentPage - 1);
+  }
+
 
 }

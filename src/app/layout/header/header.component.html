@@ -12,12 +12,31 @@
 
       <div class="header-right">
         <nb-actions>
-          <!-- Fav courses dropdown -->
-          <nb-action [nbContextMenu]="favMenu" nbContextMenuTag="favMenuTag" title="Favorite Courses">
+          <!-- Favorite Courses Dropdown -->
+          <nb-action class="fav-action" [nbPopover]="favDropdown" nbPopoverPlacement="bottom">
             <nb-icon icon="star-outline" status="warning"></nb-icon>
           </nb-action>
 
+          <ng-template #favDropdown>
+            <div class="fav-dropdown">
+              <div *ngFor="let course of favCourses" class="fav-item">
+                <span>{{ course.title }}</span>
+                <div class="fav-icons">
+                  <button class="icon-btn" (click)="viewPresentation(course)">
+                    <nb-icon icon="eye-outline"></nb-icon>
+                  </button>
+                  <button class="icon-btn" (click)="removeFromFav(course)">
+                    <nb-icon icon="close-outline"></nb-icon>
+                  </button>
+                </div>
+              </div>
+              <div *ngIf="favCourses.length === 0" class="empty-msg">
+                No favorite courses
+              </div>
+            </div>
+          </ng-template>
 
+          <!-- User Info / Logout -->
           <nb-action class="user-info" (click)="toggleUserMenu()">
             <nb-icon icon="person-outline"></nb-icon>
             <span>Welcome, {{ userName }}</span>
@@ -28,7 +47,6 @@
           </nb-action>
         </nb-actions>
       </div>
-
     </div>
   </nb-layout-header>
 

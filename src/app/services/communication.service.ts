@@ -97,10 +97,17 @@ export class CommunicationService {
     }
   }
 
-  removeFavorite(courseId: string) {
-    const current = this.favoriteCoursesSubject.value;
-    this.favoriteCoursesSubject.next(current.filter(c => c.id !== courseId));
-  }
+removeFavorite(course: any) {
+  this.trainingService.toggleFavorite(course.id).subscribe({
+    next: (isFav) => {
+      if (!isFav) {
+        const current = this.favoriteCoursesSubject.value;
+        this.favoriteCoursesSubject.next(current.filter(c => c.id !== course.id));
+      }
+    },
+    error: err => console.error('Erreur suppression favori:', err)
+  });
+}
 
   refreshFavorites() {
     this.loadFavoritesFromServer();

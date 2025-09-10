@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { LayoutRoutingModule } from './layout-routing.module';
 import { HeaderComponent } from './header/header.component';
-import { NbActionsModule, NbContextMenuModule, NbIconModule, NbLayoutModule, NbMenuModule, NbOptionModule, NbSearchModule, NbSelectModule, NbSidebarModule, NbUserModule } from '@nebular/theme';
+import { NbActionsModule, NbContextMenuModule, NbIconModule, NbLayoutModule, NbMenuModule, NbOptionModule, NbPopoverModule, NbSearchModule, NbSelectModule, NbSidebarModule, NbUserModule } from '@nebular/theme';
 import { LayoutComponent } from './layout.component';
 
 
@@ -25,6 +25,7 @@ import { LayoutComponent } from './layout.component';
     NbUserModule,
     NbMenuModule,
     NbContextMenuModule,
+    NbPopoverModule
     
     
 

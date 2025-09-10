@@ -144,3 +144,25 @@ nb-layout-column {
 .filters-container input {
   flex: 1;
 }
+
+
+.pagination-controls {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+
+.pagination-controls button {
+  min-width: 32px;
+  padding: 4px 8px;
+  font-size: 0.85rem;
+  border-radius: 6px;
+}
+
+.pagination-controls button[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+

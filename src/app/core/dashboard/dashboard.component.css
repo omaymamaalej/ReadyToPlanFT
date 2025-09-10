@@ -12,24 +12,34 @@ nb-layout-column {
   gap: 16px;
 }
 
+
 .dashboard-header {
-  margin-bottom: 24px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  margin-bottom: 15px;
+  background: #767a7d; 
+  color: #ffffff;
+  border-radius: 12px; 
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
 }
 
+.header-content {
+  padding: 10px;
+}
 
 .header-content h1 {
   margin: 0;
-  font-size: 2.5rem;
-  font-weight: 600;
+  font-size: 2.5rem; 
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: #ffffff;
 }
+
 
 .header-content p {
-  margin: 8px 0 0 0;
-  opacity: 0.9;
+  margin: 8px 0 0;
+  font-size: 1rem;
+  font-weight: 400;
+  color: #ecf0f1; 
 }
-
 
 
 .left-column,
@@ -57,9 +67,7 @@ nb-layout-column {
 .presentations-table th,
 .presentations-table td {
   padding: 6px 8px;
-  /* Moins d'espace autour du texte */
   font-size: 0.75rem;
-  /* Police réduite */
 }
 
 .presentations-table th {
@@ -77,19 +85,16 @@ nb-layout-column {
   background-color: #f8f9fa;
 }
 
-/* Badge audience plus petit */
 .audience-badge {
   padding: 2px 8px;
   font-size: 0.7rem;
 }
 
-/* Satisfaction réduite */
 .satisfaction-rating .rating {
   padding: 2px 6px;
   font-size: 0.7rem;
 }
 
-/* Boutons plus petits */
 .action-buttons button {
   min-width: 28px;
   height: 28px;
@@ -147,6 +152,14 @@ nb-layout-column {
 .chart-container {
   position: relative;
   height: 300px;
+}
+
+.chart-with-legend {
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  gap: 5px; /* espace entre le chart, légende et stats */
+  height: auto; 
 }
 
 .stats-numbers {
@@ -238,9 +251,6 @@ nb-layout-column {
   }
 }
 
-
-
-
 /* Tableau moderne pour Shared Presentations */
 .modern-table {
   width: 100%;
@@ -312,4 +322,60 @@ nb-layout-column {
 .filters-container nb-select,
 .filters-container input {
   flex: 1;
+}
+
+
+.pagination-controls {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+
+.pagination-controls button {
+  min-width: 32px;
+  padding: 4px 8px;
+  font-size: 0.85rem;
+  border-radius: 6px;
+}
+
+.pagination-controls button[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.custom-legend {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.legend-color {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.stats-numbers {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  padding: 16px;
+  background: #f8f9fa;
+  border-radius: 12px;
+  margin-top: 10px;
+}
+
+@media (max-width: 768px) {
+  .stats-numbers {
+    flex-direction: column;
+    gap: 16px;
+  }
 }

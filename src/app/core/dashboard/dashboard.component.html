@@ -1,47 +1,49 @@
 <nb-layout>
   <nb-layout-column>
     <div class="dashboard-container">
-      
+
       <nb-card class="dashboard-header">
         <nb-card-header>
           <div class="header-content">
-            <h1>📊 Dashboard</h1>
+            <h1>Dashboard</h1>
             <p>Overview of presentations and statistics</p>
           </div>
         </nb-card-header>
       </nb-card>
 
+
       <div class="dashboard-grid">
-        
+
         <!-- Left Column - Shared Presentations -->
         <div class="left-column">
           <nb-card class="presentations-card">
             <nb-card-header>
-              <h3>🌐 Shared Presentations</h3>
+              <h4>🌐 Shared Presentations</h4>
               <p>List of publicly accessible presentations</p>
             </nb-card-header>
             <nb-card-body>
 
               <!-- Barre de recherche + filtres -->
               <div class="filters-container">
-                <input nbInput fullWidth placeholder="🔍 Search by title or creator"
-                      [(ngModel)]="searchTerm" (input)="applyFilters()" />
+                <input nbInput fullWidth placeholder="🔍 Search by title or creator" [(ngModel)]="searchTerm"
+                  (input)="applyFilters()" />
 
-                <nb-select placeholder="Filter by Audience" [(selected)]="selectedAudience" (selectedChange)="applyFilters()">
+                <nb-select placeholder="Filter by Audience" [(selected)]="selectedAudience"
+                  (selectedChange)="applyFilters()">
                   <nb-option value="">All Audiences</nb-option>
                   <nb-option value="STUDENTS">Students</nb-option>
                   <nb-option value="TEACHERS">Teachers</nb-option>
                   <nb-option value="PROFESSIONALS">Professionals</nb-option>
                 </nb-select>
 
-                <nb-select placeholder="Filter by Satisfaction" [(selected)]="selectedSatisfaction" (selectedChange)="applyFilters()">
+                <nb-select placeholder="Filter by Satisfaction" [(selected)]="selectedSatisfaction"
+                  (selectedChange)="applyFilters()">
                   <nb-option value="">All</nb-option>
                   <nb-option value="Satisfied">Most Satisfied</nb-option>
                   <nb-option value="NotSatisfied">Not Satisfied</nb-option>
                   <nb-option value="NotRated">Not Rated</nb-option>
                 </nb-select>
               </div>
-
 
               <div class="table-responsive">
                 <table class="modern-table">
@@ -56,19 +58,16 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr *ngFor="let course of filteredCourses">
+                    <tr *ngFor="let course of pagedCourses">
 
                       <!-- Favorite -->
                       <td class="fav-cell">
-                        <nb-icon 
-                          [icon]="course.isFavorite ? 'star' : 'star-outline'" 
-                          status="warning"
-                          class="favorite-icon"
-                          (click)="toggleFavoriteFromDashboard(course)"
+                        <nb-icon [icon]="course.isFavorite ? 'star' : 'star-outline'" status="warning"
+                          class="favorite-icon" (click)="toggleFavoriteFromDashboard(course)"
                           [attr.title]="course.isFavorite ? 'Remove from favorites' : 'Add to favorites'">
                         </nb-icon>
                       </td>
-                      
+
                       <td class="creator-cell">
                         <div class="user-info">
                           <nb-icon icon="person-outline"></nb-icon>
@@ -91,10 +90,8 @@
                       <td class="action-cell">
                         <div class="actions-column">
 
-                          <button nbButton size="tiny" status="primary" 
-                                  (click)="viewPresentation(course)" 
-                                  [disabled]="course.loadingPresentation" 
-                                  title="View Presentation">
+                          <button nbButton size="tiny" status="primary" (click)="viewPresentation(course)"
+                            [disabled]="course.loadingPresentation" title="View Presentation">
                             <nb-icon *ngIf="!course.loadingPresentation" icon="eye-outline"></nb-icon>
                             <div *ngIf="course.loadingPresentation" class="spinner">
                               <div class="blob blob-0"></div>
@@ -107,18 +104,14 @@
                           </button>
 
                           <!-- Satisfait -->
-                          <button nbButton size="tiny" status="success" ghost 
-                                  (click)="evaluateCourse(course.id, 3)" 
-                                  [disabled]="course.userSatisfaction === 3" 
-                                  title="Satisfied">
+                          <button nbButton size="tiny" status="success" ghost (click)="evaluateCourse(course.id, 3)"
+                            [disabled]="course.userSatisfaction === 3" title="Satisfied">
                             <nb-icon icon="smiling-face-outline"></nb-icon>
                           </button>
 
                           <!-- Non satisfait -->
-                          <button nbButton size="tiny" status="danger" ghost 
-                                  (click)="evaluateCourse(course.id, 1)" 
-                                  [disabled]="course.userSatisfaction === 1" 
-                                  title="Not Satisfied">
+                          <button nbButton size="tiny" status="danger" ghost (click)="evaluateCourse(course.id, 1)"
+                            [disabled]="course.userSatisfaction === 1" title="Not Satisfied">
                             <nb-icon icon="alert-circle-outline"></nb-icon>
                           </button>
                         </div>
@@ -129,38 +122,99 @@
                 </table>
               </div>
 
-              
-              <div *ngIf="filteredCourses.length === 0" class="no-data">
+              <div class="pagination-controls" *ngIf="totalPages > 1">
+                <button nbButton size="tiny" ghost (click)="prevPage()" [disabled]="currentPage === 1">
+                  «
+                </button>
+
+                <ng-container *ngFor="let page of [].constructor(totalPages); let i = index">
+                  <button 
+                    nbButton 
+                    size="tiny" 
+                    [status]="currentPage === i+1 ? 'primary' : 'basic'" 
+                    (click)="goToPage(i+1)">
+                    {{ i + 1 }}
+                  </button>
+                </ng-container>
+
+                <button nbButton size="tiny" ghost (click)="nextPage()" [disabled]="currentPage === totalPages">
+                  »
+                </button>
+              </div>
+
+
+              <div *ngIf="pagedCourses.length === 0" class="no-data">
                 <nb-icon icon="file-text-outline" class="no-data-icon"></nb-icon>
                 <p>No shared presentations available at the moment</p>
               </div>
             </nb-card-body>
           </nb-card>
+
+
+          <!-- Histogramme Audience -->
+          <nb-card class="audience-card">
+            <nb-card-header>
+              <h4>📊 Audience Distribution</h4>
+              <p>Percentage of courses by target audience</p>
+            </nb-card-header>
+            <nb-card-body>
+              <div *ngIf="audienceStats.length > 0" class="chart-container">
+                <ngx-charts-bar-vertical
+                  [results]="audienceStats"
+                  [scheme]="colorSchemeHistogramme"
+                  [xAxis]="true"
+                  [yAxis]="true"
+                  [roundEdges]="true"
+                  [animations]="true"
+                  [showDataLabel]="true"
+                  [barPadding]="30">
+                </ngx-charts-bar-vertical>
+              </div>
+              <p *ngIf="audienceStats.length === 0">No audience data available</p>
+            </nb-card-body>
+          </nb-card>
+
         </div>
 
         <!-- Right Column - Statistics -->
         <div class="right-column">
-          
+
           <!-- Satisfaction Statistics Card -->
           <nb-card class="stats-card">
             <nb-card-header>
-              <h3>📈 Satisfaction Statistics</h3>
+              <h4>📈 Satisfaction Statistics</h4>
               <p>Distribution of course ratings</p>
             </nb-card-header>
             <nb-card-body>
               <div *ngIf="stats" class="chart-container">
-                <ngx-charts-pie-chart
-                  [results]="[
-                    { name: 'Satisfied', value: stats.Satisfied || 0 },
-                    { name: 'Not Satisfied', value: stats.NotSatisfied || 0 },
-                    { name: 'Not Rated', value: stats.NotRated || 0 }
-                  ]"
-                  [legend]="true"
-                  [doughnut]="true"
-                  [gradient]="false"
-                  [scheme]="colorScheme">
-                </ngx-charts-pie-chart>
-                
+                <div class="chart-with-legend">
+                  <ngx-charts-pie-chart
+                    [results]="[
+                        { name: 'Satisfied', value: stats.Satisfied || 0 },
+                        { name: 'Not Satisfied', value: stats.NotSatisfied || 0 },
+                        { name: 'Not Rated', value: stats.NotRated || 0 }
+                      ]"
+                    [doughnut]="true"
+                    [gradient]="false"
+                    [scheme]="colorScheme">
+                  </ngx-charts-pie-chart>
+
+                  <!-- Légende personnalisée -->
+                  <div class="custom-legend-vertical">
+                    <div class="legend-item" *ngFor="let item of [
+                      { name: 'Satisfied', color: '#5AA454' },
+                      { name: 'Not Satisfied', color: '#A10A28' },
+                      { name: 'Not Rated', color: '#C9C9C9' }
+                    ]">
+                      <span class="legend-color" [style.background]="item.color"></span>
+                      {{ item.name }}
+                    </div>
+                  </div>
+                </div>
+
+
+
+
                 <div class="stats-numbers">
                   <div class="stat-item">
                     <span class="stat-value">{{ totalCourses }}</span>
@@ -178,11 +232,10 @@
               </div>
             </nb-card-body>
           </nb-card>
-
           <!-- Users Card -->
           <nb-card class="users-card">
             <nb-card-header>
-              <h3>👥 User Statistics</h3>
+              <h4>👥 User Statistics</h4>
               <p>Platform user activity</p>
             </nb-card-header>
             <nb-card-body>
@@ -196,7 +249,7 @@
                     <span class="stat-label">Total Users</span>
                   </div>
                 </div>
-                
+
                 <div class="user-stat">
                   <div class="stat-icon">
                     <nb-icon icon="person-add-outline"></nb-icon>
@@ -206,7 +259,7 @@
                     <span class="stat-label">Active Users</span>
                   </div>
                 </div>
-                
+
                 <div class="user-stat">
                   <div class="stat-icon">
                     <nb-icon icon="file-text-outline"></nb-icon>
