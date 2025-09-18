@@ -5,7 +5,7 @@ import { UserRoutingModule } from './user-routing.module';
 import { ListUserComponent } from './list-user/list-user.component';
 import { HttpClientModule } from '@angular/common/http';
 import { LayoutModule } from '../layout/layout.module';
-import { NbCardModule, NbIconModule } from '@nebular/theme';
+import { NbBadgeModule, NbButtonModule, NbCardModule, NbIconModule, NbLayoutModule, NbSelectModule, NbSpinnerModule } from '@nebular/theme';
 import { FormsModule } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
 
@@ -23,6 +23,11 @@ import { NgxPaginationModule } from 'ngx-pagination';
     NbIconModule,
     FormsModule,
     NgxPaginationModule,
+    NbLayoutModule,
+    NbSpinnerModule,
+    NbSelectModule,
+    NbButtonModule,
+    NbBadgeModule
 
 
   ],

@@ -1,12 +1,22 @@
+nb-layout-column {
+  padding: 0 10px !important; 
+  position: relative;
+}
+
 .account-wrapper {
   display: flex;
   flex-wrap: wrap;
   gap: 1.5rem;
   margin: 1rem;
+  padding: 0;
+  position: relative; 
+  z-index: 1;
+
 }
 
 .profile-card {
   flex: 1 1 25%;
+  height: 200px;
 }
 
 .details-card {
@@ -23,7 +33,7 @@
 
 .about-section {
   text-align: center;
-  margin-top: 1rem;
+  margin-top: 1.5rem;
 }
 
 nb-card-header h5 {
@@ -32,7 +42,7 @@ color: #4a6ea9;
 
 .about-section h5 {
   color: #4a6ea9;
-  margin-bottom: 0.5rem;
+  margin-bottom: 1.7rem;
 }
 
 .about-section p, .about-section ul {
@@ -57,95 +67,80 @@ color: #4a6ea9;
   margin-top: 1rem;
 }
 
+.background-shapes {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
 
+nb-sidebar .background-shapes,
+nb-sidebar::before,
+nb-sidebar::after {
+  display: none !important;
+}
 
+.shape {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.2;
+  filter: blur(40px);
+  animation: float 20s infinite alternate ease-in-out;
+}
 
+.shape-1 {
+  width: 300px; 
+  height: 300px;
+  background: linear-gradient(45deg, #3366ff, #00d68f);
+  top: -80px; 
+  left: -60px;
+}
 
+.shape-2 {
+  width: 350px; 
+  height: 350px;
+  background: linear-gradient(45deg, #ff3d71, #ffaa00);
+  bottom: -100px;
+  right: -80px;
+}
 
+.shape-3 {
+  width: 250px; 
+  height: 250px;
+  background: linear-gradient(45deg, #8a2387, #f27121);
+  top: 20%;
+  left: 70%;
+}
 
+.shape-4 {
+  width: 160px; 
+  height: 160px;
+  background: linear-gradient(45deg, #00c6ff, #0072ff);
+  top: 65%;
+  left: 10%;
+}
 
+.shape-5 {
+  width: 120px;
+  height: 120px;
+  background: linear-gradient(45deg, #ff6a00, #ee0979);
+  top: 40%;
+  right: 15%;
+}
+nb-card {
+  background: rgba(255, 255, 255, 0.9); 
+  position: relative;
+  z-index: 1;
+}
 
-
-
-
-
-/* .bandtit{
-	font-family: 'Varela Round', sans-serif;
-	background: #435d7d;
-	color: #fff;
-	padding: 16px 30px;
-	border-radius: 3px 3px 0 0;
-	margin: -15px auto 10px;
+@keyframes float {
+  0%   { transform: translateY(0px) translateX(0px); }
+  50%  { transform: translateY(20px) translateX(-15px); }
+  100% { transform: translateY(-15px) translateX(10px); }
 }
 
 
-
-body {
-    margin: 0;
-    padding-top: 40px;
-    color: #c0c5d0;
-    background: #f5f6fa;
-    position: relative;
-    height: 100%;
-}
-.account-settings .user-profile {
-    margin: 0 0 1rem 0;
-    padding-bottom: 1rem;
-    text-align: center;
-    
-   
-}
-.account-settings .user-profile .user-avatar {
-    margin: 0 0 1rem 0;
-}
-.account-settings .user-profile .user-avatar img {
-    width: 90px;
-    height: 90px;
-    -webkit-border-radius: 100px;
-    -moz-border-radius: 100px;
-    border-radius: 100px;
-}
-.account-settings .user-profile h4.user-name {
-    margin: 0 0 0.5rem 0;
-    font-family: 'Varela Round', sans-serif;
-}
-.account-settings .user-profile h5.user-email {
-    margin: 0;
-    font-size: 0.8rem;
-    font-weight: 400;
-    color: #b8c1d1;
-    font-family: 'Varela Round', sans-serif;
-}
-.account-settings .about {
-    margin: 2rem 0 0 0;
-    text-align: center;
-}
-.account-settings .about h5 {
-    margin: 0 0 15px 0;
-    color: #435d7d;
-}
-.account-settings .about p {
-    font-size: 0.825rem;
-}
-.form-control {
-    border: 1px solid #cfd1d8;
-    -webkit-border-radius: 2px;
-    -moz-border-radius: 2px;
-    border-radius: 2px;
-    font-size: .825rem;
-    background: #ffffff;
-    color: #2e323c;
-}
-
-.card {
-    background: #fffffffc;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
-    border: 0;
-    margin-bottom: 1rem;
-	color: #38415e;
-	font-family: 'Varela Round', sans-serif;
-	font-size: 15px;
-}
- */

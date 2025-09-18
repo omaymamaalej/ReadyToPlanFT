@@ -8,14 +8,22 @@ export const ADMIN_MENU_ITEMS: NbMenuItem[] = [
   },
 
   {
-    title: 'List User',
-    icon: 'list-outline',
-    link: '/listUser',
+    title: 'Profile',
+    icon: 'edit-outline',
+    link: 'profileInformation/account',
   },
+
+
 
   {
     title: 'FEATURES',
     group: true,
+  },
+
+  {
+    title: 'List User',
+    icon: 'list-outline',
+    link: '/listUser',
   },
   // {
   //   title: 'Business Plans',
@@ -37,11 +45,7 @@ export const ADMIN_MENU_ITEMS: NbMenuItem[] = [
   //     },
   //   ],
   // },
-  {
-    title: 'Profile',
-    icon: 'edit-outline',
-    link: 'profileInformation/account',
-  },
+  
   {
     title: 'Auth',
     icon: 'lock-outline',

@@ -1,16 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { TokenStorageService } from 'src/app/_services/token-storage.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { User } from 'src/app/models/User';
 import { AccountService } from 'src/app/services/account.service';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
+  styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
 
+  @ViewChild('form') loginForm!: NgForm;
+  
   user = {
     username: '',
     password: '',
@@ -43,7 +47,6 @@ export class LoginComponent implements OnInit {
     lastModifiedDate: new Date(),
   };
 
-  // ✅ Déclare config comme une propriété d'instance
   config: { [key: string]: any } = {
     'forms.validation.email.required': true,
     'forms.validation.password.required': true,
@@ -56,9 +59,9 @@ export class LoginComponent implements OnInit {
     private authService: AuthService,
     private tokenStorage: TokenStorageService,
     private router: Router
-  ) {}
+  ) { }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   getConfigValue(key: string): any {
     return this.config[key];
@@ -70,23 +73,29 @@ export class LoginComponent implements OnInit {
     this.submitted = true;
     this.isLoginFailed = false;
     this.errorMessage = '';
+    this.errors = []; // reset errors
+
+    if (this.loginForm) {
+      Object.keys(this.loginForm.controls).forEach(key => {
+        this.loginForm.controls[key].markAsTouched();
+      });
+    }
+
+    if (this.loginForm && this.loginForm.invalid) {
+      return;
+    }
 
     this.authService.login(this.user.username, this.user.password).subscribe({
       next: (authResponse) => {
-        // 1. Sauvegarde du token JWT
         this.tokenStorage.saveToken(authResponse.id_token || authResponse.token);
-        
-        // 2. Récupération des infos utilisateur complètes
         this.accountService.getAccount().subscribe({
           next: (userData) => {
-            // 3. Sauvegarde des données utilisateur avec les authorities
             const userWithToken = {
               ...userData,
               token: authResponse.id_token || authResponse.token
             };
             this.tokenStorage.saveUser(userWithToken);
-            
-            // 4. Redirection selon le rôle
+
             if (this.isAdminUser(userData)) {
               this.router.navigate(['/dashboard']).then(() => {
                 window.location.reload();
@@ -95,15 +104,26 @@ export class LoginComponent implements OnInit {
               this.router.navigate(['/dashboard']);
             }
           },
-          error: (err) => {
-            console.error('Failed to fetch user account', err);
-            this.handleError("Échec de la récupération du profil utilisateur");
+          error: () => {
+            this.handleError("Failed to fetch user profile.");
           }
         });
       },
       error: (err) => {
         console.error('Login error', err);
-        this.handleError(err.error?.message || err.error?.title || 'Échec de la connexion');
+
+        if (this.loginForm) {
+          this.loginForm.controls['username'].setErrors({'incorrect': true});
+          this.loginForm.controls['password'].setErrors({'incorrect': true});
+        }
+
+        if (err.status === 401) {
+          this.handleError("Invalid username or password.");
+        } else if (err.status === 404) {
+          this.handleError("User does not exist.");
+        } else {
+          this.handleError("An unexpected error occurred. Please try again.");
+        }
       }
     });
   }
@@ -113,7 +133,7 @@ export class LoginComponent implements OnInit {
   }
 
   private handleError(errorMsg: string): void {
-    this.errorMessage = errorMsg;
+    this.errors = [errorMsg];   
     this.isLoginFailed = true;
     this.submitted = false;
     this.tokenStorage.signOut();

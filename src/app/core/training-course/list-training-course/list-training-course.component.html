@@ -6,6 +6,9 @@
       </nb-card-header>
 
       <nb-card-body>
+
+        <nb-spinner *ngIf="loading" status="primary"></nb-spinner>
+
         <!-- 🔎 Barre de recherche + filtres -->
         <div class="filters-container">
           <input nbInput fullWidth placeholder="🔍 Search by title"
@@ -32,7 +35,6 @@
           </nb-select>
         </div>
 
-        <nb-spinner *ngIf="loading" status="primary"></nb-spinner>
 
         <table *ngIf="!loading && pagedCourses.length" class="training-table modern-table">
           <thead>
