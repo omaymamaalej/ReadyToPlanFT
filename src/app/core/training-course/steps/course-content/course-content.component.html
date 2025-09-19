@@ -1,0 +1,89 @@
+<div *ngIf="!savedCourse" [formGroup]="form">
+
+  <div class="form-row select-row">
+    <label for="studyClass">Study Class *</label>
+    <div class="input-wrapper select-wrapper">
+      <nb-select id="studyClass" formControlName="studyClass" placeholder="Select a class">
+        <nb-option *ngFor="let sc of studyClasses" [value]="sc[0]">
+          {{ sc[1] }}
+        </nb-option>
+      </nb-select>
+      <div class="error" *ngIf="form.get('studyClass')?.invalid && form.get('studyClass')?.touched">
+        Study class is required.
+      </div>
+    </div>
+  </div>
+
+  <div class="form-row select-row">
+    <label for="level">Level *</label>
+    <div class="input-wrapper select-wrapper">
+      <nb-select id="level" formControlName="level" placeholder="Select a level">
+        <nb-option *ngFor="let lvl of levels" [value]="lvl[0]">
+          {{ lvl[1] }}
+        </nb-option>
+      </nb-select>
+      <div class="error" *ngIf="form.get('level')?.invalid && form.get('level')?.touched">
+        Level is required.
+      </div>
+    </div>
+  </div>
+
+  <div class="form-row" *ngIf="form.get('targetAudience')?.value !== 'STUDENTS'">
+    <label for="instructor">Instructor *</label>
+    <div class="input-wrapper">
+      <input id="instructor" nbInput formControlName="instructor" placeholder="Instructor Name">
+      <div class="error" *ngIf="form.get('instructor')?.invalid && form.get('instructor')?.touched">
+        Instructor is required.
+      </div>
+    </div>
+  </div>
+
+  <div class="form-row" *ngIf="form.get('targetAudience')?.value !== 'STUDENTS'">
+    <label for="duration">Duration *</label>
+    <div class="input-wrapper">
+      <input id="duration" nbInput formControlName="duration" placeholder="Course Duration">
+      <div class="error" *ngIf="form.get('duration')?.invalid && form.get('duration')?.touched">
+        Duration is required.
+      </div>
+    </div>
+  </div>
+
+  <div class="form-row select-row" *ngIf="form.get('targetAudience')?.value !== 'STUDENTS'">
+    <label for="locationType">Location Type *</label>
+    <div class="input-wrapper select-wrapper">
+      <nb-select id="locationType" formControlName="locationType" placeholder="Select a location type">
+        <nb-option *ngFor="let loc of locationTypes" [value]="loc[0]">
+          {{ loc[1] }}
+        </nb-option>
+      </nb-select>
+      <div class="error" *ngIf="form.get('locationType')?.invalid && form.get('locationType')?.touched">
+        Location type is required.
+      </div>
+    </div>
+  </div>
+
+  <div class="form-row select-row">
+    <label for="languages">Language *</label>
+    <div class="input-wrapper select-wrapper">
+      <nb-select id="languages" formControlName="languages" placeholder="Select a language">
+        <nb-option *ngFor="let lang of languages" [value]="lang[0]">
+          {{ lang[1] }}
+        </nb-option>
+      </nb-select>
+      <div class="error" *ngIf="form.get('languages')?.invalid && form.get('languages')?.touched">
+        Language is required.
+      </div>
+    </div>
+  </div>
+
+  <div class="buttons-row" style="margin-top:1rem;">
+    <button nbButton status="success" [disabled]="!allRequiredFilled()" (click)="saveCourse()">
+      💾 Save
+    </button>
+  </div>
+
+</div>
+
+<div *ngIf="savedCourse">
+  <app-course-details [courseData]="savedCourse"></app-course-details>
+</div>

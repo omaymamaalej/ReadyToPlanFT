@@ -12,6 +12,7 @@ import { ListUserComponent } from '../user/list-user/list-user.component';
 import { AddTrainingCourseComponent } from '../core/training-course/add-training-course/add-training-course.component';
 import { ListTrainingCourseComponent } from '../core/training-course/list-training-course/list-training-course.component';
 import { DashboardComponent } from '../core/dashboard/dashboard.component';
+import { AddTrainingCourseStepsComponent } from '../core/training-course/add-training-course-steps/add-training-course-steps.component';
 
 
 const routes: Routes = [
@@ -30,6 +31,7 @@ const routes: Routes = [
       { path: 'business-plan-list', component: BusinessPlanListComponent },
       { path: 'listUser', component: ListUserComponent },
       { path: 'trainingCourse/addTrainingCourse', component: AddTrainingCourseComponent },
+      { path: 'trainingCourse/addTrainingCourseSteps', component: AddTrainingCourseStepsComponent },
       { path: 'trainingCourse/AllTrainingCourse', component: ListTrainingCourseComponent },
 
     ],

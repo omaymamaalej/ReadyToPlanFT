@@ -40,7 +40,10 @@ export class TrainingCourseService {
   }
 
   update(payload: TrainingCourseDto): Observable<TrainingCourseDto> {
-    return this.http.put<TrainingCourseDto>(`${this.apiUrl}/training-courses/${payload.id}`, payload);
+    return this.http.put<TrainingCourseDto>(
+      `${this.apiUrl}/training-courses/${payload.id}`, 
+      payload
+    );
   }
 
   partialUpdate(course: Partial<TrainingCourseDto> & { id: string }): Observable<TrainingCourseDto> {
@@ -101,6 +104,43 @@ export class TrainingCourseService {
 
   getPublicCoursesWithSatisfaction(): Observable<TrainingCourseDto[]> {
     return this.http.get<TrainingCourseDto[]>(`${this.apiUrl}/training-courses/public/with-satisfaction`);
+  }
+
+
+  createWithoutPresentation(payload: TrainingCourseDto): Observable<TrainingCourseDto> {
+    const token = this.tokenStorage.getToken();
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+
+    return this.http.post<TrainingCourseDto>(
+      `${this.apiUrl}/training-courses/without-presentation`,
+      payload,
+      { headers }
+    );
+  }
+
+
+  // Méthode pour sauvegarder le plan
+  saveCoursePlan(id: string, plan: string): Observable<TrainingCourseDto> {
+    return this.http.post<TrainingCourseDto>(
+      `${this.apiUrl}/training-courses/${id}/save-plan`, 
+      plan
+    );
+  }
+
+  // Méthode pour récupérer le plan
+  getCoursePlan(id: string): Observable<string> {
+    return this.http.get(`${this.apiUrl}/training-courses/${id}/plan`, { 
+      responseType: 'text' 
+    });
+  }
+
+  // Méthode pour régénérer le plan
+  regenerateCoursePlan(id: string): Observable<string> {
+    return this.http.post(`${this.apiUrl}/training-courses/${id}/regenerate-plan`, null, { 
+      responseType: 'text' 
+    });
   }
 
 

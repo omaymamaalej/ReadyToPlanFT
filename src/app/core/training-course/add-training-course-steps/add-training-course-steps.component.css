@@ -1,0 +1,21 @@
+:host ::ng-deep nb-stepper .step-content {
+  text-align: center;
+}
+
+:host ::ng-deep nb-stepper .step-content button {
+  cursor: pointer;
+  margin: 0.5rem;
+}
+
+
+/* Style personnalisé pour le bouton vert */
+:host ::ng-deep .step-buttons button[nbButton][status="success"] {
+  background-color: #00d68f;
+  border-color: #00d68f;
+  color: #ffffff;
+}
+
+:host ::ng-deep .step-buttons button[nbButton][status="success"]:hover {
+  background-color: #00b37c;
+  border-color: #00b37c;
+}

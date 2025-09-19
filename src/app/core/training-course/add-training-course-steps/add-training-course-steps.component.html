@@ -1,0 +1,45 @@
+<nb-card class="col-md-12 col-lg-12 col-xxxl-12">
+    <nb-card-body>
+        <nb-stepper orientation="horizontal">
+            <!-- Step 1 : Course Information -->
+            <nb-step label="Course Information">
+                <app-course-information [form]="trainingCourseForm"
+                    [targetAudiences]="targetAudiences"></app-course-information>
+                <div class="step-buttons">
+                    <button nbButton nbStepperPrevious disabled>Prev</button>
+                    <button nbButton nbStepperNext
+                        [disabled]="!trainingCourseForm.get('title')?.valid || !trainingCourseForm.get('summary')?.valid || !trainingCourseForm.get('targetAudience')?.valid"
+                        [status]="trainingCourseForm.get('title')?.valid && trainingCourseForm.get('summary')?.valid && trainingCourseForm.get('targetAudience')?.valid ? 'success' : 'basic'">
+                        Next
+                    </button>
+                </div>
+            </nb-step>
+
+            <!-- Step 2 : Course Content -->
+            <nb-step label="Course Content">
+                <app-course-content [form]="trainingCourseForm"></app-course-content>
+                <div class="step-buttons">
+                    <button nbButton nbStepperPrevious>Prev</button>
+                    <button nbButton nbStepperNext [disabled]="!trainingCourseForm.valid"
+                        [status]="trainingCourseForm.valid ? 'success' : 'basic'">
+                        Next
+                    </button>
+                </div>
+            </nb-step>
+
+            
+            <nb-step label="Step 3">
+                <ng-template #labelTwo>Step 3</ng-template>
+                <!-- <app-step3></app-step3> -->
+                <button nbButton nbStepperPrevious>prev</button>
+                <button nbButton nbStepperNext>next</button>
+            </nb-step>
+            <nb-step [label]="labelFour">
+                <ng-template #labelFour>Step 4</ng-template>
+                <!-- <app-step4></app-step4> -->
+                <button nbButton nbStepperPrevious>prev</button>
+                <button nbButton disabled nbStepperNext>next</button>
+            </nb-step>
+        </nb-stepper>
+    </nb-card-body>
+</nb-card>

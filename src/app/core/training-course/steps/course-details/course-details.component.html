@@ -1,0 +1,171 @@
+<div class="course-details-container" *ngIf="courseData">
+  <nb-card>
+    <nb-card-header>
+      <div class="course-header">
+        <h3>📋 Course Details</h3>
+        <div class="actions" *ngIf="!editMode">
+
+          <button nbButton status="primary" (click)="generateCoursePlan()" 
+                  [disabled]="generatingPlan" class="generate-plan-btn">
+            <nb-icon [icon]="generatingPlan ? 'loader-outline' : 'file-text-outline'"></nb-icon>
+            {{ generatingPlan ? 'Generating...' : 'Generate Course Plan' }}
+          </button>
+
+          <button nbButton status="success" (click)="viewSavedPlan()" 
+                  [disabled]="!hasSavedPlan" class="view-plan-btn">
+            <nb-icon icon="eye-outline"></nb-icon>
+            View Saved Plan
+          </button>
+
+          <button nbButton status="info" (click)="toggleEdit()" class="edit-btn">
+            <nb-icon icon="edit-outline"></nb-icon> Edit
+          </button>
+        </div>
+      </div>
+    </nb-card-header>
+
+    <nb-card-body>
+      <form [formGroup]="courseForm">
+        <nb-list class="details-list" [class.edit-mode]="editMode">
+          <nb-list-item>
+            <div class="list-item-content">
+              <div class="detail-label">Title</div>
+              <div class="detail-value" *ngIf="!editMode">{{ courseData.title || 'Not specified' }}</div>
+              <input *ngIf="editMode" nbInput fullWidth formControlName="title" class="edit-input">
+            </div>
+          </nb-list-item>
+
+          <nb-list-item>
+            <div class="list-item-content">
+              <div class="detail-label">Summary</div>
+              <div class="detail-value" *ngIf="!editMode">{{ courseData.summary || 'Not specified' }}</div>
+              <textarea *ngIf="editMode" nbInput fullWidth formControlName="summary"
+                class="edit-input textarea-input"></textarea>
+            </div>
+          </nb-list-item>
+
+          <nb-list-item>
+            <div class="list-item-content">
+              <div class="detail-label">Target Audience</div>
+              <div class="detail-value" *ngIf="!editMode">{{ courseData.targetAudience || 'Not specified' }}</div>
+              <nb-select class="edit-input" *ngIf="editMode" fullWidth placeholder="Select Target Audience"
+                formControlName="targetAudience">
+                <nb-option *ngFor="let ta of targetAudiences" [value]="ta[1]">{{ ta[1] }}</nb-option>
+              </nb-select>
+            </div>
+          </nb-list-item>
+
+          <nb-list-item *ngIf="courseData.studyClass || editMode">
+            <div class="list-item-content">
+              <div class="detail-label">Study Class</div>
+              <div class="detail-value" *ngIf="!editMode">{{ courseData.studyClass }}</div>
+              <nb-select class="edit-input" *ngIf="editMode" fullWidth placeholder="Select Study Class"
+                formControlName="studyClass">
+                <nb-option *ngFor="let sc of studyClasses" [value]="sc[1]">{{ sc[1] }}</nb-option>
+              </nb-select>
+            </div>
+          </nb-list-item>
+
+          <nb-list-item *ngIf="courseData.level">
+            <div class="list-item-content">
+              <div class="detail-label">Level</div>
+              <div class="detail-value" *ngIf="!editMode">{{ courseData.level }}</div>
+              <nb-select class="edit-input" *ngIf="editMode" fullWidth placeholder="Select Level"
+                formControlName="level">
+                <nb-option *ngFor="let lv of levels" [value]="lv[1]">{{ lv[1] }}</nb-option>
+              </nb-select>
+            </div>
+          </nb-list-item>
+
+          <!-- Instructor - affiché seulement si editMode ET showExtraFields sont true -->
+          <nb-list-item *ngIf="(courseData.instructor && !editMode) || (editMode && showExtraFields)">
+            <div class="list-item-content">
+              <div class="detail-label">Instructor</div>
+              <div class="detail-value" *ngIf="!editMode">{{ courseData.instructor }}</div>
+              <input *ngIf="editMode" nbInput fullWidth formControlName="instructor" class="edit-input">
+            </div>
+          </nb-list-item>
+
+          <!-- Duration - affiché seulement si editMode ET showExtraFields sont true -->
+          <nb-list-item *ngIf="(courseData.duration && !editMode) || (editMode && showExtraFields)">
+            <div class="list-item-content">
+              <div class="detail-label">Duration</div>
+              <div class="detail-value" *ngIf="!editMode">{{ courseData.duration }}</div>
+              <input *ngIf="editMode" nbInput fullWidth formControlName="duration" class="edit-input">
+            </div>
+          </nb-list-item>
+
+          <!-- Location Type - affiché seulement si editMode ET showExtraFields sont true -->
+          <nb-list-item *ngIf="(courseData.locationType && !editMode) || (editMode && showExtraFields)">
+            <div class="list-item-content">
+              <div class="detail-label">Location Type</div>
+              <div class="detail-value" *ngIf="!editMode">{{ courseData.locationType }}</div>
+              <nb-select class="edit-input" *ngIf="editMode" fullWidth formControlName="locationType">
+                <nb-option *ngFor="let lt of locationTypes" [value]="lt[1]">{{ lt[1] }}</nb-option>
+              </nb-select>
+            </div>
+          </nb-list-item>
+
+          <nb-list-item *ngIf="courseData.languages || editMode">
+            <div class="list-item-content">
+              <div class="detail-label">Language</div>
+              <div class="detail-value" *ngIf="!editMode">{{ courseData.languages }}</div>
+              <nb-select class="edit-input" *ngIf="editMode" fullWidth placeholder="Select Language"
+                formControlName="languages">
+                <nb-option *ngFor="let lang of languages" [value]="lang[1]">{{ lang[1] }}</nb-option>
+              </nb-select>
+            </div>
+          </nb-list-item>
+        </nb-list>
+      </form>
+    </nb-card-body>
+
+    <nb-card-footer *ngIf="editMode">
+      <div class="edit-actions">
+        <button nbButton status="success" (click)="saveChanges()" class="action-btn" [disabled]="!courseForm.valid">
+          <nb-icon icon="checkmark-outline"></nb-icon> Save Changes
+        </button>
+        <button nbButton status="danger" (click)="cancelEdit()" class="action-btn">
+          <nb-icon icon="close-outline"></nb-icon> Cancel
+        </button>
+      </div>
+    </nb-card-footer>
+  </nb-card>
+
+  <div class="modal-overlay" *ngIf="showPlanModal" (click)="showPlanModal = false">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h4>Generated Course Plan</h4>
+        <button nbButton ghost size="small" (click)="showPlanModal = false">
+          <nb-icon icon="close-outline"></nb-icon>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="plan-container" [innerHTML]="coursePlan"></div>
+      </div>
+      <div class="modal-footer">
+        <button nbButton status="basic" (click)="showPlanModal = false">Cancel</button>
+        <button nbButton status="success" (click)="saveCoursePlan()">Save Plan</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Modal pour le plan sauvegardé -->
+  <div class="modal-overlay" *ngIf="showSavedPlanModal" (click)="showSavedPlanModal = false">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h4>Saved Course Plan</h4>
+        <button nbButton ghost size="small" (click)="showSavedPlanModal = false">
+          <nb-icon icon="close-outline"></nb-icon>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="plan-container" [innerHTML]="savedCoursePlan"></div>
+      </div>
+      <div class="modal-footer">
+        <button nbButton status="success" (click)="showSavedPlanModal = false">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

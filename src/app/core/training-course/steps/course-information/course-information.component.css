@@ -1,0 +1,58 @@
+.form-row {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+label {
+  width: 150px;
+  font-weight: 600;
+  color: #222b45;
+  margin-top: 0.5rem;
+}
+
+/* style par défaut pour title et summary */
+.input-wrapper {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem; /* petit espace horizontal entre input et erreur */
+}
+
+input[nbInput],
+textarea[nbInput] {
+  border-radius: 8px;
+  padding: 0.6rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* style pour le select avec label sur la même ligne */
+.select-wrapper {
+  flex: 1;
+  display: flex;
+  align-items: center; /* label et select sur la même ligne */
+  gap: 0.5rem; /* petit espace entre select et message d'erreur */
+}
+
+.select-wrapper nb-select {
+  border-radius: 8px;
+  padding: 0.6rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.error {
+  color: #e74c3c;
+  font-size: 0.8rem;
+  margin-left: 10px;
+  margin-top: 4px;
+}
+
+:host {
+  display: block;
+  padding: 2rem;
+  background: #f7f9fc;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}

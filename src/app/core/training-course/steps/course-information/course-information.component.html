@@ -1,0 +1,39 @@
+<div [formGroup]="form">
+
+    <div class="form-row">
+        <label for="title">Title *</label>
+        <div class="input-wrapper">
+            <input id="title" nbInput formControlName="title" placeholder="Course Title" required>
+            <div class="error" *ngIf="form.get('title')?.invalid && form.get('title')?.touched">
+                Title is required.
+            </div>
+        </div>
+    </div>
+
+    <div class="form-row">
+        <label for="summary">Summary *</label>
+        <div class="input-wrapper">
+            <textarea id="summary" nbInput formControlName="summary" placeholder="Course Summary"></textarea>
+            <div class="error" *ngIf="form.get('summary')?.invalid && form.get('summary')?.touched">
+                Summary is required.
+            </div>
+        </div>
+    </div>
+
+    <div class="form-row select-row">
+        <label for="audience">Target Audience *</label>
+        <div class="input-wrapper select-wrapper">
+            <nb-select id="audience" formControlName="targetAudience">
+                <nb-option *ngFor="let audience of targetAudiences" [value]="audience[0]">
+                    {{ audience[1] }}
+                </nb-option>
+            </nb-select>
+            <div class="error" *ngIf="form.get('targetAudience')?.invalid && form.get('targetAudience')?.touched">
+                Target audience is required.
+            </div>
+        </div>
+    </div>
+
+    
+
+</div>

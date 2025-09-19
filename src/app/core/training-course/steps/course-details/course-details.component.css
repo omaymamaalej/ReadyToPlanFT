@@ -1,0 +1,579 @@
+.course-details-container {
+  margin-top: 1.5rem;
+}
+
+.course-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.course-header h3 {
+  margin: 0;
+  color: #2a2a2a;
+  font-weight: 600;
+  font-size: 1.5rem;
+}
+
+.details-list {
+  background: transparent;
+}
+
+.details-list nb-list-item {
+  border-bottom: 1px solid #edf1f7;
+  padding: 1rem 0;
+}
+
+.details-list nb-list-item:last-child {
+  border-bottom: none;
+}
+
+.list-item-content {
+  display: flex;           /* mettre label et value/input sur la même ligne */
+  align-items: center;     /* aligner verticalement */
+  gap: 1rem;               /* espace entre label et value/input */
+  width: 100%;
+  flex-wrap: wrap;         /* wrap pour mobile */
+}
+
+.detail-label {
+  font-weight: 700;        /* plus visible */
+  color: #5a616f;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  min-width: 150px;        /* largeur fixe pour aligner tous les labels */
+}
+
+.detail-value {
+  color: #2a2a2a;
+  font-size: 1rem;
+  line-height: 1.5;
+  word-break: break-word;
+  flex: 1;                 /* prend l’espace restant */
+}
+
+.edit-input {
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #e4e9f2;
+  padding: 0.5rem 0.75rem;
+  font-size: 1rem;
+  flex: 1;                 /* même largeur que value */
+}
+
+.edit-input:focus {
+  border-color: #36f;
+  box-shadow: 0 0 0 0.2rem rgba(51, 102, 255, 0.2);
+}
+
+.textarea-input {
+  min-height: 100px;
+  resize: vertical;
+  flex: 1;                 /* même largeur que label */
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.edit-btn, .action-btn {
+  border-radius: 8px;
+  padding: 0.6rem 1.2rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+.edit-btn:hover, .action-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.edit-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+/* Indication visuelle pour les champs requis */
+.edit-input:required {
+  border-left: 3px solid #36f;
+}
+
+.view-plan-btn {
+  margin-right: 10px;
+}
+
+
+
+/* Styles pour la modal overlay */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 8px;
+  width: 80%;
+  max-width: 800px;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.modal-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid #e4e9f2;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f7f9fc;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+
+.modal-header h4 {
+  margin: 0;
+  color: #192038;
+}
+
+.modal-body {
+  padding: 20px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.modal-footer {
+  padding: 16px 20px;
+  border-top: 1px solid #e4e9f2;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  background-color: #f7f9fc;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
+.generate-plan-btn {
+  margin-right: 10px;
+}
+
+.plan-container {
+  max-height: 50vh;
+  overflow-y: auto;
+  padding: 15px;
+  border: 1px solid #e4e9f2;
+  border-radius: 8px;
+  background-color: #fafbfc;
+}
+
+.plan-container h2, .plan-container h3, .plan-container h4 {
+  color: #3366ff;
+  margin-top: 15px;
+}
+
+.plan-container ul {
+  padding-left: 20px;
+}
+
+.plan-container li {
+  margin-bottom: 5px;
+}
+
+/* Styles pour le plan de cours */
+.course-plan {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.6;
+}
+
+.course-plan h2 {
+  color: #3366ff;
+  border-bottom: 2px solid #3366ff;
+  padding-bottom: 8px;
+  margin-bottom: 20px;
+}
+
+.course-plan h3 {
+  color: #52c41a;
+  margin-top: 25px;
+  margin-bottom: 15px;
+}
+
+.course-plan h4 {
+  color: #fa8c16;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+.course-plan ul {
+  background-color: #f9f9f9;
+  padding: 15px;
+  border-radius: 8px;
+  border-left: 4px solid #1890ff;
+  margin-bottom: 15px;
+}
+
+.course-plan li {
+  margin-bottom: 8px;
+}
+
+.course-plan strong {
+  color: #1890ff;
+}
+
+/* Styles améliorés pour le plan de cours avec numérotation */
+/* Styles améliorés pour le plan de cours - Design épuré aligné à gauche */
+.modern-course-plan {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 30px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.plan-header {
+  margin-bottom: 30px;
+  padding: 0 0 20px 0;
+  border-bottom: 2px solid #e9ecef;
+  text-align: left;
+}
+
+.plan-header h1 {
+  margin: 0 0 10px 0;
+  font-size: 32px;
+  font-weight: 700;
+  color: #2c3e50;
+  line-height: 1.3;
+}
+
+.total-duration {
+  margin: 0;
+  font-size: 18px;
+  color: #666;
+  font-weight: 500;
+  background: #e3f2fd;
+  padding: 8px 16px;
+  border-radius: 20px;
+  display: inline-block;
+}
+
+.chapters-container {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.chapter {
+  padding: 25px;
+  border-radius: 12px;
+  background: #f8f9fa;
+  border-left: 5px solid #4facfe;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
+  margin-left: 0;
+  text-align: left;
+}
+
+.chapter:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  background: #ffffff;
+}
+
+.chapter-title {
+  margin: 0 0 15px 0;
+  font-size: 22px;
+  font-weight: 700;
+  color: #2c3e50;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.chapter-number {
+  background: #4facfe;
+  color: white;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-weight: bold;
+  font-size: 14px;
+  min-width: 80px;
+  text-align: center;
+  box-shadow: 0 2px 6px rgba(79, 172, 254, 0.3);
+}
+
+.chapter-duration {
+  font-size: 16px;
+  margin-bottom: 20px;
+  color: #5a6169;
+  background: #e3f2fd;
+  padding: 8px 16px;
+  border-radius: 20px;
+  display: inline-block;
+  font-weight: 500;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+.subtopics {
+  margin-top: 20px;
+}
+
+.subtopic {
+  margin: 10px 0;
+  padding: 8px 12px;
+  color: #4a5568;
+  background: #ffffff;
+  border-radius: 6px;
+  font-size: 15px;
+  border-left: 3px solid #4facfe;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+}
+
+.subtopic:hover {
+  background: #f1f8ff;
+  transform: translateX(5px);
+}
+
+/* Variantes de couleurs pour les différents chapitres */
+.chapter:nth-child(1) {
+  border-left-color: #4facfe;
+}
+
+.chapter:nth-child(1) .chapter-number {
+  background: #4facfe;
+}
+
+.chapter:nth-child(2) {
+  border-left-color: #43e97b;
+}
+
+.chapter:nth-child(2) .chapter-number {
+  background: #43e97b;
+}
+
+.chapter:nth-child(3) {
+  border-left-color: #fa709a;
+}
+
+.chapter:nth-child(3) .chapter-number {
+  background: #fa709a;
+}
+
+.chapter:nth-child(4) {
+  border-left-color: #a8edea;
+}
+
+.chapter:nth-child(4) .chapter-number {
+  background: #a8edea;
+  color: #2c3e50;
+}
+
+.chapter:nth-child(5) {
+  border-left-color: #ffecd2;
+}
+
+.chapter:nth-child(5) .chapter-number {
+  background: #ffecd2;
+  color: #2c3e50;
+}
+
+.chapter:nth-child(6) {
+  border-left-color: #667eea;
+}
+
+.chapter:nth-child(6) .chapter-number {
+  background: #667eea;
+}
+
+.chapter:nth-child(7) {
+  border-left-color: #f093fb;
+}
+
+.chapter:nth-child(7) .chapter-number {
+  background: #f093fb;
+}
+
+.chapter:nth-child(8) {
+  border-left-color: #5ee7df;
+}
+
+.chapter:nth-child(8) .chapter-number {
+  background: #5ee7df;
+  color: #2c3e50;
+}
+
+/* Agrandissement de la modal */
+.modal-content {
+  background: white;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 1000px;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+}
+
+.modal-body {
+  padding: 30px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.plan-container {
+  max-height: 60vh;
+  overflow-y: auto;
+  padding: 20px;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  background-color: #fafbfc;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .modern-course-plan {
+    padding: 20px;
+    margin: 15px;
+  }
+  
+  .plan-header h1 {
+    font-size: 24px;
+  }
+  
+  .chapter {
+    padding: 20px;
+  }
+  
+  .chapter-title {
+    font-size: 18px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  
+  .chapter-number {
+    font-size: 12px;
+    min-width: 70px;
+    padding: 4px 10px;
+  }
+  
+  .subtopic {
+    font-size: 14px;
+  }
+  
+  .modal-content {
+    width: 95%;
+    margin: 10px;
+  }
+  
+  .modal-body {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .modern-course-plan {
+    padding: 15px;
+  }
+  
+  .plan-header h1 {
+    font-size: 20px;
+  }
+  
+  .chapter {
+    padding: 15px;
+  }
+  
+  .chapter-title {
+    font-size: 16px;
+  }
+  
+  .chapter-duration {
+    font-size: 14px;
+  }
+}
+
+/* ------------------------------------- */
+.plan-items {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.plan-item {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  padding: 15px 20px;
+  border-radius: 8px;
+  color: white;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+}
+
+.plan-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.plan-item h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+}
+
+/* Variantes de couleurs pour les différents items */
+.plan-item:nth-child(2n) {
+  background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+}
+
+.plan-item:nth-child(3n) {
+  background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+}
+
+.plan-item:nth-child(4n) {
+  background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+  color: #2c3e50;
+}
+
+.plan-item:nth-child(5n) {
+  background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+  color: #2c3e50;
+}
+
+
+@media (max-width: 768px) {
+  .list-item-content {
+    flex-direction: column; /* pour mobile, tout empilé */
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .detail-label {
+    min-width: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .details-list nb-list-item {
+    padding: 0.75rem 0;
+  }
+}

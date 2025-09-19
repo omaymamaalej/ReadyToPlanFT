@@ -88,8 +88,12 @@ export const USER_MENU_ITEMS: NbMenuItem[] = [
         link: 'trainingCourse/AllTrainingCourse',
       },
       {
-        title: 'Add New Course',
-        link: 'trainingCourse/addTrainingCourse',
+        title: 'Add New Course (Automatic)',
+        link: 'trainingCourse/addTrainingCourseAutomatic',
+      },
+      {
+        title: 'Add New Course (With Steps)',
+        link: 'trainingCourse/addTrainingCourseSteps',
       },
     ],
   },
