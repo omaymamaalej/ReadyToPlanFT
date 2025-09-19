@@ -1,0 +1,142 @@
+.plan-editor {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.editor-header {
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.editor-header h3 {
+  color: #2c3e50;
+  margin-bottom: 10px;
+}
+
+.chapters-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.chapter-editor {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 12px;
+  border-left: 5px solid #4facfe;
+}
+
+.chapter-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.chapter-number {
+  background: #4facfe;
+  color: white;
+  padding: 4px 10px;
+  border-radius: 15px;
+  font-weight: bold;
+  font-size: 14px;
+  margin-right: 10px;
+}
+
+.chapter-title-input {
+  padding: 10px 15px;
+  border: 2px solid #e9ecef;
+  border-radius: 8px;
+  font-size: 16px;
+  min-width: 300px;
+  transition: border-color 0.3s ease;
+}
+
+.chapter-title-input:focus {
+  border-color: #4facfe;
+  outline: none;
+}
+
+.duration-input-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.duration-input {
+  padding: 8px 12px;
+  border: 2px solid #e9ecef;
+  border-radius: 8px;
+  font-size: 14px;
+  width: 120px;
+  transition: border-color 0.3s ease;
+}
+
+.duration-input:focus {
+  border-color: #4facfe;
+  outline: none;
+}
+
+.subtopics-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.subtopic-editor {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.subtopic-input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 2px solid #e9ecef;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: border-color 0.3s ease;
+}
+
+.subtopic-input:focus {
+  border-color: #4facfe;
+  outline: none;
+}
+
+.remove-btn {
+  color: #dc3545;
+}
+
+.add-subtopic-btn {
+  margin-top: 10px;
+}
+
+.editor-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 2px solid #e9ecef;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .chapter-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .chapter-title-input {
+    min-width: 100%;
+  }
+  
+  .duration-input-container {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}

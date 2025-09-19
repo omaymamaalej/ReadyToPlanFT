@@ -1,0 +1,41 @@
+<div class="plan-editor">
+  <div class="editor-header">
+    <h3>✏️ Course Plan Editor</h3>
+    <p>Edit chapters and subtopics as needed</p>
+  </div>
+
+  <form [formGroup]="editForm">
+    <div formArrayName="chapters" class="chapters-editor">
+      <div *ngFor="let chapter of chaptersArray.controls; let i = index" [formGroupName]="i" class="chapter-editor">
+        <div class="chapter-header">
+          <h4>
+            <span class="chapter-number">Chapter {{i + 1}}</span>
+            <input formControlName="title" class="chapter-title-input" placeholder="Chapter Title">
+          </h4>
+          <div class="duration-input-container">
+            <span>⏱️</span>
+            <input formControlName="duration" class="duration-input" placeholder="Duration (e.g., 2 hours)">
+          </div>
+        </div>
+
+        <div formArrayName="subtopics" class="subtopics-editor">
+          <div *ngFor="let subtopic of getSubtopics(i).controls; let j = index" class="subtopic-editor">
+            <input [formControlName]="j" class="subtopic-input" placeholder="Subtopic">
+            <button type="button" (click)="removeSubtopic(i, j)" class="remove-btn" nbButton ghost size="small">
+              <nb-icon icon="trash-2-outline"></nb-icon>
+            </button>
+          </div>
+        </div>
+
+        <button type="button" (click)="addSubtopic(i)" class="add-subtopic-btn" nbButton size="small">
+          <nb-icon icon="plus-outline"></nb-icon> Add Subtopic
+        </button>
+      </div>
+    </div>
+  </form>
+
+  <div class="editor-actions">
+    <button nbButton status="basic" (click)="cancelEdits()">Cancel</button>
+    <button nbButton status="success" (click)="saveEdits()">Save</button>
+  </div>
+</div>

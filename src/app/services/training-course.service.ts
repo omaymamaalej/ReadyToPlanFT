@@ -143,5 +143,14 @@ export class TrainingCourseService {
     });
   }
 
+  // Ajoutez cette méthode
+  regenerateAdaptedCoursePlan(id: string, editedPlan: string): Observable<string> {
+    return this.http.post(
+      `${this.apiUrl}/training-courses/${id}/regenerate-adapted-plan`, 
+      editedPlan,
+      { responseType: 'text' }
+    );
+  }
+
 
 }

@@ -12,6 +12,7 @@ import { AddTrainingCourseStepsComponent } from './add-training-course-steps/add
 import { CourseInformationComponent } from './steps/course-information/course-information.component';
 import { CourseContentComponent } from './steps/course-content/course-content.component';
 import { CourseDetailsComponent } from './steps/course-details/course-details.component';
+import { CoursePlanEditorComponent } from './steps/course-plan-editor/course-plan-editor.component';
 
 
 @NgModule({
@@ -22,7 +23,8 @@ import { CourseDetailsComponent } from './steps/course-details/course-details.co
     AddTrainingCourseStepsComponent,
     CourseInformationComponent,
     CourseContentComponent,
-    CourseDetailsComponent
+    CourseDetailsComponent,
+    CoursePlanEditorComponent
   ],
   imports: [
     CommonModule,

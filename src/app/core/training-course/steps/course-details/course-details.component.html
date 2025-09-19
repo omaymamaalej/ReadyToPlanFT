@@ -161,10 +161,40 @@
         </button>
       </div>
       <div class="modal-body">
-        <div class="plan-container" [innerHTML]="savedCoursePlan"></div>
+        <div class="plan-container" [innerHTML]="savedCoursePlanSafe"></div>
       </div>
       <div class="modal-footer">
+        <button nbButton status="warning" (click)="editSavedPlan()" class="edit-btn">
+          <nb-icon icon="edit-outline"></nb-icon> Edit
+        </button>
         <button nbButton status="success" (click)="showSavedPlanModal = false">Close</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Modal pour l'édition du plan -->
+  <div class="modal-overlay" *ngIf="editModePlan" (click)="editModePlan = false">
+    <div class="modal-content large-modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h4>✏️ Édition du Plan de Cours</h4>
+        <button nbButton ghost size="small" (click)="editModePlan = false">
+          <nb-icon icon="close-outline"></nb-icon>
+        </button>
+      </div>
+      <div class="modal-body">
+        <app-course-plan-editor 
+          [coursePlan]="savedCoursePlan"
+          (planUpdated)="onPlanUpdated($event)">
+        </app-course-plan-editor>
+      </div>
+      <div class="modal-footer">
+        <button nbButton status="basic" (click)="editModePlan = false">Annuler</button>
+        <button nbButton status="warning" (click)="regenerateAdaptedPlan()" [disabled]="generatingPlan">
+          <nb-icon [icon]="generatingPlan ? 'loader-outline' : 'refresh-outline'"></nb-icon>
+          {{ generatingPlan ? 'Adaptation...' : 'Adapter au Niveau/Classe' }}
+        </button>
+        <button nbButton status="success" (click)="saveEditedPlan()">Sauvegarder</button>
       </div>
     </div>
   </div>
