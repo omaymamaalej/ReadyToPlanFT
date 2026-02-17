@@ -1,27 +1,54 @@
-# ReadyToPlanFT
+#  ReadyToPlan – AI Business Plan Generator (Frontend)
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 15.2.4.
+##  Overview
 
-## Development server
+The frontend of **ReadyToPlan** is an Angular application that connects with the backend to collect business data, manage products, team members, marketing strategies, and display the AI-generated business plan.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+It provides a user-friendly interface to input data, visualize summaries, and generate reports.
 
-## Code scaffolding
+---
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+##  Tech Stack
 
-## Build
+- **Angular 15.2.4**  
+- **TypeScript**  
+- **HTML / CSS / SCSS**  
+- **RxJS**  
+- **Nebular UI for components**  
+- **RESTful API integration with Spring Boot backend**
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+---
 
-## Running unit tests
+##  Core Features
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+- Company information forms  
+- Dynamic product management (add, edit, delete products)  
+- Team member management  
+- Marketing strategy module  
+- Financial overview dashboard  
+- Generate AI-powered business plan  
+- Download business plan in PDF  
 
-## Running end-to-end tests
+---
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+##  Getting Started
 
-## Further help
+###  Clone the repository
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+```bash
+git clone https://github.com/omaymamaalej/ReadyToPlanFT.git
+cd ReadyToPlanFT
+```
+### Install dependencies
+npm install
+### Run the development server
+ng serve
+### Build the Project
+ng build
+### Environment Configuration
+API_BASE_URL=http://localhost:8080
+GEMINI_API_KEY=your_api_key
+### Author
+Omayma Maalej
+Master’s Degree in Software Engineering
+AI & Full Stack Developer 
