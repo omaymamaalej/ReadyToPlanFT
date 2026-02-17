@@ -40,14 +40,22 @@ git clone https://github.com/omaymamaalej/ReadyToPlanFT.git
 cd ReadyToPlanFT
 ```
 ### Install dependencies
+```bash
 npm install
+```
 ### Run the development server
+```bash
 ng serve
+```
 ### Build the Project
+```bash
 ng build
+```
 ### Environment Configuration
+```bash
 API_BASE_URL=http://localhost:8080
 GEMINI_API_KEY=your_api_key
+```
 ### Author
 Omayma Maalej
 Master’s Degree in Software Engineering
